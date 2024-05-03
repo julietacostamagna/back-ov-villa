@@ -12,4 +12,5 @@ app.use(authRoutes)
 
 app.listen(4000, () => {
     console.log('Server is running on port 4000')
+    console.log(process.env.DB_HOST)
 })
