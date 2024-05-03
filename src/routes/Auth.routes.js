@@ -2,7 +2,6 @@ const express = require('express')
 const router = express.Router()
 const AuthService = require('../services/AuthService')
 
-// Ruta de inicio de sesión
 router.post('/login', async (req, res) => {
     try {
         const { mail, password } = req.body
