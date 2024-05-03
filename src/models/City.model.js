@@ -24,5 +24,8 @@ City.init(
         // timestamps: false
     }
 )
-City.belongsTo(State)
+City.belongsTo(State, {
+    foreignKey: 'COD_PCI',
+    targetKey: 'COD_PRO'
+})
 module.exports = City
