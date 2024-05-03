@@ -1,5 +1,5 @@
 const { DataTypes, Model } = require('sequelize')
-const { sequelizeLaravel } = require('../database/MySQL.database')
+const { sequelizeOfivirv2 } = require('../database/MySQL.database')
 const State = require('./State.model')
 
 class City extends Model {}
@@ -18,11 +18,14 @@ City.init(
         COD_POS: { type: DataTypes.BIGINT }
     },
     {
-        sequelize: sequelizeLaravel,
+        sequelize: sequelizeOfivirv2,
         modelName: 'City'
         // tableName: 'user',
         // timestamps: false
     }
 )
-City.belongsTo(State)
+City.belongsTo(State, {
+    foreignKey: 'COD_PCI',
+    targetKey: 'id'
+})
 module.exports = City

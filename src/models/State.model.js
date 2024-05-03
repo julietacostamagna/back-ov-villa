@@ -22,5 +22,8 @@ State.init(
         // timestamps: false
     }
 )
-State.hasMany(City)
+State.hasMany(City, {
+    foreignKey: 'COD_PCI',
+    sourceKey: 'id'
+})
 module.exports = State
