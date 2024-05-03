@@ -6,8 +6,8 @@ coopm_v1 = {
     port: 33061,
     dialect: 'mysql'
 }
-ofivirv2 = {
-    database: 'ofivirv2',
+coopm_v2 = {
+    database: 'coopm_v2',
     username: 'DbDesarrollo',
     password: 'm+?PvY:zUogF01Q^XH3i9',
     host: 'localhost',
@@ -15,4 +15,4 @@ ofivirv2 = {
     dialect: 'mysql'
 }
 
-module.exports = { coopm_v1, ofivirv2 }
+module.exports = { coopm_v1, coopm_v2 }

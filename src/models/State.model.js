@@ -1,5 +1,5 @@
 const { DataTypes, Model } = require('sequelize')
-const { sequelizeOfivirv2 } = require('../database/MySQL.database')
+const { sequelizeCoopm_v2 } = require('../database/MySQL.database')
 const City = require('./City.model')
 
 class State extends Model {}
@@ -16,7 +16,7 @@ State.init(
         COD_AFIP: { type: DataTypes.BIGINT }
     },
     {
-        sequelize: sequelizeOfivirv2,
+        sequelize: sequelizeCoopm_v2,
         modelName: 'State'
         // tableName: 'user',
         // timestamps: false

@@ -1,5 +1,5 @@
 const { DataTypes, Model } = require('sequelize')
-const { sequelizeOfivirv2 } = require('../database/MySQL.database')
+const { sequelizeCoopm_v2 } = require('../database/MySQL.database')
 const State = require('./State.model')
 
 class City extends Model {}
@@ -18,7 +18,7 @@ City.init(
         COD_POS: { type: DataTypes.BIGINT }
     },
     {
-        sequelize: sequelizeOfivirv2,
+        sequelize: sequelizeCoopm_v2,
         modelName: 'City'
         // tableName: 'user',
         // timestamps: false
