@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js",
-    "dev": "node --watch index.js"
+    "dev": "node --env-file .env --watch index.js"
   },
   "author": "",
   "license": "ISC",
@@ -17,6 +17,7 @@
     "mysql2": "^3.9.7",
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
-    "sequelize": "^6.37.3"
+    "sequelize": "^6.37.3",
+    "tedious": "^18.2.0"
   }
 }

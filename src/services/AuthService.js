@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
-// const User = require('../models/User.model')
+const User = require('../models/User.model')
+const { sequelize } = require('../database/MSSQL.database')
 
 const signToken = (user) => {
     return jwt.sign(
@@ -26,5 +27,16 @@ const signToken = (user) => {
 //         throw new Error('Contraseña incorrecta')
 //     }
 
-//     return signToken(user)
-// }
+//    return signToken(user)
+//}
+
+const testConection = async () => {
+    try {
+        await sequelize.authenticate()
+        console.log('CONEXIÓN EXITOSA')
+    } catch (error) {
+        console.error('ERROR DE MIERDACOOP:', error)
+    }
+}
+
+exports.testConection = testConection
