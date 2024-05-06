@@ -17,6 +17,11 @@ const Street_City = sequelizeCoopm_v2.define('Street_Cities', {
             model: Street, // 'Actors' would also work
             key: 'id'
         }
+    },
+    status: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: true
     }
 })
 City.belongsToMany(Street, { through: Street_City })

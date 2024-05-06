@@ -1,5 +1,7 @@
 const { DataTypes, Model } = require('sequelize')
 const { sequelizeCoopm_v2 } = require('../database/MySQL.database')
+const Address = require('./Address.model')
+const City = require('./City.model')
 
 class Street extends Model {}
 Street.init(
@@ -21,4 +23,5 @@ Street.init(
     }
 )
 Street.hasMany(City)
+Street.belongsTo(Address)
 module.exports = Street

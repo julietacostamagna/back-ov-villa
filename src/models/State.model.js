@@ -2,6 +2,7 @@ const { DataTypes, Model } = require('sequelize')
 const { sequelizeCoopm_v2 } = require('../database/MySQL.database')
 
 const City = require('./City.model')
+const Address = require('./Address.model')
 
 class State extends Model {}
 State.init(
@@ -27,4 +28,5 @@ State.hasMany(City, {
     foreignKey: 'COD_PCI',
     sourceKey: 'COD_PRO'
 })
+State.belongsTo(Address)
 module.exports = State
