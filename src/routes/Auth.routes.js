@@ -13,21 +13,21 @@ router.post('/login', async (req, res) => {
         res.status(400).json({ error: error.message })
     }
 })
-router.get('/migracion', async (req, res) => {
-    try {
-        await MainMigrate()
-        res.json({ msj: 'migracion completa' })
-    } catch (error) {
-        res.status(400).json({ error: error.message })
-    }
-})
-router.get('/relation', async (req, res) => {
-    try {
-        await MigrationRelations()
-        res.json({ msj: 'migracion de relaciones completa' })
-    } catch (error) {
-        res.status(400).json({ error: error.message })
-    }
-})
+// router.get('/migracion', async (req, res) => {
+//     try {
+//         await MainMigrate()
+//         res.json({ msj: 'migracion completa' })
+//     } catch (error) {
+//         res.status(400).json({ error: error.message })
+//     }
+// })
+// router.get('/relation', async (req, res) => {
+//     try {
+//         await MigrationRelations()
+//         res.json({ msj: 'migracion de relaciones completa' })
+//     } catch (error) {
+//         res.status(400).json({ error: error.message })
+//     }
+// })
 
 module.exports = router
