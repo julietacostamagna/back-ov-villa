@@ -1,25 +1,21 @@
 const { DataTypes, Model } = require('sequelize')
 const { sequelizeCoopm_v2 } = require('../database/MySQL.database')
 
-class State extends Model {}
-State.init(
+class Street extends Model {}
+Street.init(
     {
         id: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.BIGINT,
             allowNull: false,
             primaryKey: true
         },
-        id_procoop: { type: DataTypes.BIGINT },
-        COD_PRO: { type: DataTypes.BIGINT },
-        DES_PRO: { type: DataTypes.STRING },
-        COD_AFIP: { type: DataTypes.BIGINT }
+        name: { type: DataTypes.STRING },
+        id_api: { type: DataTypes.BIGINT },
+        id_procoop: { type: DataTypes.BIGINT }
     },
     {
-        sequelize: sequelizeCoopm_v2,
-        modelName: 'State'
-        // tableName: 'user',
-        // timestamps: false
+        sequelize: sequelizeCoopm_v2
     }
 )
-State.hasMany(City)
-module.exports = State
+
+module.exports = Street
