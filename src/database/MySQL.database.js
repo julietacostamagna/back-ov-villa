@@ -31,16 +31,12 @@ async function initialzeModels() {
     const Person_physical = require('../models/Person_physical.model')
     const State = require('../models/State.model')
     const Street = require('../models/Street.model')
-    // const Person_Address = require('../models/Person_Address.model')
-    // const Street_City = require('../models/Street_City.model')
 }
 async function MainMigrate() {
     try {
         await sequelizeCoopm_v2.authenticate()
         await initialzeModels()
         await sequelizeCoopm_v2.sync()
-        // const setupRelations = require('../models/Relations_foreing.js')
-        // setupRelations(sequelizeCoopm_v2)
         console.log(true)
     } catch (error) {
         console.error('Unable to connect to the database:', error)
