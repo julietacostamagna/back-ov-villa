@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
-const User = require('../models/User.model')
+const UserDesarrollo = require('../models/UserDesarrollo.model')
 const { sequelize } = require('../database/MSSQL.database')
 
 const signToken = (user) => {
@@ -16,7 +16,7 @@ const signToken = (user) => {
 }
 
 exports.login = async (email, password) => {
-    const user = await User.findOne({ where: email })
+    const user = await UserDesarrollo.findOne({ where: email })
     if (!user) {
         throw new Error('El usuario no existe')
     }
@@ -26,7 +26,6 @@ exports.login = async (email, password) => {
     if (!isMatch) {
         throw new Error('Contraseña incorrecta')
     }
-
     return signToken(user)
 }
 
