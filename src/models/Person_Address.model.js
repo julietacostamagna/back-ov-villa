@@ -24,6 +24,5 @@ const Person_Address = sequelizeCoopm_v2.define('Person_Addresses', {
         defaultValue: true
     }
 })
-Personal_data.belongsToMany(Address, { through: Person_Address })
-Address.belongsToMany(Personal_data, { through: Person_Address })
+
 module.exports = Person_Address
