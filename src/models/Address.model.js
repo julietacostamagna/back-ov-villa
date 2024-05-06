@@ -1,15 +1,11 @@
 const { DataTypes, Model } = require('sequelize')
 const { sequelizeCoopm_v2 } = require('../database/MySQL.database')
-const Personal_data = require('./Personal_data.model')
-const Street = require('./Street.model')
-const City = require('./City.model')
-const State = require('./State.model')
 
-class Address extends Model {}
-Address.init(
+class Address_user extends Model {}
+Address_user.init(
     {
         id: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.BIGINT,
             allowNull: false,
             primaryKey: true
         },
@@ -17,21 +13,17 @@ Address.init(
         floor: { type: DataTypes.STRING },
         dpto: { type: DataTypes.INTEGER },
         postal_code: { type: DataTypes.DATE },
-        google_address: { type: DataTypes.STRING, isNull: true },
-        owner_name: { type: DataTypes.STRING, isNull: true },
-        owner_last_name: { type: DataTypes.STRING, isNull: true },
-        owner_num_dni: { type: DataTypes.STRING, isNull: true }
+        google_address: { type: DataTypes.STRING, allowNull: true },
+        owner_name: { type: DataTypes.STRING, allowNull: true },
+        owner_last_name: { type: DataTypes.STRING, allowNull: true },
+        owner_num_dni: { type: DataTypes.STRING, allowNull: true }
     },
     {
-        sequelize: sequelizeCoopm_v2,
-        modelName: 'Address'
+        sequelize: sequelizeCoopm_v2
     }
 )
 
 // RELACIONES FORANEAS
 // Falta hacer relacion con datos catastrales.
-Address.hasMany(Personal_data)
-Address.hasMany(Street)
-Address.hasMany(City)
-Address.hasMany(State)
-module.exports = Address
+
+module.exports = Address_user

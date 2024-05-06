@@ -6,7 +6,7 @@ class Person_physical extends Model {}
 Person_physical.init(
     {
         id: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.BIGINT,
             allowNull: false,
             primaryKey: true
         },
@@ -15,11 +15,10 @@ Person_physical.init(
         type_dni: { type: DataTypes.INTEGER },
         num_dni: { type: DataTypes.INTEGER },
         burn_date: { type: DataTypes.DATE },
-        validation_renaper: { type: DataTypes.INTEGER, isNull: true }
+        validation_renaper: { type: DataTypes.INTEGER, allowNull: true }
     },
     {
-        sequelize: sequelizeCoopm_v2,
-        modelName: 'Person_physical'
+        sequelize: sequelizeCoopm_v2
     }
 )
 // Person_physical.hasMany(User)

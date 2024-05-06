@@ -24,6 +24,5 @@ const Street_City = sequelizeCoopm_v2.define('Street_Cities', {
         defaultValue: true
     }
 })
-City.belongsToMany(Street, { through: Street_City })
-Street.belongsToMany(City, { through: Street_City })
+
 module.exports = Street_City

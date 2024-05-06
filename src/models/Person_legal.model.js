@@ -6,7 +6,7 @@ class Person_legal extends Model {}
 Person_legal.init(
     {
         id: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.BIGINT,
             allowNull: false,
             primaryKey: true
         },
@@ -14,13 +14,12 @@ Person_legal.init(
         fantasy_name: { type: DataTypes.STRING },
         cuit: { type: DataTypes.INTEGER },
         date_registration: { type: DataTypes.DATE },
-        legal_address: { type: DataTypes.STRING, isNull: true },
-        num_address: { type: DataTypes.STRING, isNull: true },
-        authorization_img: { type: DataTypes.STRING, isNull: true }
+        legal_address: { type: DataTypes.STRING, allowNull: true },
+        num_address: { type: DataTypes.STRING, allowNull: true },
+        authorization_img: { type: DataTypes.STRING, allowNull: true }
     },
     {
-        sequelize: sequelizeCoopm_v2,
-        modelName: 'Person_legal'
+        sequelize: sequelizeCoopm_v2
     }
 )
 
