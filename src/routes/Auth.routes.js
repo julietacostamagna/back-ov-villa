@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const AuthService = require('../services/AuthService')
+const ProcopService = require('../services/ProcopService')
 
 router.post('/login', async (req, res) => {
     try {
@@ -15,8 +16,19 @@ router.post('/login', async (req, res) => {
 
 router.get('/testConect', async (req, res) => {
     try {
-        await AuthService.testConection()
+        await ProcopService.testConection()
         res.json({ message: 'Conexión exitosa' })
+    } catch (error) {
+        res.status(400).json({ error: error.message })
+    }
+})
+
+router.post('/api/procoop/personaPorDni', async (req, res) => {
+    try {
+        // Body: { dni: '12345678' } | {cuit: '1-12345678-90' }
+        const { dni, cuit } = req.body
+        const persona = dni ? await ProcopService.personaPorDni(dni) : await ProcopService.empresaPorCuit(cuit)
+        res.json(persona)
     } catch (error) {
         res.status(400).json({ error: error.message })
     }
