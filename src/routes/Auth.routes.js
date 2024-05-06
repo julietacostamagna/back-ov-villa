@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router()
 const AuthService = require('../services/AuthService')
 const ProcopService = require('../services/ProcopService')
+const { MainMigrate, MigrationRelations } = require('../database/MySQL.database')
 
 router.post('/login', async (req, res) => {
     try {
@@ -13,6 +14,22 @@ router.post('/login', async (req, res) => {
         res.status(400).json({ error: error.message })
     }
 })
+// router.get('/migracion', async (req, res) => {
+//     try {
+//         await MainMigrate()
+//         res.json({ msj: 'migracion completa' })
+//     } catch (error) {
+//         res.status(400).json({ error: error.message })
+//     }
+// })
+// router.get('/relation', async (req, res) => {
+//     try {
+//         await MigrationRelations()
+//         res.json({ msj: 'migracion de relaciones completa' })
+//     } catch (error) {
+//         res.status(400).json({ error: error.message })
+//     }
+// })
 
 router.get('/testConect', async (req, res) => {
     try {

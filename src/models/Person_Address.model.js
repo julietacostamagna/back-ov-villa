@@ -1,20 +1,20 @@
 const { DataTypes } = require('sequelize')
 const { sequelizeCoopm_v2 } = require('../database/MySQL.database')
-const City = require('./City.model')
-const Street = require('./Street.model')
+const Address = require('./Address.model')
+const Personal_data = require('./Personal_data.model')
 
-const Street_City = sequelizeCoopm_v2.define('Street_Cities', {
-    CityId: {
+const Person_Address = sequelizeCoopm_v2.define('Person_Addresses', {
+    AddressId: {
         type: DataTypes.BIGINT,
         references: {
-            model: City, // 'Movies' would also work
+            model: Address, // 'Movies' would also work
             key: 'id'
         }
     },
-    StreetId: {
+    PersonaDataId: {
         type: DataTypes.BIGINT,
         references: {
-            model: Street, // 'Actors' would also work
+            model: Personal_data, // 'Actors' would also work
             key: 'id'
         }
     },
@@ -25,4 +25,4 @@ const Street_City = sequelizeCoopm_v2.define('Street_Cities', {
     }
 })
 
-module.exports = Street_City
+module.exports = Person_Address

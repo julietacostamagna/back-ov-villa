@@ -5,7 +5,7 @@ class Street extends Model {}
 Street.init(
     {
         id: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.BIGINT,
             allowNull: false,
             primaryKey: true
         },
@@ -14,11 +14,8 @@ Street.init(
         id_procoop: { type: DataTypes.BIGINT }
     },
     {
-        sequelize: sequelizeCoopm_v2,
-        modelName: 'Street'
-        // tableName: 'user',
-        // timestamps: false
+        sequelize: sequelizeCoopm_v2
     }
 )
-Street.hasMany(City)
+
 module.exports = Street
