@@ -1,13 +1,11 @@
 const { DataTypes, Model } = require('sequelize')
 const { sequelizeCoopm_v2 } = require('../database/MySQL.database')
 
-const City = require('./City.model')
-
 class State extends Model {}
 State.init(
     {
         id: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.BIGINT,
             allowNull: false,
             primaryKey: true
         },
@@ -17,14 +15,8 @@ State.init(
         COD_AFIP: { type: DataTypes.BIGINT }
     },
     {
-        sequelize: sequelizeCoopm_v2,
-        modelName: 'State'
-        // tableName: 'user',
-        // timestamps: false
+        sequelize: sequelizeCoopm_v2
     }
 )
-State.hasMany(City, {
-    foreignKey: 'COD_PCI',
-    sourceKey: 'COD_PRO'
-})
+
 module.exports = State
