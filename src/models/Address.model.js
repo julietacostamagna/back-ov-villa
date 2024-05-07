@@ -1,14 +1,9 @@
 const { DataTypes, Model } = require('sequelize')
 const { sequelizeCoopm_v2 } = require('../database/MySQL.database')
 
-class Address_user extends Model {}
-Address_user.init(
+class Address extends Model {}
+Address.init(
     {
-        id: {
-            type: DataTypes.BIGINT,
-            allowNull: false,
-            primaryKey: true
-        },
         number_address: { type: DataTypes.STRING },
         floor: { type: DataTypes.STRING },
         dpto: { type: DataTypes.INTEGER },
@@ -26,4 +21,4 @@ Address_user.init(
 // RELACIONES FORANEAS
 // Falta hacer relacion con datos catastrales.
 
-module.exports = Address_user
+module.exports = Address

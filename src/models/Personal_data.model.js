@@ -1,16 +1,9 @@
 const { DataTypes, Model } = require('sequelize')
 const { sequelizeCoopm_v2 } = require('../database/MySQL.database')
-const User = require('./User.model')
-const Address = require('./Address.model')
 
 class Personal_data extends Model {}
 Personal_data.init(
     {
-        id: {
-            type: DataTypes.BIGINT,
-            allowNull: false,
-            primaryKey: true
-        },
         mail_procoop: { type: DataTypes.STRING, email: true },
         cell_phone: { type: DataTypes.STRING },
         fixed_phone: { type: DataTypes.STRING, allowNull: true },

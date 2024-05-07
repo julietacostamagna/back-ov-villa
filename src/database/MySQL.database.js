@@ -44,10 +44,10 @@ async function MainMigrate() {
 }
 async function MigrationRelations() {
     try {
-        await sequelizeCoopm_v2.authenticate()
+        // await sequelizeCoopm_v2.authenticate()
         const setupRelations = require('../models/Relations_foreing.js')
-        await setupRelations(sequelizeCoopm_v2)
-        console.log(true)
+        const sincronico = await setupRelations()
+        console.log(sincronico)
     } catch (error) {
         console.error('Unable to connect to the database:', error)
     }

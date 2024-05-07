@@ -1,15 +1,24 @@
-const userService = require('../services/UserService.js')
+const User = require('../models/User.model.js')
+const ScriptService = require('../services/ScriptService.js')
 
-async function getUser(req, res) {
-    const id = req.params.id
-    const user = await userService.getUserById(id)
-    res.json(user)
+async function migrationUser(req, res) {
+    try {
+        const users = await ScriptService.listUser()
+        for (const user in users) {
+            await User.create({
+                email: users[user].email,
+                email_verified: users[user].date_update_pass ? new Date(users[user].date_update_pass) : new Date(),
+                password: users[user].password
+            })
+        }
+        return res.status(200).json(users)
+    } catch (error) {
+        res.json(error)
+    }
 }
 
 // Más funciones según sea necesario...
 
 module.exports = {
-    getUser,
-    updateUser
-    // Exporta las demás funciones aquí...
+    migrationUser
 }

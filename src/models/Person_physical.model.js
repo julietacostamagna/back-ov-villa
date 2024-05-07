@@ -5,11 +5,6 @@ const User = require('./User.model')
 class Person_physical extends Model {}
 Person_physical.init(
     {
-        id: {
-            type: DataTypes.BIGINT,
-            allowNull: false,
-            primaryKey: true
-        },
         name: { type: DataTypes.STRING },
         last_name: { type: DataTypes.STRING },
         type_dni: { type: DataTypes.INTEGER },
