@@ -22,26 +22,26 @@ async function testConnection() {
     }
 }
 
-async function initialzeModels() {
-    const User = require('../models/User.model')
-    const Personal_data = require('../models/Personal_data.model')
-    const Address = require('../models/Address.model')
-    const City = require('../models/City.model')
-    const Person_legal = require('../models/Person_legal.model')
-    const Person_physical = require('../models/Person_physical.model')
-    const State = require('../models/State.model')
-    const Street = require('../models/Street.model')
-}
-async function MainMigrate() {
-    try {
-        await sequelizeCoopm_v2.authenticate()
-        await initialzeModels()
-        await sequelizeCoopm_v2.sync()
-        console.log(true)
-    } catch (error) {
-        console.error('Unable to connect to the database:', error)
-    }
-}
+// async function initialzeModels() {
+//     const User = require('../models/User.model')
+//     const Personal_data = require('../models/Personal_data.model')
+//     const Address = require('../models/Address.model')
+//     const City = require('../models/City.model')
+//     const Person_legal = require('../models/Person_legal.model')
+//     const Person_physical = require('../models/Person_physical.model')
+//     const State = require('../models/State.model')
+//     const Street = require('../models/Street.model')
+// }
+// async function MainMigrate() {
+//     try {
+//         await sequelizeCoopm_v2.authenticate()
+//         await initialzeModels()
+//         await sequelizeCoopm_v2.sync()
+//         console.log(true)
+//     } catch (error) {
+//         console.error('Unable to connect to the database:', error)
+//     }
+// }
 async function MigrationRelations() {
     try {
         // await sequelizeCoopm_v2.authenticate()
@@ -57,7 +57,7 @@ module.exports = {
     sequelizeCoopm_v1,
     sequelizeCoopm_v2,
     QueryTypes,
-    testConnection,
-    MainMigrate,
-    MigrationRelations
+    testConnection
+    // MainMigrate,
+    // MigrationRelations
 }

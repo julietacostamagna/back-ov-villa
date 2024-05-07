@@ -9,6 +9,7 @@ module.exports = () => {
     const Street = require('./Street.model')
     const Person_Address = require('./Person_Address.model')
     const Street_City = require('./Street_City.model')
+
     // Relaciones de Address
     Address.belongsTo(Street)
     Address.belongsTo(City)
@@ -20,21 +21,9 @@ module.exports = () => {
         targetKey: 'COD_PRO'
     })
 
-    // Relaciones de Personal_data
-    // Personal_data.hasMany(User)
-
-    // // Relaciones de State
-    // State.hasMany(City, {
-    //     foreignKey: 'COD_PCI',
-    //     sourceKey: 'COD_PRO'
-    // })
-
     // Relaciones de tabla intermedia entre City y Street
     City.belongsToMany(Street, { through: Street_City })
     Street.belongsToMany(City, { through: Street_City })
-
-    // Relaciones de Street
-    // Street.hasMany(City)
 
     // Relaciones de User
     User.belongsTo(Personal_data)

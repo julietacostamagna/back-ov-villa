@@ -1,6 +1,5 @@
 const { DataTypes, Model } = require('sequelize')
 const { sequelizeCoopm_v2 } = require('../database/MySQL.database')
-const User = require('./User.model')
 
 class Person_physical extends Model {}
 Person_physical.init(
