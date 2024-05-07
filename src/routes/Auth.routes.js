@@ -33,4 +33,14 @@ router.get('/relation', async (req, res) => {
     }
 })
 
+router.get('/testConect', async (req, res) => {
+    try {
+        await AuthService.testConection()
+        res.json({ message: 'Conexión exitosa' })
+    } catch (error) {
+        res.status(400).json({ error: error.message })
+    }
+})
+
 module.exports = router
+
