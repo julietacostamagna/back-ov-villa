@@ -4,11 +4,6 @@ const { sequelizeCoopm_v2 } = require('../database/MySQL.database')
 class User extends Model {}
 User.init(
     {
-        id: {
-            type: DataTypes.BIGINT,
-            allowNull: false,
-            primaryKey: true
-        },
         email: { type: DataTypes.STRING, email: true, unique: true },
         email_verified: DataTypes.DATE,
         password: { type: DataTypes.STRING, is: /^(?=.*[A-Z]).{6,}$/ },

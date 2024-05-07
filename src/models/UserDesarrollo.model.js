@@ -1,59 +1,106 @@
-// const { DataTypes } = require('sequelize')
-// const { sequelizeCoopm_v1 } = require('../database/MySQL.database')
+const { DataTypes } = require('sequelize')
+const { sequelizeCoopm_v1 } = require('../database/MySQL.database')
 
-// const UserDesarrollo = sequelizeCoopm_v1.define(
-//     'User',
-//     {
-//         id: {
-//             type: DataTypes.INTEGER,
-//             allowNull: false,
-//             primaryKey: true
-//         },
-//         id_procoop: { allowNull: true, type: DataTypes.INTEGER },
-//         name: { allowNull: true, type: DataTypes.STRING },
-//         last_name: { allowNull: true, type: DataTypes.STRING },
-//         dni: { allowNull: true, type: DataTypes.INTEGER },
-//         birthday: { allowNull: true, type: DataTypes.DATE },
-//         username: { allowNull: true, type: DataTypes.STRING },
-//         email: { allowNull: true, type: DataTypes.STRING },
-//         internal_email: { allowNull: true, type: DataTypes.STRING },
-//         social_mail: { allowNull: true, type: DataTypes.STRING },
-//         password: { allowNull: true, type: DataTypes.STRING },
-//         create_time: { allowNull: true, type: DataTypes.DATE },
-//         admin: { allowNull: true, type: DataTypes.INTEGER },
-//         area_id: { allowNull: true, type: DataTypes.INTEGER },
-//         profile_id: { allowNull: true, type: DataTypes.INTEGER },
-//         internal: { allowNull: true, type: DataTypes.STRING },
-//         external: { allowNull: true, type: DataTypes.STRING },
-//         status: { allowNull: true, type: DataTypes.INTEGER },
-//         phone: { allowNull: true, type: DataTypes.STRING },
-//         flag: { allowNull: true, type: DataTypes.STRING },
-//         qr_image: { allowNull: true, type: DataTypes.STRING },
-//         qr_fields: { allowNull: true, type: DataTypes.STRING },
-//         home_number: { allowNull: true, type: DataTypes.STRING },
-//         id_state: { allowNull: true, type: DataTypes.INTEGER },
-//         id_cities: { allowNull: true, type: DataTypes.INTEGER },
-//         address: { allowNull: true, type: DataTypes.STRING },
-//         postal_code: { allowNull: true, type: DataTypes.INTEGER },
-//         docket: { allowNull: true, type: DataTypes.INTEGER },
-//         docket_status: { allowNull: true, type: DataTypes.INTEGER },
-//         cuil: { allowNull: true, type: DataTypes.BIGINT },
-//         type_document: { allowNull: true, type: DataTypes.STRING },
-//         status_civil: { allowNull: true, type: DataTypes.INTEGER },
-//         sex: { allowNull: true, type: DataTypes.INTEGER },
-//         date_entry: { allowNull: true, type: DataTypes.DATE },
-//         image: { allowNull: true, type: DataTypes.STRING },
-//         id_check: { allowNull: true, type: DataTypes.INTEGER },
-//         user_create: { allowNull: true, type: DataTypes.INTEGER },
-//         date_create: { allowNull: true, type: DataTypes.DATE },
-//         user_edit: { allowNull: true, type: DataTypes.INTEGER },
-//         date_edit: { allowNull: true, type: DataTypes.DATE },
-//         function_id: DataTypes.INTEGER
-//     },
-//     {
-//         tableName: 'user',
-//         timestamps: false
-//     }
-// )
+const UserDesarrollo = sequelizeCoopm_v1.define(
+    'User',
+    {
+        id: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            primaryKey: true
+        },
+        first_name: {
+            type: DataTypes.STRING
+        },
+        last_name: {
+            type: DataTypes.STRING
+        },
+        number_customer: {
+            type: DataTypes.STRING
+        },
+        email: {
+            type: DataTypes.STRING
+        },
+        password: {
+            type: DataTypes.STRING
+        },
+        document_type: {
+            type: DataTypes.INTEGER
+        },
+        document_number: {
+            type: DataTypes.STRING
+        },
+        sex: {
+            type: DataTypes.INTEGER
+        },
+        phone: {
+            type: DataTypes.STRING
+        },
+        id_state: {
+            type: DataTypes.INTEGER
+        },
+        id_cities: {
+            type: DataTypes.INTEGER
+        },
+        address: {
+            type: DataTypes.STRING
+        },
+        birthday: {
+            type: DataTypes.DATE
+        },
+        date_input: {
+            type: DataTypes.DATE
+        },
+        date_lvl_up_2: {
+            type: DataTypes.DATE
+        },
+        level: {
+            type: DataTypes.INTEGER
+        },
+        email_key: {
+            type: DataTypes.INTEGER
+        },
+        key_validate: {
+            type: DataTypes.INTEGER
+        },
+        key_email_password: {
+            type: DataTypes.INTEGER
+        },
+        img: {
+            type: DataTypes.STRING
+        },
+        popup: {
+            type: DataTypes.INTEGER
+        },
+        dark: {
+            type: DataTypes.INTEGER
+        },
+        date_level_three: {
+            type: DataTypes.DATE
+        },
+        check_lvl_3: {
+            type: DataTypes.INTEGER
+        },
+        check_prepaga: {
+            type: DataTypes.INTEGER
+        },
+        whatsapp: {
+            type: DataTypes.STRING
+        },
+        check_coopate: {
+            type: DataTypes.INTEGER
+        },
+        update_pass: {
+            type: DataTypes.INTEGER
+        },
+        date_update_pass: {
+            type: DataTypes.DATE
+        }
+    },
+    {
+        tableName: 'user_customer',
+        timestamps: false
+    }
+)
 
-// module.exports = UserDesarrollo
+module.exports = UserDesarrollo
