@@ -2,7 +2,6 @@ const express = require('express')
 const router = express.Router()
 const AuthService = require('../services/AuthService')
 const { migrationUser } = require('../controllers/User.controller')
-// const { migrator1Up } = require('../controllers/migrations.controller')
 
 router.post('/login', async (req, res) => {
     try {
@@ -15,7 +14,6 @@ router.post('/login', async (req, res) => {
     }
 })
 router.get('/users', migrationUser)
-// router.get('/pruebaMigration', migrator1Up)
 
 router.get('/testConect', async (req, res) => {
     try {
