@@ -9,17 +9,11 @@ module.exports = {
                 primaryKey: true,
                 type: Sequelize.INTEGER
             },
-            id_procoop: {
-                type: Sequelize.BIGINT
-            },
             COD_LOC: {
                 type: Sequelize.BIGINT
             },
             DES_LOC: {
                 type: Sequelize.STRING
-            },
-            COD_PCI: {
-                type: Sequelize.BIGINT
             },
             COD_POS: {
                 type: Sequelize.BIGINT
