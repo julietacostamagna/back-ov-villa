@@ -9,9 +9,6 @@ module.exports = {
                 primaryKey: true,
                 type: Sequelize.INTEGER
             },
-            id_procoop: {
-                type: Sequelize.BIGINT
-            },
             COD_PRO: {
                 type: Sequelize.BIGINT,
                 unique: true
@@ -19,7 +16,7 @@ module.exports = {
             DES_PRO: {
                 type: Sequelize.BIGINT
             },
-            cod_AFIP: {
+            COD_AFIP: {
                 type: Sequelize.BIGINT
             },
             createdAt: {
