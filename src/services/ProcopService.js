@@ -45,7 +45,6 @@ const empresaPorCuit = async (cuit) => {
 }
 
 module.exports = {
-    testConection,
     personaPorDni,
     empresaPorCuit
 }
