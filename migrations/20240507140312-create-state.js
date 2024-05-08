@@ -14,10 +14,10 @@ module.exports = {
                 unique: true
             },
             DES_PRO: {
-                type: Sequelize.BIGINT
+                type: Sequelize.STRING
             },
             COD_AFIP: {
-                type: Sequelize.BIGINT
+                type: Sequelize.STRING
             },
             createdAt: {
                 allowNull: false,

@@ -14,8 +14,8 @@ module.exports = (sequelize, DataTypes) => {
     State.init(
         {
             COD_PRO: DataTypes.BIGINT,
-            DES_PRO: DataTypes.BIGINT,
-            COD_AFIP: DataTypes.BIGINT
+            DES_PRO: DataTypes.STRING,
+            COD_AFIP: DataTypes.STRING
         },
         {
             sequelize,

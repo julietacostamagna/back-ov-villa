@@ -46,8 +46,24 @@ const ListCity = async () => {
         console.error('ERROR DE PROCOOP:', error)
     }
 }
+const ListState = async () => {
+    try {
+        const query = `SELECT * FROM PROVINC`
+        const result = await sequelize.query(query, {
+            type: sequelize.QueryTypes.SELECT
+        })
+        if (result.length === 0) {
+            // Retorno un objeto con un mensaje de error
+            return { error: 'No se encontró la persona' }
+        }
+        return result
+    } catch (error) {
+        console.error('ERROR DE PROCOOP:', error)
+    }
+}
 module.exports = {
     conexionProcoop,
     Persona_x_COD_SOC,
-    ListCity
+    ListCity,
+    ListState
 }

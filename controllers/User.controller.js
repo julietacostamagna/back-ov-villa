@@ -44,25 +44,7 @@ async function migrationUser(req, res) {
         res.json(error)
     }
 }
-async function migrationCityProcoop(req, res) {
-    try {
-        const Cities = await ListCity()
-        const citiesOfi = []
-        Cities.forEach((city) => {
-            citiesOfi.push({
-                COD_LOC: city.COD_LOC,
-                DES_LOC: city.DES_LOC,
-                COD_POS: city.COD_POS
-            })
-        })
-
-        return res.status(200).json(Cities)
-    } catch (error) {
-        res.json(error)
-    }
-}
 
 module.exports = {
-    migrationUser,
-    migrationCityProcoop
+    migrationUser
 }
