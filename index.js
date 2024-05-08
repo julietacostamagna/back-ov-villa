@@ -1,7 +1,7 @@
 const express = require('express')
 const app = express()
-const authRoutes = require('./src/routes/Auth.routes') // Importa tus rutas de autenticación
-const appConf = require('./src/config/app.conf')
+const authRoutes = require('./routes/Auth.routes') // Importa tus rutas de autenticación
+const appConf = require('./config/app.conf')
 // const appRoutes = require('./src/routes/Auth.routes')
 
 app.use(express.json()) // Para poder parsear JSON
