@@ -3,7 +3,7 @@ const router = express.Router()
 const { migrationUser } = require('../controllers/User.controller')
 // const { migrator1Up } = require('../controllers/migrations.controller')
 const { login, testConect } = require('../controllers/Auth.controller')
-
+const { verifyToken } = require('../middleware/Auth.middleware')
 
 
 // RUTAS PARA AUHT

@@ -1,6 +1,11 @@
-const passport = require('passport')
-const passportJWT = require('../config/auth.conf.js')
+const jwt = require('jsonwebtoken');
 
-passport.use(passportJWT)
-
-exports.requireAuth = passport.authenticate('jwt', { session: false })
+const verifyToken = (token, secret) => {
+    try {
+        const decoded = jwt.verify(token, secret);
+        return decoded;
+    } catch (err) {
+        console.log('El token es inválido:', err);
+        return null;
+    }
+}

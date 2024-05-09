@@ -4,12 +4,14 @@ const { sequelizeCoopm_v1 } = require('../database/MySQL.database')
 const UserDesarrollo = require('../models/userDesarrollo')
 const crypto = require('crypto');
 
-//Generacion de la firma del token
-const secret = crypto.randomBytes(32).toString('hex');
+//Funcion para Generacion de la firma del token
+const generateToken = () => {
+    return crypto.randomBytes(64).toString('hex');
+}
 
-console.log(secret);
-
+// Funcion para firmar el token
 const signToken = (user) => {
+    const secret = generateToken()
     return jwt.sign(
         {
             iss: 'oficina',
