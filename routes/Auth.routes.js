@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router()
 const AuthService = require('../services/AuthService')
 const { migrationUser, migrationCityProcoop } = require('../controllers/User.controller')
+const { testConectionOnc } = require('../controllers/TestConections.controller')
 
 router.post('/login', async (req, res) => {
     try {
@@ -22,5 +23,6 @@ router.get('/testConect', async (req, res) => {
         res.status(400).json({ error: error.message })
     }
 })
+router.get('/testConectOnc', testConectionOnc)
 
 module.exports = router
