@@ -9,18 +9,15 @@ module.exports = {
                 primaryKey: true,
                 type: Sequelize.INTEGER
             },
-            id_procoop: {
-                type: Sequelize.BIGINT
-            },
             COD_PRO: {
                 type: Sequelize.BIGINT,
                 unique: true
             },
             DES_PRO: {
-                type: Sequelize.BIGINT
+                type: Sequelize.STRING
             },
-            cod_AFIP: {
-                type: Sequelize.BIGINT
+            COD_AFIP: {
+                type: Sequelize.STRING
             },
             createdAt: {
                 allowNull: false,

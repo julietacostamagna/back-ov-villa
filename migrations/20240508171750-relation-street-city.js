@@ -3,19 +3,19 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
     async up(queryInterface, Sequelize) {
-        await queryInterface.addColumn('Person_Addresses', 'Personal_dataId', {
+        await queryInterface.addColumn('Street_Cities', 'StreetId', {
             type: Sequelize.INTEGER,
             references: {
-                model: 'Personal_data',
+                model: 'Streets',
                 key: 'id'
             },
             onUpdate: 'CASCADE',
             onDelete: 'CASCADE'
         })
-        await queryInterface.addColumn('Person_Addresses', 'AddressId', {
+        await queryInterface.addColumn('Street_Cities', 'CityId', {
             type: Sequelize.INTEGER,
             references: {
-                model: 'Addresses',
+                model: 'Cities',
                 key: 'id'
             },
             onUpdate: 'CASCADE',
@@ -24,7 +24,7 @@ module.exports = {
     },
 
     async down(queryInterface, Sequelize) {
-        await queryInterface.removeColumn('Person_Addresses', 'AddressId')
-        await queryInterface.removeColumn('Person_Addresses', 'Personal_dataId')
+        await queryInterface.removeColumn('Street_Cities', 'StreetId')
+        await queryInterface.removeColumn('Street_Cities', 'CityId')
     }
 }
