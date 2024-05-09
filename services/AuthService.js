@@ -1,9 +1,18 @@
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
+const { sequelizeCoopm_v1 } = require('../database/MySQL.database')
 const { sequelize, SequelizeOncativo } = require('../database/MSSQL.database')
 const UserDesarrollo = require('../models/userDesarrollo')
+const crypto = require('crypto')
 
+//Funcion para Generacion de la firma del token
+const generateToken = () => {
+    return crypto.randomBytes(64).toString('hex')
+}
+
+// Funcion para firmar el token
 const signToken = (user) => {
+    const secret = generateToken()
     return jwt.sign(
         {
             iss: 'oficina',
@@ -11,12 +20,13 @@ const signToken = (user) => {
             iat: new Date().getTime(),
             exp: new Date().setDate(new Date().getDate() + 1)
         },
-        'Cspmdesarrollo03'
+        secret
     )
 }
 
 exports.login = async (email, password) => {
-    const user = await UserDesarrollo.findOne({ where: email })
+    const user = await UserDesarrollo.findOne({ where: { email: email } })
+    console.log(user.dataValues)
     if (!user) {
         throw new Error('El usuario no existe')
     }
@@ -31,10 +41,9 @@ exports.login = async (email, password) => {
 
 const testConection = async () => {
     try {
-        await sequelize.authenticate()
-        console.log('CONEXIÓN EXITOSA')
+        await sequelizeCoopm_v1.authenticate()
     } catch (error) {
-        console.error('ERROR DE MIERDACOOP:', error)
+        console.error('ERROR DE DATABASE:', error)
     }
 }
 const testConectionOncativo = async () => {
