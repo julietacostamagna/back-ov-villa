@@ -13,8 +13,6 @@ router.post('/login', async (req, res) => {
         res.status(400).json({ error: error.message })
     }
 })
-router.get('/users', migrationUser)
-router.get('/localidad', migrationCityProcoop)
 
 router.get('/testConect', async (req, res) => {
     try {
