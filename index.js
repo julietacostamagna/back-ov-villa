@@ -1,16 +1,18 @@
 const express = require('express')
 const app = express()
-const authRoutes = require('./routes/Auth.routes') // Importa tus rutas de autenticación
-const appRoutes = require('./routes/App.routes') // Importa tus rutas de autenticación
 
-const appConf = require('./config/app.conf')
-// const appRoutes = require('./src/routes/Auth.routes')
+// Rutas
+const publicRoutes = require('./routes/Public.routes')
+// const privateRoutes = require('./routes/Private.routes')
 
-app.use(express.json()) // Para poder parsear JSON
-// Usa tus rutas de autenticación
-app.use(appConf)
-app.use(authRoutes)
-app.use(appRoutes)
+// Configuracion para los cors
+const corsConfig = require('./config/app.conf')
+app.use(corsConfig)
+
+// Configuracion para el body parser
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
+app.use(publicRoutes)
 
 app.listen(4000, () => {
     console.log('Server is running on port 4000')
