@@ -2,11 +2,11 @@ const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
 const { sequelizeCoopm_v1 } = require('../database/MySQL.database')
 const UserDesarrollo = require('../models/userDesarrollo')
-const crypto = require('crypto');
+const crypto = require('crypto')
 
 //Funcion para Generacion de la firma del token
 const generateToken = () => {
-    return crypto.randomBytes(64).toString('hex');
+    return crypto.randomBytes(64).toString('hex')
 }
 
 // Funcion para firmar el token
