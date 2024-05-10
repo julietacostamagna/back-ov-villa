@@ -2,15 +2,14 @@ const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
 const { sequelizeCoopm_v1 } = require('../database/MySQL.database')
 const { sequelize, SequelizeOncativo } = require('../database/MSSQL.database')
-const UserDesarrollo = require('../models/userDesarrollo')
-const User = require('../models/user')
+const db = require('../models')
 
 const secret = process.env.SECRET
 
 async function newQuery() {
     try {
-        const users = await User.findAll()
-        console.log(users)
+        const users = await db.User.findAll()
+        return users
     } catch (error) {
         console.error('ERROR DE DATABASE:', error)
     }
@@ -33,8 +32,8 @@ const signToken = (user) => {
     )
 }
 
-exports.login = async (email, password) => {
-    const user = await UserDesarrollo.findOne({ where: { email: email } })
+const login = async (email, password) => {
+    const user = await db.UserDesarrollo.findOne({ where: { email: email } })
     if (!user) {
         throw new Error('El usuario o la contraseña son incorrectas')
     }
