@@ -22,5 +22,13 @@
         "host": "192.168.0.160",
         "port": 9387,
         "dialect": "mssql"
+    },
+    "oncativo": {
+        "database": "PR_ONC_DEMO",
+        "username": "ENRIQUE",
+        "password": "procoop123",
+        "host": "192.168.0.239",
+        "port": 1433,
+        "dialect": "mssql"
     }
 }

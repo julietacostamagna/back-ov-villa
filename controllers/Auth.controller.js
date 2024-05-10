@@ -1,5 +1,5 @@
+const { db_coopm_v1 } = require('../models')
 const AuthService = require('../services/AuthService')
-
 const testConect = async (req, res) => {
     try {
         await AuthService.testConection()
@@ -28,5 +28,19 @@ const newQuery = async (req, res) => {
         res.status(401).json({ error: error.message })
     }
 }
-
-module.exports = { login, testConect, newQuery }
+const register = async (req, res) => {
+    try {
+        console.log(req.body)
+        db_coopm_v1.UserDesarrollo.findAll()
+            .then((item) => {
+                console.log(item)
+            })
+            .catch((error) => {
+                console.error(error)
+            })
+        // res.json({ msj: req.body })
+    } catch (error) {
+        res.status(400).json({ error: error.message })
+    }
+}
+module.exports = { login, testConect, register, newQuery }
