@@ -24,9 +24,8 @@ const signToken = (user) => {
     )
 }
 
-exports.login = async (email, password) => {
+const login = async (email, password) => {
     const user = await UserDesarrollo.findOne({ where: { email: email } })
-    console.log(user.dataValues)
     if (!user) {
         throw new Error('El usuario no existe')
     }
@@ -56,5 +55,6 @@ const testConectionOncativo = async () => {
 
 module.exports = {
     testConection,
-    testConectionOncativo
+    testConectionOncativo,
+    login
 }
