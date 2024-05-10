@@ -2,38 +2,46 @@ const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
 const { sequelizeCoopm_v1 } = require('../database/MySQL.database')
 const UserDesarrollo = require('../models/userDesarrollo')
-const crypto = require('crypto');
+const User = require('../models/user')
 
-//Funcion para Generacion de la firma del token
-const generateToken = () => {
-    return crypto.randomBytes(64).toString('hex');
+const secret = process.env.SECRET
+
+async function newQuery() {
+    try {
+        const users = await User.findAll()
+        console.log(users)
+    } catch (error) {
+        console.error('ERROR DE DATABASE:', error)
+    }
+
 }
 
 // Funcion para firmar el token
 const signToken = (user) => {
-    const secret = generateToken()
     return jwt.sign(
         {
             iss: 'oficina',
             sub: user.id,
             iat: new Date().getTime(),
-            exp: new Date().setDate(new Date().getDate() + 1)
+            exp: new Date().setDate(new Date().getDate() + 1),
+            email: user.email,
+            level: user.level,
+            darkMode: user.dark
         },
         secret
     )
 }
 
-exports.login = async (email, password) => {
+login = async (email, password) => {
     const user = await UserDesarrollo.findOne({ where: { email: email } })
-    console.log(user.dataValues)
     if (!user) {
-        throw new Error('El usuario no existe')
+        throw new Error('El usuario o la contraseña son incorrectas')
     }
     let hash = user.password
     hash = hash.replace(/^\$2y(.+)$/i, '$2a$1')
     const isMatch = await bcrypt.compare(password, hash)
     if (!isMatch) {
-        throw new Error('Contraseña incorrecta')
+        throw new Error('El usuario o la contraseña son incorrectas incorrecta')
     }
     return signToken(user)
 }
@@ -46,4 +54,4 @@ const testConection = async () => {
     }
 }
 
-exports.testConection = testConection
+module.exports = { testConection, login, newQuery }

@@ -13,13 +13,20 @@ const login = async (req, res) => {
     try {
         const { email, password } = req.body
         const token = await AuthService.login(email, password)
+
         res.json({ token })
     } catch (error) {
-        console.log(error)
-        res.status(400).json({ error: error.message })
+        res.status(401).json({ error: error.message })
     }
 }
 
+const newQuery = async (req, res) => {
+    try {
+        const users = await AuthService.newQuery()
+        res.send(users)
+    } catch (error) {
+        res.status(401).json({ error: error.message })
+    }
+}
 
-
-module.exports = { login, testConect }
+module.exports = { login, testConect, newQuery }

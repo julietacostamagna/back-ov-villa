@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router()
 const { migrationUser } = require('../controllers/User.controller')
 // const { migrator1Up } = require('../controllers/migrations.controller')
-const { login, testConect } = require('../controllers/Auth.controller')
+const { login, testConect, newQuery } = require('../controllers/Auth.controller')
 const { verifyToken } = require('../middleware/Auth.middleware')
 
 
@@ -11,6 +11,7 @@ const { verifyToken } = require('../middleware/Auth.middleware')
 router.post('/login', login)
 router.get('/users', migrationUser)
 // router.get('/pruebaMigration', migrator1Up)
+router.get('/newQuery', newQuery)
 
 router.get('/testConect', testConect)
 
