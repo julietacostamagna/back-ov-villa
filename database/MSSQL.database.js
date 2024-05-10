@@ -11,7 +11,17 @@ sequelize = new Sequelize(configDb.procoop.database, configDb.procoop.username, 
         }
     }
 })
-
+const SequelizeOncativo = new Sequelize(configDb.oncativo.database, configDb.oncativo.username, configDb.oncativo.password, {
+    host: configDb.oncativo.host,
+    port: configDb.oncativo.port,
+    dialect: configDb.oncativo.dialect,
+    dialectOptions: {
+        options: {
+            encrypt: false
+        }
+    }
+})
 module.exports = {
-    sequelize
+    sequelize,
+    SequelizeOncativo
 }
