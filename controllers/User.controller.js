@@ -2,6 +2,10 @@ const { ListCity } = require('../services/ProcoopService.js')
 const { Persona_x_COD_SOC } = require('../services/ProcoopService.js')
 const ScriptService = require('../services/ScriptService.js')
 
+
+const user = (req, res) => {
+}
+
 async function migrationUser(req, res) {
     try {
         const users = await ScriptService.listUser()

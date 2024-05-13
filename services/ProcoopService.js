@@ -43,6 +43,23 @@ const empresaPorCuit = async (cuit) => {
     }
 }
 
+const invoicesXsocio = async (id_procoop) => {
+    try {
+        const query = `SELECT * FROM facturas WHERE id_procoop = :id_procoop`
+        const result = await sequelize.query(query, {
+            replacements: { id_procoop: id_procoop },
+            type: sequelize.QueryTypes.SELECT
+        })
+        if (result.length === 0) {
+            return { error: 'No se encontraron facturas' }
+        }
+        return result
+    }
+    catch (error) {
+        console.error('ERROR DE PROCOOP:', error)
+    }
+}
+
 const Persona_x_COD_SOC = async (numberCustomer) => {
     try {
         const query = `SELECT * FROM socios  WHERE cod_soc = :numberCustomer`
@@ -101,6 +118,7 @@ module.exports = {
     personaPorDni,
     empresaPorCuit,
     conexionProcoop,
+    invoicesXsocio,
     Persona_x_COD_SOC,
     ListCity,
     ListState
