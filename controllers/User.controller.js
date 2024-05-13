@@ -1,6 +1,7 @@
 const { ListCity } = require('../services/ProcoopService.js')
 const { Persona_x_COD_SOC } = require('../services/ProcoopService.js')
 const ScriptService = require('../services/ScriptService.js')
+const { verifyEmailToken } = require('../services/UserService.js')
 
 
 const user = (req, res) => {
@@ -62,6 +63,19 @@ async function migrationUser(req, res) {
     }
 }
 
+async function tokenVerify(req, res) {
+    try {
+        const { token, id } = req.query
+        if (!token) throw new Error('Se debe pasar el token.')
+        const user = await verifyEmailToken(token, id)
+        if (!user) throw new Error('El usuario no existe o ya ha sido validado.')
+        res.status(200).json(true)
+    } catch (error) {
+        res.status(400).json({ message: error.message })
+    }
+}
+
 module.exports = {
-    migrationUser
+    migrationUser,
+    tokenVerify
 }

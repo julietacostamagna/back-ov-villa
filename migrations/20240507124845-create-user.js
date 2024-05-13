@@ -20,7 +20,6 @@ module.exports = {
             email: { type: Sequelize.STRING, email: true, unique: true, allowNull: false },
             email_verified: Sequelize.DATE,
             password: { type: Sequelize.STRING, is: /^(?=.*[A-Z]).{6,}$/ },
-            remember_token: { type: Sequelize.STRING, allowNull: true },
             token_temp: { type: Sequelize.STRING, allowNull: true },
             createdAt: {
                 allowNull: false,

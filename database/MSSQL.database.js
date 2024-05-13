@@ -11,10 +11,10 @@ sequelize = new Sequelize(configDb.procoop.database, configDb.procoop.username, 
         }
     }
 })
-const SequelizeOncativo = new Sequelize(configDb.oncativo.database, configDb.oncativo.username, configDb.oncativo.password, {
-    host: configDb.oncativo.host,
-    port: configDb.oncativo.port,
-    dialect: configDb.oncativo.dialect,
+const SequelizeOncativo = new Sequelize(configDb.procoopOncativo.database, configDb.procoopOncativo.username, configDb.procoopOncativo.password, {
+    host: configDb.procoopOncativo.host,
+    port: configDb.procoopOncativo.port,
+    dialect: configDb.procoopOncativo.dialect,
     dialectOptions: {
         options: {
             encrypt: false
