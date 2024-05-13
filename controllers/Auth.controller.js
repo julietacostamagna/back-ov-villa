@@ -1,6 +1,7 @@
-const { db, db_coopm_v1 } = require('../models')
 const AuthService = require('../services/AuthService')
-const bcrypt = require('bcrypt')
+const crypto = require('crypto')
+const { verifyEmail, sendRecoverPass } = require('../services/EmailServices')
+const { getUserxEmail, setTokenTemporal, verifyEmailToken, RegisterAcept } = require('../services/UserService')
 const testConect = async (req, res) => {
     try {
         await AuthService.testConection()
@@ -29,18 +30,46 @@ const newQuery = async (req, res) => {
         res.status(401).json({ error: error.message })
     }
 }
+
 const register = async (req, res) => {
     try {
-        const pass = await bcrypt.hash(req.body.password, 10)
-        console.log(pass)
-        // const data = { ...req.body, password: bcryt(req.body.password), name_register: req.body.name, lastName_register: req.body.last_name }
-        // const user = await db.User.create(data)
-        // const listuser = await db_coopm_v1.UserDesarrollo.findAll()
-        // const listuser = await db.State.findAll()
-        res.json(pass)
+        const fullUrl = req.protocol + '://' + req.get('host')
+        const user = await AuthService.registerUser(req.body, fullUrl)
+        res.json(user)
     } catch (error) {
-        console.log(error)
-        res.status(400).json({ error: error.message })
+        res.status(400).json({ message: error.message })
     }
 }
-module.exports = { login, testConect, register, newQuery }
+
+const verifyRegister = async (req, res) => {
+    try {
+        const { token_temp, id } = req.query
+        if (!token_temp || !id) throw new Error('No se enviaron los parametros necesarios')
+        const isValidToken = await verifyEmailToken(token_temp, id)
+        if (isValidToken.error) throw new Error('El enlace es invalido o ya fue utilizado')
+        await RegisterAcept(isValidToken)
+        res.status(200).json({ message: 'Se Verifico correctamente el usuario' })
+    } catch (error) {
+        res.status(400).json({ message: error.message })
+    }
+}
+
+const password_recover = async (req, res) => {
+    try {
+        const { email } = req.query
+        if (!email) throw new Error('No se enviaron los parametros necesarios')
+        const user = await getUserxEmail(email)
+        const tokenTemp = await crypto.randomBytes(64).toString('hex')
+        // Genero url pra click en email para redireccionar y que cambie la password
+        const fullUrl = `${req.protocol}://${req.get('host')}/ChangePassword/${tokenTemp}/${user.id}`
+        // Enviar correo electronico con el link para resetear la contraseña
+        await sendRecoverPass(user.name, user.email, fullUrl)
+        // Guardar en BD el token temporal y su fecha de expiracion
+        await setTokenTemporal(user.id, tokenTemp)
+        res.status(200).json({ message: `Se ha enviado un mensaje a tu cuenta de correo electrónico`, url: fullUrl })
+    } catch (error) {
+        res.status(400).json({ message: error.message })
+    }
+}
+
+module.exports = { login, testConect, register, newQuery, verifyRegister, password_recover }
