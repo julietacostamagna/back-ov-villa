@@ -14,10 +14,18 @@ const login = async (req, res) => {
     try {
         const { email, password } = req.body
         const token = await AuthService.login(email, password)
-
         res.json({ token })
     } catch (error) {
         res.status(401).json({ error: error.message })
+    }
+}
+
+const logout = async (req, res) => {
+    try {
+        res.clearCookie('token')
+        res.json({ message: 'Sesión cerrada' })
+    } catch (error) {
+        res.status(400).json({ error: error.message })
     }
 }
 
@@ -43,4 +51,4 @@ const register = async (req, res) => {
         res.status(400).json({ error: error.message })
     }
 }
-module.exports = { login, testConect, register, newQuery }
+module.exports = { login, testConect, register, newQuery, logout }
