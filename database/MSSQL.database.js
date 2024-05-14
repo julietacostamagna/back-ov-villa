@@ -5,17 +5,16 @@ sequelize = new Sequelize(configDb.procoop.database, configDb.procoop.username, 
   host: configDb.procoop.host,
   port: configDb.procoop.port,
   dialect: configDb.procoop.dialect,
-  timezone: "America/Argentina/Buenos_Aires",
   dialectOptions: {
     options: {
       encrypt: false,
     },
   },
 });
-const SequelizeOncativo = new Sequelize(configDb.oncativo.database, configDb.oncativo.username, configDb.oncativo.password, {
-  host: configDb.oncativo.host,
-  port: configDb.oncativo.port,
-  dialect: configDb.oncativo.dialect,
+const SequelizeOncativo = new Sequelize(configDb.procoopOncativo.database, configDb.procoopOncativo.username, configDb.procoopOncativo.password, {
+  host: configDb.procoopOncativo.host,
+  port: configDb.procoopOncativo.port,
+  dialect: configDb.procoopOncativo.dialect,
   dialectOptions: {
     options: {
       encrypt: false,

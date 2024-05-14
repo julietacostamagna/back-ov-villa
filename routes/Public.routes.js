@@ -1,17 +1,23 @@
 const express = require("express");
 const router = express.Router();
-const { migrationUser } = require("../controllers/User.controller");
+const { migrationUser, tokenVerify } = require("../controllers/User.controller");
 // const { migrator1Up } = require('../controllers/migrations.controller')
-const { login, testConect, register, newQuery } = require("../controllers/Auth.controller");
+const { login, testConect, register, newQuery, verifyRegister, password_recover } = require("../controllers/Auth.controller");
 const { verifyToken } = require("../middleware/Auth.middleware");
+const { sendEmail } = require("../services/EmailServices");
 const { customerServices, customerConsumption } = require("../controllers/Procoop.controller");
 const { getInvoice } = require("../controllers/Payment.controller");
 
-// RUTAS PARA AUHT
+// RUTAS PARA AUTH
 
 router.post("/login", login);
 router.post("/register", register);
+router.post("/verifyRegister", verifyRegister);
+router.post("/password_recover", password_recover);
+router.post("/existToken", tokenVerify);
+
 router.get("/users", migrationUser);
+router.get("/email", sendEmail);
 
 //RUTAS DE CONSULTAS A PROCOOP
 router.get("/getService", customerServices);
@@ -19,9 +25,7 @@ router.get("/getConsumo", customerConsumption);
 
 //RUTAS DE PAGOS
 router.get("/facturas", getInvoice);
-
 // router.get('/pruebaMigration', migrator1Up)
-router.get("/newQuery", newQuery);
 
 router.get("/testConect", testConect);
 
