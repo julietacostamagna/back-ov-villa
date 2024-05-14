@@ -170,6 +170,23 @@ const debtsCustomer = async (number, all = false) => {
   }
 };
 
+const phoneCustomer = async (account) => {
+  try {
+    const query = `SELECT ID_SERSOC, COD_SUM, COD_SER, COD_CAT, [NUM_MED/NUMTEL]
+                  FROM Datos_ServiciosXSuministro WHERE COD_SUM = :account AND cod_ser = 10 AND fec_baja IS NULL`;
+    const result = await sequelize.query(query, {
+      replacements: { account: account },
+      type: sequelize.QueryTypes.SELECT,
+    });
+    if (result.length === 0) {
+      return { error: "No se encontró la persona" };
+    }
+    return result;
+  } catch (error) {
+    console.error("ERROR DE PROCOOP:", error);
+  }
+};
+
 module.exports = {
   personaPorDni,
   empresaPorCuit,
@@ -180,4 +197,5 @@ module.exports = {
   serviceCustomer,
   consumoCustomer,
   debtsCustomer,
+  phoneCustomer,
 };
