@@ -114,17 +114,20 @@ const ListState = async () => {
   }
 };
 
-const serviceCustomer = async (number) => {
+const serviceCustomer = async (data) => {
   try {
+    if (data.type !== "COD_SOC" && data.type !== "cod_sum") {
+      return { error: "No se encontró la persona" };
+    }
     const query = `SELECT s.DES_SER, dss.ID_SERSOC,dss.COD_SER,s.DES_SER,dss.COD_CAT,dss.COD_CATSER,dss.NOMBRE_CATEGORIA,ds.COD_SUM,ds.COD_SOC, ds.DESCRI_SITIVA,
                     ds.NOMBRECALLE AS CALLECUENTA,ds.NUMERO AS ALTURACALLECUENTA,ds.PISO AS PISOCUENTA,ds.DPTO AS DPTOCUENTA,dss.NOMBRECALLE AS CALLESERVICIO,
                     dss.NUMERO AS ALTURACALLESERVICIO,dss.PISO AS PISOSERVICIO,dss.DPTO AS DPTOSERVICIO,dss.FEC_ALTA,dss.FEC_BAJA,dss.ALTA_ADM,dss.BAJA_ADM,dss.[NUM_MED/NUMTEL]
                     FROM Datos_Suministro ds
                     INNER JOIN Datos_ServiciosXSuministro dss ON dss.cod_sum = ds.cod_sum
                     INNER JOIN Servicio s ON s.cod_ser = dss.cod_ser
-                    WHERE ds.COD_SOC = :number ORDER BY ds.cod_sum`;
+                    WHERE ds.${data.type} = :number ORDER BY ds.cod_sum`;
     const result = await sequelize.query(query, {
-      replacements: { number: number },
+      replacements: { number: data.number },
       type: sequelize.QueryTypes.SELECT,
     });
     if (result.length === 0) {

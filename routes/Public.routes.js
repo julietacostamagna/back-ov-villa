@@ -5,8 +5,8 @@ const { migrationUser, tokenVerify } = require("../controllers/User.controller")
 const { login, testConect, register, newQuery, verifyRegister, password_recover } = require("../controllers/Auth.controller");
 const { verifyToken } = require("../middleware/Auth.middleware");
 const { sendEmail } = require("../services/EmailServices");
-const { customerServices, customerConsumption } = require("../controllers/Procoop.controller");
-const { getInvoice } = require("../controllers/Payment.controller");
+const { customerServices, customerConsumption, customerServicesDetail } = require("../controllers/Services.controller");
+const { getInvoice, existInvoice } = require("../controllers/Payment.controller");
 
 // RUTAS PARA AUTH
 
@@ -22,9 +22,11 @@ router.get("/email", sendEmail);
 //RUTAS DE CONSULTAS A PROCOOP
 router.get("/getService", customerServices);
 router.get("/getConsumo", customerConsumption);
+router.get("/getDetailService", customerServicesDetail);
 
 //RUTAS DE PAGOS
 router.get("/facturas", getInvoice);
+router.get("/existinvoice", existInvoice);
 // router.get('/pruebaMigration', migrator1Up)
 
 router.get("/testConect", testConect);

@@ -1,3 +1,4 @@
+const axios = require("axios");
 const { db } = require("../models/index.js");
 const { debtsCustomer, phoneCustomer } = require("../services/ProcoopService.js");
 const codes = require("../utils/Procoop/serviceCode.json");
@@ -70,6 +71,20 @@ async function getInvoice(req, res) {
   }
 }
 
+async function existInvoice(req, res) {
+  try {
+    const { url } = req.query;
+    const timeout = 5000;
+    const response = await axios.head(url, { timeout });
+    const status = { status: response.status >= 200 && response.status < 300 ? "existe" : "falla" };
+    const code = status.status === "existe" ? 200 : 404;
+    return res.status(code).json(status);
+  } catch (error) {
+    return res.status(404).json({ status: "falla" });
+  }
+}
+
 module.exports = {
   getInvoice,
+  existInvoice,
 };
