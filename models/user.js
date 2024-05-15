@@ -31,7 +31,8 @@ module.exports = (sequelize, DataTypes) => {
                     }
                 }
             },
-            token_temp: DataTypes.STRING
+            token_temp: DataTypes.STRING,
+            typePerson: DataTypes.INTEGER
         },
         {
             sequelize,
