@@ -51,7 +51,7 @@ const register = async (req, res) => {
     if (!reg.test(password)) throw new Error("La contraseña no tiene formato correcto");
     const tokenTemp = await crypto.randomBytes(64).toString("hex");
     const data = { email, typePerson, password: pass, name_register: name, token_temp: tokenTemp };
-    if (typePerson != 1) {
+    if (parseInt(typePerson) === 1) {
       data.lastName_register = last_name;
     }
     const user = await AuthService.registerUser(data, fullUrl);
