@@ -23,6 +23,7 @@ const personaPorDni = async (dni) => {
     }
     catch (error) {
         console.error('ERROR DE PROCOOP:', error)
+        throw error.message
     }
 }
 
@@ -84,6 +85,8 @@ const Persona_x_COD_SOC = async (numberCustomer) => {
         console.error('ERROR DE PROCOOP:', error)
     }
 }
+
+
 const ListCity = async () => {
     try {
         const query = `SELECT * FROM localida`

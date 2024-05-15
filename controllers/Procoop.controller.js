@@ -1,6 +1,27 @@
 const City = require('../models/city.js')
 const State = require('../models/state.js')
-const { ListCity, ListState } = require('../services/ProcoopService.js')
+const { ListCity, ListState, empresaPorCuit, personaPorDni } = require('../services/ProcoopService.js')
+
+async function searchByDNI(req, res) {
+    const { dni } = req.body
+    try {
+        const result = await personaPorDni(dni)
+        return res.status(200).json(result)
+    } catch (error) {
+        return res.status(400).json({ error, msj: error.messagge })
+    }
+}
+
+async function searchByCuit(req, res) {
+    const { cuit } = req.body
+    try {
+        const result = await empresaPorCuit(cuit)
+        return res.status(200).json(result)
+    } catch (error) {
+        console.log(error)
+        return res.json({ error, msj: 'error' })
+    }
+}
 
 async function migrationCity(req, res) {
     try {
@@ -36,6 +57,8 @@ async function migrationState(req, res) {
 }
 
 module.exports = {
+    searchByCuit,
+    searchByDNI,
     migrationCity,
     migrationState
 }
