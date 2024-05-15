@@ -205,6 +205,30 @@ const phoneCustomer = async (account) => {
     console.error("ERROR DE PROCOOP:", error);
   }
 };
+const adheridosSS = async (data) => {
+  try {
+    const query = `SELECT ad.cod_ser, s.des_ser, ad.cod_sum, ad.cod_soc, ad.fec_alt,
+                  ad.fec_baj, d.des_doc, pe.num_dni, ad.cod_per, pe.apellidos, pe.fec_nac, pe.cod_cal, 
+                  ca.des_cal, pe.numero, pe.piso, pe.dpto, pe.gru_sgr, pe.fac_sgr, vi.des_vin
+                  FROM adhsoc ad
+                  LEFT JOIN	personas pe ON ad.cod_per = pe.cod_per 
+                  LEFT JOIN	vinculos vi ON ad.cod_vin = vi.cod_vin 
+                  LEFT JOIN	calles ca ON pe.cod_cal = ca.cod_cal 
+                  LEFT JOIN	document d ON pe.tip_dni = d.cod_doc 
+                  LEFT JOIN	servicio s ON ad.cod_ser = s.cod_ser
+                  WHERE	ad.cod_sum = :account AND ad.cod_ser IN (:ser1, :ser2) AND fec_baj IS NULL`;
+    const result = await sequelize.query(query, {
+      replacements: { account: data.account, ser1: data.ser[0], ser2: data.ser[1] },
+      type: sequelize.QueryTypes.SELECT,
+    });
+    if (result.length === 0) {
+      return { error: "No se encontró la persona" };
+    }
+    return result;
+  } catch (error) {
+    console.error("ERROR DE PROCOOP:", error);
+  }
+};
 
 module.exports = {
   personaPorDni,
@@ -218,4 +242,5 @@ module.exports = {
   consumoCustomer,
   debtsCustomer,
   phoneCustomer,
+  adheridosSS,
 };

@@ -1,4 +1,4 @@
-const { serviceCustomer, consumoCustomer, Persona_x_COD_SOC } = require("../services/ProcoopService.js");
+const { serviceCustomer, consumoCustomer, Persona_x_COD_SOC, adheridosSS } = require("../services/ProcoopService.js");
 const codes = require("../utils/Procoop/serviceCode.json");
 
 async function customerServices(req, res) {
@@ -87,28 +87,28 @@ async function customerServicesDetail(req, res) {
     let result;
     switch (serviceCode[service]) {
       case "ELECTRICIDAD":
-        result = await getDataServiceGral(cod_sum);
+        result = await DetailServiceGraf(req.query);
         break;
       case "TV":
-        result = await getDataServiceGral(cod_sum);
+        result = await getDataServiceGral(req.query);
         break;
       case "SENSA":
-        result = await getDataServiceGral(cod_sum);
+        result = await getDataServiceGral(req.query);
         break;
       case "TELEFONO":
-        result = await getDataServiceGral(cod_sum);
+        result = await getDataServiceGral(req.query);
         break;
       case "INTERNET":
-        result = await getDataServiceGral(cod_sum);
+        result = await getDataServiceGral(req.query);
         break;
       case "SEPELIO":
-        result = await getDataServiceGral(cod_sum);
+        result = await getDataServiceSocial(req.query);
         break;
       case "BANCO DE SANGRE":
-        result = await getDataServiceGral(cod_sum);
+        result = await getDataServiceSocial(req.query);
         break;
       case "AGUA":
-        result = await getDataServiceGral(cod_sum);
+        result = await DetailServiceGraf(req.query);
         break;
       default:
         return res.status(500).json({ error: "Servicio inválido" });
@@ -119,11 +119,73 @@ async function customerServicesDetail(req, res) {
   }
 }
 
-async function getDataServiceGral(number) {
-  const dataSoc = { type: "cod_sum", number };
+async function getDataServiceGral(req) {
+  const dataSoc = { type: "cod_sum", number: req.cod_sum };
   const services = await serviceCustomer(dataSoc);
-  const customer = await Persona_x_COD_SOC(services[0].COD_SOC)[0];
-  return customer;
+  const customer = await Persona_x_COD_SOC(services[0].COD_SOC);
+  const serviceCodes = codes.SV;
+  let dataService = [];
+  const typeServicerequest = serviceCodes[req.service] || null;
+  for (let i in services) {
+    let typeService = serviceCodes[services[i].COD_SER] || null;
+    if (!typeService) {
+      continue;
+    }
+    if (services[i].cod_ser == req.service || typeService == typeServicerequest) {
+      dataService.push({
+        account: services[i].COD_SUM,
+        service: typeService,
+        address: `${services[i].CALLECUENTA} ${parseInt(services[i].ALTURACALLECUENTA)}`,
+        nameCustomer: customer[0].APELLIDOS,
+        titleService: services[i].DES_SER,
+        category: services[i].NOMBRE_CATEGORIA,
+        detail: services[i]["NUM_MED/NUMTEL"] ? (typeService === "TELEFONO" ? "TEL " : "MEDIDOR Nº ") + services[i]["NUM_MED/NUMTEL"] : "",
+        status: !services[i].ALTA_ADM ? 2 : !services[i].BAJA_ADM ? 1 : 0,
+      });
+    }
+  }
+  return dataService;
+}
+
+async function DetailServiceGraf(req) {
+  const dataServ = await getDataServiceGral(req);
+  const dataSearch = { ser: req.service, account: req.cod_sum };
+  const consumpts = await consumoCustomer(dataSearch);
+  let dataGraf = { data: [], label: [] };
+  for (let j in consumpts) {
+    dataGraf.data.push(parseFloat(consumpts[j].consumo));
+    dataGraf.label.push(consumpts[j].periodo);
+  }
+  const difConsumo = parseFloat(consumpts[0].consumo) - parseFloat(consumpts[consumpts.length - 1].consumo);
+  const DataServiceElectric = {
+    generalData: dataServ,
+    difCosumo: difConsumo,
+    graficData: dataGraf,
+  };
+  return DataServiceElectric;
+}
+
+async function getDataServiceSocial(req) {
+  const dataServ = await getDataServiceGral(req);
+  const serviceCodes = codes.SV;
+  const service = serviceCodes[req.service] == "SEPELIO" ? [4, 90] : [3, 89];
+  const dataSearch = { ser: service, account: req.cod_sum };
+  const IncreasedService = await adheridosSS(dataSearch);
+  let dataAdherido = [];
+  for (let data of IncreasedService) {
+    dataAdherido.push({
+      name: data.apellidos || "",
+      category: data.des_vin || "",
+      dni: data.num_dni || "",
+      groupBlood: data.gru_sgr || "",
+      burn: data.fec_nac || "",
+    });
+  }
+  const datosSS = {
+    generalData: dataServ,
+    adheridos: dataAdherido,
+  };
+  return datosSS;
 }
 
 module.exports = {

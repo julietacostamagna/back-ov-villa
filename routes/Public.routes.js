@@ -19,7 +19,7 @@ router.post("/existToken", tokenVerify);
 router.get("/users", migrationUser);
 router.get("/email", sendEmail);
 
-//RUTAS DE CONSULTAS A PROCOOP
+//RUTAS DE SERVICIOS
 router.get("/getService", customerServices);
 router.get("/getConsumo", customerConsumption);
 router.get("/getDetailService", customerServicesDetail);
