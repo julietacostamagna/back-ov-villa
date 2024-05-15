@@ -36,4 +36,20 @@ const RegisterAcept = async (user) => {
         return { error: error.message }
     }
 }
-module.exports = { getUserxEmail, setTokenTemporal, RegisterAcept, verifyEmailToken }
+const getUser = async (id) => {
+    try {
+        const data = await db.User.findByPk(id)
+        return data.get()
+    } catch (error) {
+        return { error: error.message }
+    }
+}
+const getLevel = async (id) => {
+    try {
+        const data = await db.User_procoopMember.findOne({ where: { id_user: id } })
+        return data
+    } catch (error) {
+        return { error: error.message }
+    }
+}
+module.exports = { getUserxEmail, setTokenTemporal, RegisterAcept, verifyEmailToken, getUser, getLevel }

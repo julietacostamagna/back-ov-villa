@@ -10,7 +10,7 @@ const { sendEmail } = require('../services/EmailServices')
 
 router.post('/login', login)
 router.post('/register', register)
-router.post('/verifyRegister', verifyRegister)
+router.post('/validationUser', verifyRegister)
 router.post('/password_recover', password_recover)
 router.post('/existToken', tokenVerify)
 

@@ -2,8 +2,8 @@ var axios = require('axios')
 const { Register, PasswordRecovery } = require('../utils/email/registerEmail')
 const { db } = require('../models')
 async function sendEmail(data, url) {
-    const html = Register({ name: `${data.name} ${data.last_name}`, link: url })
-    console.log({ name: `${data.name} ${data.last_name}`, link: url })
+    const html = Register({ name: `${data.name_register} ${data.lastName_register}`, link: url })
+    console.log({ name: `${data.name_register} ${data.lastName_register}`, link: url })
     return html
     // axios
     //     .post(
