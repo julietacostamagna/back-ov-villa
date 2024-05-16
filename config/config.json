@@ -13,7 +13,8 @@
         "password": "m+?PvY:zUogF01Q^XH3i9",
         "host": "localhost",
         "port": 3306,
-        "dialect": "mysql"
+        "dialect": "mysql",
+        "timezone": "America/Argentina/Buenos_Aires"
     },
     "procoop": {
         "database": "PR_MT_NUEVA_DEMO",
@@ -23,7 +24,7 @@
         "port": 9387,
         "dialect": "mssql"
     },
-    "oncativo": {
+    "procoopOncativo": {
         "database": "PR_ONC_DEMO",
         "username": "ENRIQUE",
         "password": "procoop123",

@@ -3,6 +3,8 @@ const bcrypt = require('bcrypt')
 const { sequelizeCoopm_v1 } = require('../database/MySQL.database')
 const { sequelize, SequelizeOncativo } = require('../database/MSSQL.database')
 const { db, db_coopm_v1 } = require('../models')
+const { Sequelize } = require('sequelize')
+const { sendEmail } = require('./EmailServices')
 
 const secret = process.env.SECRET
 
@@ -16,23 +18,26 @@ async function newQuery() {
 }
 
 // Funcion para firmar el token
-const signToken = (user) => {
-    return jwt.sign(
-        {
-            iss: 'oficina',
-            sub: user.id,
-            iat: new Date().getTime(),
-            // exp: new Date().setDate(new Date().getDate() + 1),
-            email: user.email,
-            level: user.level,
-            darkMode: user.dark
-        },
-        secret
-    )
+const signToken = (user, remember) => {
+    // Seteo de fecha con 2 años mas para expiracion
+    const dateYear = new Date().setFullYear(new Date().getFullYear() + 2)
+    // Seteo de fecha con 8horas mas para expiracion
+    const dateHour = new Date().setHours(new Date().getHours() + 8)
+    const configSing = {
+        iss: 'oficina',
+        sub: user.id,
+        iat: new Date().getTime(),
+        exp: new Date(remember ? dateYear : dateHour).getTime(),
+        email: user.email,
+        level: user.level,
+        darkMode: user.dark
+    }
+    return jwt.sign(configSing, secret)
 }
 
-const login = async (email, password) => {
-    const user = await db_coopm_v1.UserDesarrollo.findOne({ where: { email: email } })
+const login = async (email, password, remember) => {
+    // const user = await db_coopm_v1.UserDesarrollo.findOne({ where: { email: email } })
+    const user = await db.User.findOne({ where: { email: email } })
     if (!user) {
         throw new Error('El usuario o la contraseña son incorrectas')
     }
@@ -42,7 +47,7 @@ const login = async (email, password) => {
     if (!isMatch) {
         throw new Error('El usuario o la contraseña son incorrectas')
     }
-    return signToken(user)
+    return signToken(user, remember)
 }
 
 const testConection = async () => {
@@ -52,15 +57,32 @@ const testConection = async () => {
         console.error('ERROR DE DATABASE:', error)
     }
 }
+const registerUser = async (data, url) => {
+    try {
+        const user = await db.User.create(data)
+        const urlAthentificate = `${url}/login/${data.token_temp}/${user.id}`
+        await sendEmail(data, urlAthentificate)
+        return data
+    } catch (error) {
+        if (error instanceof Sequelize.ValidationError) {
+            let listErrors = []
+            error.errors.forEach((e) => {
+                listErrors.push(e.message)
+            })
+            throw new Error(listErrors)
+        } else {
+            throw error
+        }
+    }
+}
 
 const logout = async (req, res) => {
     try {
         const id = req.cookies.token.sub
         const user = await db_coopm_v1.UserDesarrollo.findOne({ where: { id: id } })
-
     } catch (error) {
         res.status(400).json({ error: error.message })
     }
 }
 
-module.exports = { testConection, login, newQuery, logout }
+module.exports = { testConection, login, newQuery, registerUser, logout }

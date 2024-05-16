@@ -15,11 +15,24 @@ module.exports = (sequelize, DataTypes) => {
         {
             name_register: DataTypes.STRING,
             lastName_register: DataTypes.STRING,
-            email: DataTypes.STRING,
+            email: {
+                type: DataTypes.STRING,
+                allowNull: false,
+                unique: { args: true, msg: 'El email ya existe' },
+                validate: { isEmail: true }
+            },
             email_verified: DataTypes.DATE,
-            password: DataTypes.STRING,
-            remember_token: DataTypes.STRING,
-            token_temp: DataTypes.STRING
+            password: {
+                type: DataTypes.STRING,
+                validate: {
+                    is: {
+                        args: /^(?=.*[A-Z])(?=.*[!@#$%^&*]).{6,}$/,
+                        msg: 'La contraseña no tiene formato correcto'
+                    }
+                }
+            },
+            token_temp: DataTypes.STRING,
+            typePerson: DataTypes.INTEGER
         },
         {
             sequelize,

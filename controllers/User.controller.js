@@ -1,10 +1,9 @@
 const { ListCity } = require('../services/ProcoopService.js')
 const { Persona_x_COD_SOC } = require('../services/ProcoopService.js')
 const ScriptService = require('../services/ScriptService.js')
+const { verifyEmailToken, getUser, getLevel } = require('../services/UserService.js')
 
-
-const user = (req, res) => {
-}
+const user = (req, res) => {}
 
 async function migrationUser(req, res) {
     try {
@@ -62,6 +61,51 @@ async function migrationUser(req, res) {
     }
 }
 
+async function tokenVerify(req, res) {
+    try {
+        const { token, id } = req.query
+        if (!token) throw new Error('Se debe pasar el token.')
+        const user = await verifyEmailToken(token, id)
+        if (!user) throw new Error('El usuario no existe o ya ha sido validado.')
+        res.status(200).json(true)
+    } catch (error) {
+        res.status(400).json({ message: error.message })
+    }
+}
+async function dataUser(req, res) {
+    try {
+        const { id } = req.body
+        if (!id) throw new Error('Se debe pasar el id del usuario.')
+        const user = await getUser(id)
+        if (!user) throw new Error('El usuario no existe o ya ha sido validado.')
+        const dataProcoop = await getLevel(user.id)
+        let level = 1
+        if (dataProcoop) {
+            level = dataProcoop.filter((item) => {
+                if (item.primary_account === true) {
+                    return item.level
+                }
+            })
+        }
+        user.level = level
+        res.status(200).json(user)
+    } catch (error) {
+        console.log({ message: error.message })
+        res.status(400).json({ message: error.message })
+    }
+}
+async function allfacturas(req, res) {
+    try {
+        res.status(200).json({ user: 'hola' })
+    } catch (error) {
+        console.log({ message: error.message })
+        res.status(400).json({ message: error.message })
+    }
+}
+
 module.exports = {
-    migrationUser
+    migrationUser,
+    tokenVerify,
+    dataUser,
+    allfacturas
 }

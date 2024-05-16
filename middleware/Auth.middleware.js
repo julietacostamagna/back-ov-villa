@@ -1,16 +1,19 @@
-const jwt = require('jsonwebtoken');
-
-const verifyToken = (req, res) => {
+const jwt = require('jsonwebtoken')
+const secret = process.env.SECRET
+const verifyToken = (req, res, next) => {
     try {
-        const cookie = req.cookies;
-        // Verifico 
-        if(!cookie.token) {
-            throw new Error('No se ha enviado el token');
+        const token = req.cookies.token
+        // Verifico
+        if (!token) {
+            throw new Error('No se ha enviado el token')
         }
-        return
+        const decoded = jwt.verify(token, secret)
+        if (!new Date(decoded.exp) > new Date()) {
+            throw new Error('El token ha expirado')
+        }
+        next()
     } catch (err) {
-        console.log('El token es inválido:', err);
-        return null;
+        res.status(400).json({ message: err.message })
     }
 }
 
