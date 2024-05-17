@@ -1,7 +1,6 @@
-const { ListCity } = require('../services/ProcoopService.js')
 const { Persona_x_COD_SOC } = require('../services/ProcoopService.js')
 const ScriptService = require('../services/ScriptService.js')
-const { verifyEmailToken, getUser, getLevel } = require('../services/UserService.js')
+const { verifyEmailToken, getUser, getLevel, updateLvl2 } = require('../services/UserService.js')
 
 const user = (req, res) => {}
 
@@ -102,10 +101,23 @@ async function allfacturas(req, res) {
         res.status(400).json({ message: error.message })
     }
 }
+async function upgradeUser(req, res) {
+    try {
+        const user = await getUser(req.user.id)
+        if (!user) throw new Error('El usuario no existe o ya ha sido validado.')
+        const response = await updateLvl2(user, req.body)
+        // if (!response) throw new Error('El usuario no se pudo actualizar.')
+        res.status(200).json(response)
+    } catch (error) {
+        console.log({ message: error.message })
+        res.status(400).json({ message: error.message })
+    }
+}
 
 module.exports = {
     migrationUser,
     tokenVerify,
     dataUser,
+    upgradeUser,
     allfacturas
 }

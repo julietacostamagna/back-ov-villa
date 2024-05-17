@@ -5,6 +5,7 @@ const { sequelize, SequelizeOncativo } = require('../database/MSSQL.database')
 const { db, db_coopm_v1 } = require('../models')
 const { Sequelize } = require('sequelize')
 const { sendEmail } = require('./EmailServices')
+const { getLevel } = require('./UserService')
 
 const secret = process.env.SECRET
 
@@ -28,8 +29,9 @@ const signToken = (user, remember) => {
         sub: user.id,
         iat: new Date().getTime(),
         exp: new Date(remember ? dateYear : dateHour).getTime(),
-        email: user.email,
+        NameUser: user.name_register,
         level: user.level,
+        TypeUser: user.typePerson,
         darkMode: user.dark
     }
     return jwt.sign(configSing, secret)
@@ -47,6 +49,16 @@ const login = async (email, password, remember) => {
     if (!isMatch) {
         throw new Error('El usuario o la contraseña son incorrectas')
     }
+    const dataProcoop = await getLevel(user.id)
+    let level = 1
+    if (dataProcoop) {
+        level = dataProcoop.filter((item) => {
+            if (item.primary_account === true) {
+                return item.level
+            }
+        })
+    }
+    user.level = level
     return signToken(user, remember)
 }
 
