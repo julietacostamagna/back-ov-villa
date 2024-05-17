@@ -82,7 +82,7 @@ const Persona_x_COD_SOC = async (numberCustomer) => {
     }
 }
 
-const ListCity = async () => {
+const ListCityProcoop = async () => {
     try {
         const query = `SELECT * FROM localida`
         const result = await sequelize.query(query, {
@@ -98,7 +98,7 @@ const ListCity = async () => {
     }
 }
 
-const ListState = async () => {
+const ListStateProcoop = async () => {
     try {
         const query = `SELECT * FROM PROVINC`
         const result = await sequelize.query(query, {
@@ -236,8 +236,8 @@ module.exports = {
     conexionProcoop,
     invoicesXsocio,
     Persona_x_COD_SOC,
-    ListCity,
-    ListState,
+    ListCityProcoop,
+    ListStateProcoop,
     serviceCustomer,
     consumoCustomer,
     debtsCustomer,
