@@ -66,11 +66,11 @@ const updateLvl2 = async (user, dataUpdate) => {
                     last_name: user.lastName_register,
                     type_dni: dataUpdate.document_type,
                     num_dni: dataUpdate.document_number,
-                    burn_date: new Date(`${dataUpdate.birthdate} `), // Se agrega espacio para que guarde el dia con el -3 horas sino le resta las 3 horas y pone un dia antes
+                    born_date: new Date(`${dataUpdate.birthdate} `), // Se agrega espacio para que guarde el dia con el -3 horas sino le resta las 3 horas y pone un dia antes
                     validation_renaper: dataUpdate.validation_renaper || null,
                     fixed_phone: dataUpdate.fixed_phone || null,
                     cell_phone: `+549${dataUpdate.phoneCaract}${dataUpdate.numberPhone}`,
-                    SexId: dataUpdate.sex
+                    SexId: dataUpdate.sex,
                 }
                 // const person = await db.Person_physical.create( dataUser, { transaction: t })
                 // const userDetail = await db.User_Detail.create({ id_user: user.id, id_person_physical: person.id }, { transaction: t })
@@ -90,7 +90,7 @@ const updateLvl2 = async (user, dataUpdate) => {
                 last_name: dataProcoop[0].APELLIDOS,
                 type_dni: dataProcoop[0].TIP_DNI,
                 num_dni: dataProcoop[0].NUM_DNI,
-                burn_date: new Date(`${dataProcoop[0].FEC_NAC} `)
+                born_date: new Date(`${dataProcoop[0].FEC_NAC} `),
             }
 
             const ProcoopMember = { id: 1 }
@@ -100,7 +100,7 @@ const updateLvl2 = async (user, dataUpdate) => {
                 id_procoop_member: ProcoopMember.id,
                 level: 2,
                 primary_account: true,
-                status: true
+                status: true,
             }
             // const userProcoopMember = await db.User_Detail.create(dataUserProcoop, { transaction: t })
             const address = {
@@ -114,7 +114,7 @@ const updateLvl2 = async (user, dataUpdate) => {
                 owner_num_dni: dataUser.num_dni || null,
                 StreetId: dataUpdate.address,
                 CityId: dataUpdate.id_cities,
-                StateId: dataUpdate.id_state
+                StateId: dataUpdate.id_state,
             }
             return { address, dataUpdate, dataUser, dataUserProcoop, dataProcoop, dataProcoopMember }
         } catch (error) {

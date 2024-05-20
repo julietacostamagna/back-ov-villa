@@ -21,7 +21,7 @@ async function migrationUser(req, res) {
                 email_verified: users[user].date_input ? new Date(users[user].date_input) : '',
                 password: users[user].password,
                 img_profile: users[user].img,
-                dark: users[user].dark
+                dark: users[user].dark,
             })
             if (usersProcoop.length > 0) {
                 procoopmembers.push({
@@ -37,7 +37,7 @@ async function migrationUser(req, res) {
                     last_name: usersProcoop[0]?.APELLIDOS || '',
                     type_dni: usersProcoop[0]?.TIP_DNI || '',
                     num_dni: usersProcoop[0]?.NUM_DNI || '',
-                    burn_date: new Date(usersProcoop[0]?.FEC_NAC) || ''
+                    born_date: new Date(usersProcoop[0]?.FEC_NAC) || '',
                 })
                 User_procoopmembers.push({ id_user: userMigrate.length, id_procoopmembers: procoopmembers.length, level: users[user].level, primary_account: true, status: true })
             }
@@ -46,11 +46,11 @@ async function migrationUser(req, res) {
                 last_name: users[user].last_name,
                 type_dni: users[user].document_type,
                 num_dni: users[user].document_number,
-                burn_date: users[user].birthday ? new Date(users[user].birthday) : '',
+                born_date: users[user].birthday ? new Date(users[user].birthday) : '',
                 validation_renaper: users[user].check_lvl_3 || '',
                 fixed_phone: '',
                 cell_phone: users[user].phone,
-                sex: users[user].sex
+                sex: users[user].sex,
             })
         }
         const data = { users: userMigrate, person_physical: person_physical, procoopmembers: procoopmembers, User_procoopmembers: User_procoopmembers }
@@ -119,5 +119,5 @@ module.exports = {
     tokenVerify,
     dataUser,
     upgradeUser,
-    allfacturas
+    allfacturas,
 }
