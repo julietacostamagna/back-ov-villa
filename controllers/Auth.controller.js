@@ -16,7 +16,7 @@ const login = async (req, res) => {
   try {
     const { email, password, remember } = req.body;
     const token = await AuthService.login(email, password, remember);
-    res.json({ token });
+    res.status(200).json({ token });
   } catch (error) {
     res.status(401).json({ error: error.message });
   }
@@ -49,7 +49,7 @@ const register = async (req, res) => {
     if (email !== email_confirmation) throw new Error("Los emails no coinciden");
     if (password !== password_confirmation) throw new Error("Las contraseñas no coinciden");
     if (!reg.test(password)) throw new Error("La contraseña no tiene formato correcto");
-    const tokenTemp = await crypto.randomBytes(64).toString("hex");
+    const tokenTemp = crypto.randomBytes(64).toString("hex");
     const data = { email, typePerson, password: pass, name_register: name, token_temp: tokenTemp };
     if (parseInt(typePerson) === 1) {
       data.lastName_register = last_name;

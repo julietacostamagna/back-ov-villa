@@ -25,11 +25,11 @@ module.exports = (sequelize, DataTypes) => {
             last_name: DataTypes.STRING,
             type_dni: DataTypes.INTEGER,
             num_dni: DataTypes.BIGINT,
-            burn_date: DataTypes.DATE
+            born_date: DataTypes.DATE,
         },
         {
             sequelize,
-            modelName: 'Procoop_Member'
+            modelName: 'Procoop_Member',
         }
     )
     return Procoop_Member
@@ -54,7 +54,7 @@ module.exports = (sequelize, DataTypes) => {
 //         last_name: DataTypes.STRING,
 //         type_dni: DataTypes.INTEGER,
 //         num_dni: DataTypes.BIGINT,
-//         burn_date: DataTypes.DATE
+//         born_date: DataTypes.DATE
 //     },
 //     {}
 // )
