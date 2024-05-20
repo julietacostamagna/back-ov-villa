@@ -3,7 +3,6 @@ const State = require('../models/state.js')
 const { ListCityProcoop, ListStateProcoop, empresaPorCuit, personaPorDni, Persona_x_COD_SOC } = require('../services/ProcoopService.js')
 
 async function searchByDNI(req, res) {
-<<<<<<< HEAD
 	const { dni } = req.body
 	try {
 		const result = await personaPorDni(dni)
@@ -26,7 +25,7 @@ async function searchByCuit(req, res) {
 
 async function migrationCity(req, res) {
 	try {
-		const listCities = await ListCity()
+		const listCities = await ListCityProcoop()
 		let citiesOfi = []
 		if (listCities) {
 			citiesOfi = await listCities.map((item) => {
@@ -42,7 +41,7 @@ async function migrationCity(req, res) {
 }
 async function migrationState(req, res) {
 	try {
-		const ListStates = await ListState()
+		const ListStates = await ListStateProcoop()
 		let listStateOfi = []
 		if (ListStates) {
 			listStateOfi = await ListStates.map((item) => {
@@ -56,82 +55,22 @@ async function migrationState(req, res) {
 		return res.json({ error, msj: 'error' })
 	}
 }
+async function getNameCustomer(req, res) {
+	try {
+		const { customer } = req.body
+		const result = await Persona_x_COD_SOC(customer)
+		return res.status(200).json(result[0].APELLIDOS)
+	} catch (error) {
+		console.log(error)
+		return res.json({ error, msj: 'error' })
+	}
+	// Persona_x_COD_SOC
+}
 
 module.exports = {
 	searchByCuit,
 	searchByDNI,
 	migrationCity,
 	migrationState,
-=======
-    const { dni } = req.body
-    try {
-        const result = await personaPorDni(dni)
-        return res.status(200).json(result)
-    } catch (error) {
-        return res.status(400).json({ error, msj: error.messagge })
-    }
-}
-
-async function searchByCuit(req, res) {
-    const { cuit } = req.body
-    try {
-        const result = await empresaPorCuit(cuit)
-        return res.status(200).json(result)
-    } catch (error) {
-        console.log(error)
-        return res.json({ error, msj: 'error' })
-    }
-}
-
-async function migrationCity(req, res) {
-    try {
-        const listCities = await ListCityProcoop()
-        let citiesOfi = []
-        if (listCities) {
-            citiesOfi = await listCities.map((item) => {
-                return { COD_LOC: item.COD_LOC, DES_LOC: item.DES_LOC, COD_POS: item.COD_POS, COD_PCI: item.COD_PCI }
-            })
-        }
-        const resultadd = await City.bulkCreate(citiesOfi)
-        return res.status(200).json(resultadd)
-    } catch (error) {
-        console.log(error)
-        return res.json({ error, msj: 'error' })
-    }
-}
-async function migrationState(req, res) {
-    try {
-        const ListStates = await ListStateProcoop()
-        let listStateOfi = []
-        if (ListStates) {
-            listStateOfi = await ListStates.map((item) => {
-                return { COD_PRO: item.COD_PRO, DES_PRO: item.DES_PRO, COD_AFIP: item.COD_AFIP }
-            })
-        }
-        const resultadd = await State.bulkCreate(listStateOfi)
-        return res.status(200).json(resultadd)
-    } catch (error) {
-        console.log(error)
-        return res.json({ error, msj: 'error' })
-    }
-}
-async function getNameCustomer(req, res) {
-    try {
-        const { customer } = req.body
-        const result = await Persona_x_COD_SOC(customer)
-        return res.status(200).json(result[0].APELLIDOS)
-    } catch (error) {
-        console.log(error)
-        return res.json({ error, msj: 'error' })
-    }
-    // Persona_x_COD_SOC
-}
-
-module.exports = {
-    searchByCuit,
-    searchByDNI,
-    migrationCity,
-    migrationState,
-    getNameCustomer
->>>>>>> 3e4f1b52c42ddba1c4c2c1e3d13d6f245b4f0b82
+	getNameCustomer,
 }

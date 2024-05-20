@@ -1,9 +1,9 @@
 const express = require('express')
 const router = express.Router()
-const { migrationCity, migrationState, getNameCustomer, searchByCuit, searchByDNI } = require('../controllers/Procoop.controller')
-const { migrationUser, dataUser, upgradeUser, updateUser } = require('../controllers/User.controller')
+const { getNameCustomer, searchByCuit, searchByDNI } = require('../controllers/Procoop.controller')
+const { dataUser, upgradeUser, updateUser } = require('../controllers/User.controller')
 const { verifyToken } = require('../middleware/Auth.middleware')
-const { newQuery, logout } = require('../controllers/Auth.controller')
+const { logout } = require('../controllers/Auth.controller')
 const { getListState, getListCity, getListStreet, newStreet } = require('../controllers/Location.controller')
 
 router.get('/test', (req, res) => {
@@ -17,7 +17,6 @@ router.post('/searchDni', verifyToken, searchByDNI)
 router.post('/searchCuit', verifyToken, searchByCuit)
 // router.get('/users', migrationUser)
 router.post('/dataUser', verifyToken, dataUser)
-router.get('/allfacturas', verifyToken, allfacturas)
 // router.get('/localidad', migrationCity)
 // router.get('/provincia', migrationState)
 
