@@ -66,7 +66,7 @@ const updateLvl2 = async (user, dataUpdate) => {
           last_name: user.lastName_register,
           type_dni: dataUpdate.document_type,
           num_dni: dataUpdate.document_number,
-          burn_date: new Date(`${dataUpdate.birthdate} `), // Se agrega espacio para que guarde el dia con el -3 horas sino le resta las 3 horas y pone un dia antes
+          born_date: new Date(`${dataUpdate.birthdate} `), // Se agrega espacio para que guarde el dia con el -3 horas sino le resta las 3 horas y pone un dia antes
           validation_renaper: dataUpdate.validation_renaper || null,
           fixed_phone: dataUpdate.fixed_phone || null,
           cell_phone: `+549${dataUpdate.phoneCaract}${dataUpdate.numberPhone}`,
@@ -90,7 +90,7 @@ const updateLvl2 = async (user, dataUpdate) => {
         last_name: dataProcoop[0].APELLIDOS,
         type_dni: dataProcoop[0].TIP_DNI,
         num_dni: dataProcoop[0].NUM_DNI,
-        burn_date: new Date(`${dataProcoop[0].FEC_NAC} `),
+        born_date: new Date(`${dataProcoop[0].FEC_NAC} `),
       };
 
       const ProcoopMember = { id: 1 };

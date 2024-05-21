@@ -7,6 +7,7 @@ const { sendEmail } = require('../services/EmailServices')
 const { customerServices, customerConsumption, customerServicesDetail } = require('../controllers/Services.controller')
 const { getInvoice, existInvoice } = require('../controllers/Payment.controller')
 const { searchByDNI, searchByCuit } = require('../controllers/Procoop.controller')
+
 // RUTAS PARA AUTH
 
 router.post('/login', login)
