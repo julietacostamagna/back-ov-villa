@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
 		 */
 		static associate(models) {
 			// define association here
-			this.belongsTo(models.service_request, {
+			this.belongsTo(models.Service_Request, {
 				foreignKey: 'service_request_id',
 				as: 'Service_Requests',
 			})
