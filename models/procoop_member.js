@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
 		 */
 		static associate(models) {
 			// define association here
-			Procoop_Member.hasMany(models.service_request, { foreignKey: 'procoop_member_id', as: 'Service_Requests' })
+			Procoop_Member.hasMany(models.Service_Request, { foreignKey: 'procoop_member_id', as: 'Service_Requests' })
 		}
 	}
 	Procoop_Member.init(
