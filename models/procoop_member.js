@@ -14,13 +14,14 @@ module.exports = (sequelize, DataTypes) => {
 	}
 	Procoop_Member.init(
 		{
+			number_customer: DataTypes.INTEGER,
 			mail_procoop: DataTypes.STRING,
 			cell_phone: DataTypes.STRING,
 			fixed_phone: DataTypes.STRING,
 			id_type_perso_procop: DataTypes.INTEGER,
 			id_situation_procop: DataTypes.INTEGER,
-			blood_type: DataTypes.INTEGER,
-			factor: DataTypes.INTEGER,
+			blood_type: DataTypes.STRING,
+			factor: DataTypes.STRING,
 			donor: DataTypes.INTEGER,
 			name: DataTypes.STRING,
 			last_name: DataTypes.STRING,

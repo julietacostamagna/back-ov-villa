@@ -1,4 +1,6 @@
+const { QueryTypes } = require('sequelize')
 const { SequelizeMorteros } = require('../database/MSSQL.database')
+const { db } = require('../models')
 const conexionProcoop = async () => {
 	try {
 		await SequelizeMorteros.authenticate()
@@ -63,15 +65,15 @@ const Persona_x_COD_SOC = async (numberCustomer) => {
 		const query = `SELECT * FROM socios  WHERE cod_soc = :numberCustomer`
 		const result = await SequelizeMorteros.query(query, {
 			replacements: { numberCustomer: numberCustomer },
-			type: SequelizeMorteros.QueryTypes.SELECT,
+			type: QueryTypes.SELECT,
 		})
 		if (result.length === 0) {
 			// Retorno un objeto con un mensaje de error
 			return { error: 'No se encontró la persona' }
 		}
 		const query2 = `SELECT * FROM personas WHERE COD_PER = ${result[0].cod_per}`
-		const result2 = await sequelize.query(query2, {
-			type: SequelizeMorteros.QueryTypes.SELECT,
+		const result2 = await SequelizeMorteros.query(query2, {
+			type: QueryTypes.SELECT,
 		})
 		if (result2.length === 0) {
 			// Retorno un objeto con un mensaje de error
@@ -230,6 +232,14 @@ const adheridosSS = async (data) => {
 		console.error('ERROR DE PROCOOP:', error)
 	}
 }
+const getProcoopMemberxDni = async (dni) => {
+	try {
+		const user_procoop = await db.Procoop_Member.findOne({ where: { num_dni: dni } })
+		return user_procoop.get()
+	} catch (error) {
+		return { error: error.message }
+	}
+}
 
 module.exports = {
 	personaPorDni,
@@ -244,4 +254,5 @@ module.exports = {
 	debtsCustomer,
 	phoneCustomer,
 	adheridosSS,
+	getProcoopMemberxDni,
 }

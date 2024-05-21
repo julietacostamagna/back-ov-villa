@@ -1,10 +1,10 @@
 const express = require('express')
 const router = express.Router()
-const { getNameCustomer, searchByCuit, searchByDNI } = require('../controllers/Procoop.controller')
-const { dataUser, upgradeUser, updateUser } = require('../controllers/User.controller')
+const { migrationCity, migrationState, getNameCustomer, searchByCuit, searchByDNI } = require('../controllers/Procoop.controller')
+const { migrationUser, dataUser, upgradeUser, updateUser, searchUserxDni } = require('../controllers/User.controller')
 const { verifyToken } = require('../middleware/Auth.middleware')
-const { logout } = require('../controllers/Auth.controller')
-const { getListState, getListCity, getListStreet, newStreet } = require('../controllers/Location.controller')
+const { newQuery, logout } = require('../controllers/Auth.controller')
+const { getListState, getListCity, getListStreet, newStreet, getAddress } = require('../controllers/Location.controller')
 
 router.get('/test', (req, res) => {
 	res.json({ message: 'Test route' })
@@ -24,9 +24,15 @@ router.post('/dataUser', verifyToken, dataUser)
 router.post('/getCustomer', verifyToken, getNameCustomer)
 router.patch('/upgradeLevelUser', verifyToken, upgradeUser)
 router.patch('/updateCustomer', verifyToken, updateUser)
+
+// Funciones de localidad
 router.get('/listState', verifyToken, getListState)
 router.get('/listCity', verifyToken, getListCity)
 router.get('/listStreet', verifyToken, getListStreet)
 router.post('/addStreet', verifyToken, newStreet)
+router.post('/getAddress', verifyToken, getAddress)
+
+// Funcion para recuperar toda la informacion del usuario por dni
+router.get('/searchUserxDni', verifyToken, searchUserxDni)
 
 module.exports = router
