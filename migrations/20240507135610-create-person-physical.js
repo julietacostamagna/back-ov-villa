@@ -7,44 +7,44 @@ module.exports = {
                 allowNull: false,
                 autoIncrement: true,
                 primaryKey: true,
-                type: Sequelize.INTEGER
+                type: Sequelize.INTEGER,
             },
             name: {
-                type: Sequelize.STRING
+                type: Sequelize.STRING,
             },
             last_name: {
-                type: Sequelize.STRING
+                type: Sequelize.STRING,
             },
             type_dni: {
-                type: Sequelize.INTEGER
+                type: Sequelize.INTEGER,
             },
             num_dni: {
-                type: Sequelize.INTEGER
+                type: Sequelize.INTEGER,
             },
-            burn_date: {
-                type: Sequelize.DATE
+            born_date: {
+                type: Sequelize.DATE,
             },
             validation_renaper: {
                 type: Sequelize.INTEGER,
-                allowNull: true
+                allowNull: true,
             },
             fixed_phone: {
-                type: Sequelize.STRING
+                type: Sequelize.STRING,
             },
             cell_phone: {
-                type: Sequelize.STRING
+                type: Sequelize.STRING,
             },
             createdAt: {
                 allowNull: false,
-                type: Sequelize.DATE
+                type: Sequelize.DATE,
             },
             updatedAt: {
                 allowNull: false,
-                type: Sequelize.DATE
-            }
+                type: Sequelize.DATE,
+            },
         })
     },
     async down(queryInterface, Sequelize) {
         await queryInterface.dropTable('Person_physicals')
-    }
+    },
 }

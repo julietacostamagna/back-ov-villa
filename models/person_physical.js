@@ -17,15 +17,15 @@ module.exports = (sequelize, DataTypes) => {
             last_name: DataTypes.STRING,
             type_dni: DataTypes.INTEGER,
             num_dni: DataTypes.INTEGER,
-            burn_date: DataTypes.DATE,
+            born_date: DataTypes.DATE,
             validation_renaper: DataTypes.INTEGER,
             fixed_phone: DataTypes.STRING,
             cell_phone: DataTypes.STRING,
-            EmployeeId: DataTypes.INTEGER
+            EmployeeId: DataTypes.INTEGER,
         },
         {
             sequelize,
-            modelName: 'Person_physical'
+            modelName: 'Person_physical',
         }
     )
     return Person_physical
@@ -42,7 +42,7 @@ module.exports = (sequelize, DataTypes) => {
 // last_name: DataTypes.STRING,
 // type_dni: DataTypes.INTEGER,
 // num_dni: DataTypes.INTEGER,
-// burn_date: DataTypes.DATE,
+// born_date: DataTypes.DATE,
 // validation_renaper: DataTypes.INTEGER,
 // fixed_phone: DataTypes.STRING,
 // cell_phone: DataTypes.STRING,
