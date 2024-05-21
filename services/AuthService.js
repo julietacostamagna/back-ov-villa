@@ -6,6 +6,7 @@ const { db, db_coopm_v1 } = require('../models')
 const { Sequelize } = require('sequelize')
 const { sendEmail } = require('./EmailServices')
 const { getLevel } = require('./UserService')
+const { getDataProcoopxId } = require('./ProcoopService')
 
 const secret = process.env.SECRET
 
@@ -31,6 +32,7 @@ const signToken = (user, remember) => {
 		exp: new Date(remember ? dateYear : dateHour).getTime(),
 		name: user.name_register,
 		lastName: user.lastName_register,
+		number_customer: user.number_customer,
 		level: user.level,
 		TypeUser: user.typePerson,
 		dark: user.dark,
@@ -51,17 +53,18 @@ const login = async (email, password, remember) => {
 		throw new Error('El usuario o la contraseña son incorrectas')
 	}
 	const dataProcoop = await getLevel(user.id)
-	let level = 1
+	let accountPrimary
 	if (dataProcoop) {
-		level = dataProcoop.map((item) => {
+		accountPrimary = dataProcoop.map((item) => {
 			let data = item.get()
-			console.log(data)
 			if (data.primary_account === true) {
-				return data.level
+				return item
 			}
 		})
 	}
-	user.level = level[0]
+	user.level = accountPrimary[0].level
+	const number_customer = await getDataProcoopxId(accountPrimary[0].id_procoop_member)
+	user.number_customer = number_customer.number_customer
 	return signToken(user, remember)
 }
 

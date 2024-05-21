@@ -61,7 +61,8 @@ async function getNameCustomer(req, res) {
 		const result = await Persona_x_COD_SOC(customer)
 		return res.status(200).json(result[0].APELLIDOS)
 	} catch (error) {
-		res.status(400).json({ message: error.message })
+		console.log(error)
+		return res.json({ error, msj: 'error' })
 	}
 	// Persona_x_COD_SOC
 }

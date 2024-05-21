@@ -1,4 +1,4 @@
-const { Persona_x_COD_SOC, getProcoopMemberxDni } = require('../services/ProcoopService.js')
+const { Persona_x_COD_SOC, getProcoopMemberxDni, allAccount, getDataProcoopxId } = require('../services/ProcoopService.js')
 const ScriptService = require('../services/ScriptService.js')
 const { verifyEmailToken, getUser, getLevel, updateLvl2, saveUser, getUserxDni } = require('../services/UserService.js')
 const { searchAddressxUser } = require('../services/locationServices.js')
@@ -138,6 +138,22 @@ async function searchUserxDni(req, res) {
 	}
 }
 
+async function getAllAccount(req, res) {
+	try {
+		const { id } = req.user
+		const allAccountRelation = await allAccount(id)
+		console.log(allAccountRelation)
+		let listUser
+		allAccountRelation.forEach((item) => {
+			listUser.push(getDataProcoopxId(item.id_procoop_member))
+		})
+		console.log(listUser)
+		return res.status(200).json(listUser)
+	} catch (error) {
+		res.status(400).json({ message: error.message })
+	}
+	// Persona_x_COD_SOC
+}
 module.exports = {
 	migrationUser,
 	tokenVerify,
@@ -145,4 +161,5 @@ module.exports = {
 	upgradeUser,
 	updateUser,
 	searchUserxDni,
+	getAllAccount,
 }

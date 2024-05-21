@@ -171,7 +171,7 @@ const consumoCustomer = async (data) => {
 
 const debtsCustomer = async (number, all = false) => {
 	try {
-		const query = `SELECT  dd.ID_FAC, dd.COD_COM,  dd.SUC_COM, fa.pagado, dd.NUM_COM, dd.TIPO, dd.FECHA, dd.COD_SOC, dd.COD_PER, dd.COD_SUM,
+		const queryString = `SELECT  dd.ID_FAC, dd.COD_COM,  dd.SUC_COM, fa.pagado, dd.NUM_COM, dd.TIPO, dd.FECHA, dd.COD_SOC, dd.COD_PER, dd.COD_SUM,
                   dd.VTO1, dd.TOTAL1, dd.VTO2, dd.TOTAL2, dd.PAGA, dd.FECHASALDO, dd.SALDO, dd.PERIODO, tf.NUMERO, dd.DEB_CRE
                   FROM  pr_mt_nueva_demo.dbo.datos_deuda dd 
                   LEFT JOIN pr_mt_nueva_demo.dbo.talonfac tf ON dd.id_fac = tf.Id_Fac
@@ -231,10 +231,28 @@ const adheridosSS = async (data) => {
 		console.error('ERROR DE PROCOOP:', error)
 	}
 }
+
+//Funciones en tablas nuevas en db nueva
 const getProcoopMemberxDni = async (dni) => {
 	try {
 		const user_procoop = await db.Procoop_Member.findOne({ where: { num_dni: dni } })
 		return user_procoop.get()
+	} catch (error) {
+		return { error: error.message }
+	}
+}
+const getDataProcoopxId = async (id) => {
+	try {
+		const user_procoop = await db.Procoop_Member.findByPk(id)
+		return user_procoop.get()
+	} catch (error) {
+		return { error: error.message }
+	}
+}
+const allAccount = async (id) => {
+	try {
+		const users_procoop = await db.User_procoopMember.findAll({ where: { id_user: id } })
+		return users_procoop.get()
 	} catch (error) {
 		return { error: error.message }
 	}
@@ -254,4 +272,6 @@ module.exports = {
 	phoneCustomer,
 	adheridosSS,
 	getProcoopMemberxDni,
+	getDataProcoopxId,
+	allAccount,
 }
