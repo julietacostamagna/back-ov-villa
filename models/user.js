@@ -1,47 +1,51 @@
-"use strict";
-const { Model } = require("sequelize");
+'use strict'
+const { Model } = require('sequelize')
 module.exports = (sequelize, DataTypes) => {
-  class User extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
-    static associate(models) {
-      // define association here
-    }
-  }
-  User.init(
-    {
-      name_register: DataTypes.STRING,
-      lastName_register: DataTypes.STRING,
-      email: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        unique: { args: true, msg: "El email ya existe" },
-        validate: { isEmail: true },
-      },
-      email_verified: DataTypes.DATE,
-      password: {
-        type: DataTypes.STRING,
-        validate: {
-          is: {
-            args: /^(?=.*[A-Z])(?=.*[!@#$%^&*]).{6,}$/,
-            msg: "La contraseña no tiene formato correcto",
-          },
-        },
-      },
-      dark: DataTypes.BOOLEAN,
-      token_temp: DataTypes.STRING,
-      typePerson: DataTypes.INTEGER,
-    },
-    {
-      sequelize,
-      modelName: "User",
-    }
-  );
-  return User;
-};
+	class User extends Model {
+		/**
+		 * Helper method for defining associations.
+		 * This method is not a part of Sequelize lifecycle.
+		 * The `models/index` file will call this method automatically.
+		 */
+		static associate(models) {
+			// define association here
+			User.hasMany(models.service_request, {
+				foreignKey: 'user_id',
+				as: 'Service_Requests',
+			})
+		}
+	}
+	User.init(
+		{
+			name_register: DataTypes.STRING,
+			lastName_register: DataTypes.STRING,
+			email: {
+				type: DataTypes.STRING,
+				allowNull: false,
+				unique: { args: true, msg: 'El email ya existe' },
+				validate: { isEmail: true },
+			},
+			email_verified: DataTypes.DATE,
+			password: {
+				type: DataTypes.STRING,
+				validate: {
+					is: {
+						args: /^(?=.*[A-Z])(?=.*[!@#$%^&*]).{6,}$/,
+						msg: 'La contraseña no tiene formato correcto',
+					},
+				},
+			},
+			dark: DataTypes.BOOLEAN,
+			token_temp: DataTypes.STRING,
+			typePerson: DataTypes.INTEGER,
+		},
+		{
+			sequelize,
+			modelName: 'User',
+		}
+	)
+	return User
+}
 
 // 'use strict'
 // const { DataTypes } = require('sequelize')
