@@ -1,8 +1,9 @@
-const { Persona_x_COD_SOC } = require('../services/ProcoopService.js')
+const { Persona_x_COD_SOC, getProcoopMemberxDni, allAccount, getDataProcoopxId } = require('../services/ProcoopService.js')
 const ScriptService = require('../services/ScriptService.js')
-const { verifyEmailToken, getUser, getLevel, updateLvl2, saveUser } = require('../services/UserService.js')
-const fs = require('fs')
-const path = require('path')
+const { verifyEmailToken, getUser, getLevel, updateLvl2, saveUser, getUserxDni } = require('../services/UserService.js')
+const { searchAddressxUser } = require('../services/locationServices.js')
+
+const user = (req, res) => {}
 
 async function migrationUser(req, res) {
 	try {
@@ -37,7 +38,7 @@ async function migrationUser(req, res) {
 					last_name: usersProcoop[0]?.APELLIDOS || '',
 					type_dni: usersProcoop[0]?.TIP_DNI || '',
 					num_dni: usersProcoop[0]?.NUM_DNI || '',
-					burn_date: new Date(usersProcoop[0]?.FEC_NAC) || '',
+					born_date: new Date(usersProcoop[0]?.FEC_NAC) || '',
 				})
 				User_procoopmembers.push({ id_user: userMigrate.length, id_procoopmembers: procoopmembers.length, level: users[user].level, primary_account: true, status: true })
 			}
@@ -46,7 +47,7 @@ async function migrationUser(req, res) {
 				last_name: users[user].last_name,
 				type_dni: users[user].document_type,
 				num_dni: users[user].document_number,
-				burn_date: users[user].birthday ? new Date(users[user].birthday) : '',
+				born_date: users[user].birthday ? new Date(users[user].birthday) : '',
 				validation_renaper: users[user].check_lvl_3 || '',
 				fixed_phone: '',
 				cell_phone: users[user].phone,
@@ -98,8 +99,8 @@ async function upgradeUser(req, res) {
 		const user = await getUser(req.user.id)
 		if (!user) throw new Error('El usuario no existe o ya ha sido validado.')
 		const response = await updateLvl2(user, req.body)
-		// if (!response) throw new Error('El usuario no se pudo actualizar.')
-		res.status(200).json(response)
+		if (!response) throw new Error('El usuario no se pudo actualizar.')
+		res.status(200).json(true)
 	} catch (error) {
 		console.log({ message: error.message })
 		res.status(400).json({ message: error.message })
@@ -109,10 +110,6 @@ async function updateUser(req, res) {
 	try {
 		const { id } = req.user
 		const { ...fields } = req.body
-		/* const name_register = req.body.first_name
-		const lastName_register = req.body.last_name
-		const img_profile = req.body.img_profile
-		const fields = { name_register, lastName_register, img_profile } */
 		if (!id) throw new Error('Se debe pasar el id del usuario.')
 		const user = await getUser(id)
 		if (!user) throw new Error('El usuario no existe o ya ha sido validado.')
@@ -132,4 +129,6 @@ module.exports = {
 	dataUser,
 	upgradeUser,
 	updateUser,
+	searchUserxDni,
+	getAllAccount,
 }

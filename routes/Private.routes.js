@@ -1,10 +1,10 @@
 const express = require('express')
 const router = express.Router()
-const { getNameCustomer, searchByCuit, searchByDNI } = require('../controllers/Procoop.controller')
-const { dataUser, upgradeUser, updateUser } = require('../controllers/User.controller')
+const { migrationCity, migrationState, getNameCustomer, searchByCuit, searchByDNI, addUserPersonMember } = require('../controllers/Procoop.controller')
+const { migrationUser, dataUser, upgradeUser, updateUser, searchUserxDni, getAllAccount } = require('../controllers/User.controller')
 const { verifyToken } = require('../middleware/Auth.middleware')
-const { logout } = require('../controllers/Auth.controller')
-const { getListState, getListCity, getListStreet, newStreet } = require('../controllers/Location.controller')
+const { newQuery, logout } = require('../controllers/Auth.controller')
+const { getListState, getListCity, getListStreet, newStreet, getAddress } = require('../controllers/Location.controller')
 
 router.get('/test', (req, res) => {
 	res.json({ message: 'Test route' })
@@ -23,12 +23,20 @@ router.get('/dataUser', verifyToken, dataUser)
 //funciones para subier lvl2
 router.post('/getCustomer', verifyToken, getNameCustomer)
 router.patch('/upgradeLevelUser', verifyToken, upgradeUser)
+router.patch('/updateUser', verifyToken, updateUser)
+
+// traigo el listado de todas las cuentas de procoop relacionadas
+router.get('/allOther', verifyToken, getAllAccount)
+router.post('/createOther', verifyToken, addUserPersonMember)
+
+// Funciones de localidad
 router.get('/listState', verifyToken, getListState)
 router.get('/listCity', verifyToken, getListCity)
 router.get('/listStreet', verifyToken, getListStreet)
 router.post('/addStreet', verifyToken, newStreet)
+router.post('/getAddress', verifyToken, getAddress)
 
-//EDICION DE USUARIO GENERAL
-router.patch('/updateUser', verifyToken, updateUser)
+// Funcion para recuperar toda la informacion del usuario por dni
+router.get('/searchUserxDni', verifyToken, searchUserxDni)
 
 module.exports = router

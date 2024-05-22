@@ -6,12 +6,11 @@ const codes = require('../utils/Procoop/serviceCode.json')
 async function getInvoice(req, res) {
 	try {
 		const { id_procoop } = req.query
-		//Si se coloca all como parametro en el request traigo todas las facturas, sino solo las que tienen saldo
 		const all = req.query.all ? true : false
 		const today = new Date()
 		const debts = await debtsCustomer(id_procoop, all)
-		if (debts.length === 0) {
-			return res.status(200).json([])
+		if (!debts) {
+			return res.status(404).json({ message: 'Error al buscar los datos' })
 		}
 		let invoices = {}
 		let phone = ''
@@ -62,9 +61,10 @@ async function getInvoice(req, res) {
 				invoices[debts[i].COD_SUM].list.push(fact)
 			}
 		}
+
 		return res.status(200).json(invoices)
 	} catch (error) {
-		console.log(error)
+		return res.status(400).json({ message: error })
 	}
 }
 
