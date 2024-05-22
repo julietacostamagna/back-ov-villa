@@ -1,6 +1,7 @@
 const City = require('../models/city.js')
 const State = require('../models/state.js')
-const { ListCityProcoop, ListStateProcoop, empresaPorCuit, personaPorDni, Persona_x_COD_SOC } = require('../services/ProcoopService.js')
+const { ListCityProcoop, ListStateProcoop, empresaPorCuit, personaPorDni, Persona_x_COD_SOC, getOrCreateUser_ProcoopMember, getOrCreateProcoopMember } = require('../services/ProcoopService.js')
+const { addStreet } = require('../services/locationServices.js')
 
 async function searchByDNI(req, res) {
 	const { dni } = req.body
@@ -61,8 +62,21 @@ async function getNameCustomer(req, res) {
 		const result = await Persona_x_COD_SOC(customer)
 		return res.status(200).json(result[0].APELLIDOS)
 	} catch (error) {
-		console.log(error)
-		return res.json({ error, msj: 'error' })
+		return res.status(400).json({ message: error.message })
+	}
+	// Persona_x_COD_SOC
+}
+async function addUserPersonMember(req, res) {
+	try {
+		const { customer } = req.body
+		const { id } = req.user
+		const ProcoopMember = await getOrCreateProcoopMember(customer)
+		const relationUserProcoopMember = await getOrCreateUser_ProcoopMember(ProcoopMember.id, id)
+		console.log(ProcoopMember, relationUserProcoopMember)
+		const dataResult = { name: ProcoopMember.last_name, num: ProcoopMember.number_customer, primary: relationUserProcoopMember.primary_account, select: relationUserProcoopMember.primary_account }
+		return res.status(200).json(dataResult)
+	} catch (error) {
+		return res.status(404).json({ message: error.message })
 	}
 	// Persona_x_COD_SOC
 }
@@ -73,4 +87,5 @@ module.exports = {
 	migrationCity,
 	migrationState,
 	getNameCustomer,
+	addUserPersonMember,
 }

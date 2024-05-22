@@ -62,26 +62,25 @@ const invoicesXsocio = async (id_procoop) => {
 
 const Persona_x_COD_SOC = async (numberCustomer) => {
 	try {
+		if (!numberCustomer) throw new Error('falta pasar el numero de socio')
 		const query = `SELECT * FROM socios  WHERE cod_soc = :numberCustomer`
 		const result = await SequelizeMorteros.query(query, {
 			replacements: { numberCustomer: numberCustomer },
 			type: QueryTypes.SELECT,
 		})
 		if (result.length === 0) {
-			// Retorno un objeto con un mensaje de error
-			return { error: 'No se encontró la persona' }
+			throw new Error('No se encontro socio')
 		}
 		const query2 = `SELECT * FROM personas WHERE COD_PER = ${result[0].cod_per}`
 		const result2 = await SequelizeMorteros.query(query2, {
 			type: QueryTypes.SELECT,
 		})
 		if (result2.length === 0) {
-			// Retorno un objeto con un mensaje de error
-			return { error: 'No se encontró la persona' }
+			throw new Error('No se encontro Persona con ese numero de socio')
 		}
 		return result2
 	} catch (error) {
-		console.error('ERROR DE PROCOOP:', error)
+		throw error
 	}
 }
 
@@ -172,7 +171,7 @@ const consumoCustomer = async (data) => {
 
 const debtsCustomer = async (number, all = false) => {
 	try {
-		const queryString = `SELECT  dd.ID_FAC, dd.COD_COM,  dd.SUC_COM, fa.pagado, dd.NUM_COM, dd.TIPO, dd.FECHA, dd.COD_SOC, dd.COD_PER, dd.COD_SUM,
+		const query = `SELECT  dd.ID_FAC, dd.COD_COM,  dd.SUC_COM, fa.pagado, dd.NUM_COM, dd.TIPO, dd.FECHA, dd.COD_SOC, dd.COD_PER, dd.COD_SUM,
                   dd.VTO1, dd.TOTAL1, dd.VTO2, dd.TOTAL2, dd.PAGA, dd.FECHASALDO, dd.SALDO, dd.PERIODO, tf.NUMERO, dd.DEB_CRE
                   FROM  pr_mt_nueva_demo.dbo.datos_deuda dd 
                   LEFT JOIN pr_mt_nueva_demo.dbo.talonfac tf ON dd.id_fac = tf.Id_Fac
@@ -183,12 +182,9 @@ const debtsCustomer = async (number, all = false) => {
 			replacements: { number: number },
 			type: SequelizeMorteros.QueryTypes.SELECT,
 		})
-		if (result.length === 0) {
-			return { error: 'No se encontró la persona' }
-		}
 		return result
 	} catch (error) {
-		console.error('ERROR DE PROCOOP:', error)
+		throw error
 	}
 }
 
@@ -233,7 +229,7 @@ const adheridosSS = async (data) => {
 	}
 }
 
-//Funciones en tablas nuevas en db nueva
+//Funciones en tablas en db nueva
 const getProcoopMemberxDni = async (dni) => {
 	try {
 		const user_procoop = await db.Procoop_Member.findOne({ where: { num_dni: dni } })
@@ -242,20 +238,83 @@ const getProcoopMemberxDni = async (dni) => {
 		return { error: error.message }
 	}
 }
+/**
+ * Busca o crea un miembro de Procoop basado en el número de cliente.
+ * Si el miembro no existe, lo crea y sincroniza los datos con la base de datos.
+ *
+ * @param {string} num_Customer - El número de identificación del cliente.
+ * @returns {Promise<Object>} Un objeto que representa al miembro de Procoop.
+ *                            Si se crea un nuevo miembro, se actualiza con información adicional.
+ *                            En caso de error, devuelve un objeto con la propiedad 'error'.
+ */
+const getOrCreateProcoopMember = async (num_Customer) => {
+	return db.sequelize.transaction(async (t) => {
+		try {
+			const [user_procoop, created] = await db.Procoop_Member.findOrCreate({ where: { number_customer: num_Customer } })
+			if (created) {
+				const dataProcoop = await Persona_x_COD_SOC(num_Customer)
+				const dataProcoopMember = {
+					number_customer: num_Customer,
+					mail_procoop: dataProcoop[0].EMAIL,
+					cell_phone: dataProcoop[0].TELEFONO,
+					fixed_phone: dataProcoop[0].TELEFONO,
+					id_type_procoop: dataProcoop[0].TIP_PERSO,
+					id_situation_procoop: dataProcoop[0].COD_SIT,
+					blood_type: dataProcoop[0].GRU_SGR,
+					factor: dataProcoop[0].FAC_SGR,
+					donor: dataProcoop[0].DAD_SGR,
+					name: dataProcoop[0].NOMBRES,
+					last_name: dataProcoop[0].APELLIDOS,
+					type_dni: dataProcoop[0].TIP_DNI,
+					num_dni: dataProcoop[0].NUM_DNI,
+					born_date: new Date(`${dataProcoop[0].FEC_NAC} `),
+				}
+				await user_procoop.update(dataProcoopMember, { transaction: t })
+			}
+			return user_procoop
+		} catch (error) {
+			throw error
+		}
+	})
+}
+
+const getOrCreateUser_ProcoopMember = async (id_ProcoopMember, id_user) => {
+	return db.sequelize.transaction(async (t) => {
+		try {
+			const [user_procoopmember, created] = await db.User_procoopMember.findOrCreate({ where: { id_procoop_member: id_ProcoopMember, id_user: id_user } })
+			if (created) {
+				const AccountPrimary = await db.User_procoopMember.findOne({ where: { id_user: id_user } })
+				await user_procoopmember.update({ level: 2, primary_account: AccountPrimary ? false : true, status: true }, { transaction: t })
+			}
+			return user_procoopmember
+		} catch (error) {
+			throw error
+		}
+	})
+}
 const getDataProcoopxId = async (id) => {
 	try {
 		const user_procoop = await db.Procoop_Member.findByPk(id)
 		return user_procoop.get()
 	} catch (error) {
-		return { error: error.message }
+		throw error
 	}
 }
 const allAccount = async (id) => {
 	try {
-		const users_procoop = await db.User_procoopMember.findAll({ where: { id_user: id } })
-		return users_procoop.get()
+		const users_procoop = await db.User_procoopMember.findAll({
+			where: { id_user: id },
+			include: [
+				{
+					model: db.Procoop_Member,
+					as: 'Procoop_Member', // Asegúrate de que este alias coincida con el definido en tu modelo
+				},
+			],
+		})
+		const result = users_procoop.map((user) => user.get({ plain: true }))
+		return result
 	} catch (error) {
-		return { error: error.message }
+		throw error
 	}
 }
 
@@ -275,4 +334,6 @@ module.exports = {
 	getProcoopMemberxDni,
 	getDataProcoopxId,
 	allAccount,
+	getOrCreateProcoopMember,
+	getOrCreateUser_ProcoopMember,
 }

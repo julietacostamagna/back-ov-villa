@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const { migrationCity, migrationState, getNameCustomer, searchByCuit, searchByDNI } = require('../controllers/Procoop.controller')
+const { migrationCity, migrationState, getNameCustomer, searchByCuit, searchByDNI, addUserPersonMember } = require('../controllers/Procoop.controller')
 const { migrationUser, dataUser, upgradeUser, updateUser, searchUserxDni, getAllAccount } = require('../controllers/User.controller')
 const { verifyToken } = require('../middleware/Auth.middleware')
 const { newQuery, logout } = require('../controllers/Auth.controller')
@@ -24,8 +24,10 @@ router.post('/dataUser', verifyToken, dataUser)
 router.post('/getCustomer', verifyToken, getNameCustomer)
 router.patch('/upgradeLevelUser', verifyToken, upgradeUser)
 router.patch('/updateCustomer', verifyToken, updateUser)
+
 // traigo el listado de todas las cuentas de procoop relacionadas
 router.get('/allOther', verifyToken, getAllAccount)
+router.post('/createOther', verifyToken, addUserPersonMember)
 
 // Funciones de localidad
 router.get('/listState', verifyToken, getListState)

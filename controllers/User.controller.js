@@ -142,13 +142,7 @@ async function getAllAccount(req, res) {
 	try {
 		const { id } = req.user
 		const allAccountRelation = await allAccount(id)
-		console.log(allAccountRelation)
-		let listUser
-		allAccountRelation.forEach((item) => {
-			listUser.push(getDataProcoopxId(item.id_procoop_member))
-		})
-		console.log(listUser)
-		return res.status(200).json(listUser)
+		return res.status(200).json(allAccountRelation)
 	} catch (error) {
 		res.status(400).json({ message: error.message })
 	}

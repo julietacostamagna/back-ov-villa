@@ -173,7 +173,7 @@ const updateLvl2 = async (user, dataUpdate) => {
 			}
 			return { userAddress, addressCreate, userProcoopMember, ProcoopMember, userDetail, person }
 		} catch (error) {
-			return { error: error.message }
+			throw error
 		}
 	})
 }
