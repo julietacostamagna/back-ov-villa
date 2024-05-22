@@ -5,6 +5,7 @@ const { dataUser, upgradeUser, updateUser } = require('../controllers/User.contr
 const { verifyToken } = require('../middleware/Auth.middleware')
 const { logout } = require('../controllers/Auth.controller')
 const { getListState, getListCity, getListStreet, newStreet } = require('../controllers/Location.controller')
+const { newRequestService } = require('../controllers/RequestService.controller')
 
 router.get('/test', (req, res) => {
 	res.json({ message: 'Test route' })
@@ -28,5 +29,8 @@ router.get('/listState', verifyToken, getListState)
 router.get('/listCity', verifyToken, getListCity)
 router.get('/listStreet', verifyToken, getListStreet)
 router.post('/addStreet', verifyToken, newStreet)
+
+// FUNCIONES PARA SOLICITUD DE SERVICIOS
+router.post('/createRequestService', verifyToken, newRequestService)
 
 module.exports = router
