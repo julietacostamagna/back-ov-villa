@@ -16,7 +16,7 @@ router.get('/logout', verifyToken, logout)
 router.post('/searchDni', verifyToken, searchByDNI)
 router.post('/searchCuit', verifyToken, searchByCuit)
 // router.get('/users', migrationUser)
-router.post('/dataUser', verifyToken, dataUser)
+router.get('/dataUser', verifyToken, dataUser)
 // router.get('/localidad', migrationCity)
 // router.get('/provincia', migrationState)
 
