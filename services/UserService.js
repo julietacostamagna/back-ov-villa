@@ -74,12 +74,16 @@ const updateLvl2 = async (user, dataUpdate) => {
 					cell_phone: `${dataUpdate.phoneCaract} ${dataUpdate.numberPhone}`,
 					SexId: dataUpdate.sex,
 				}
-				const [dataPerson, createdPerson] = await db.Person_physical.findOrCreate({ where: { num_dni: dataUser.num_dni } }, { transaction: t })
-				if (createdPerson) {
-					await dataPerson.update(dataUser, { transaction: t })
+				const existPersonPhysical = await db.Person_physical.findOne({ where: { num_dni: dataUser.num_dni } }, { transaction: t })
+				if (!existPersonPhysical) {
+					person = await db.Person_physical.create(dataUser, { transaction: t })
+				} else {
+					person = await existPersonPhysical.update(dataUser, { transaction: t })
 				}
-				person = dataPerson
-				userDetail = await db.User_Detail.findOrCreate({ where: { id_user: user.id, id_person_physical: person.id } })
+				userDetail = await db.User_Detail.findOne({ where: { id_user: user.id, id_person_physical: person.id } })
+				if (!userDetail) {
+					userDetail = await db.User_Detail.create({ id_user: user.id, id_person_physical: person.id }, { transaction: t })
+				}
 			} else {
 				dataUser = {
 					social_raeson: dataUpdate.name_register,
@@ -89,16 +93,20 @@ const updateLvl2 = async (user, dataUpdate) => {
 					legal_address: dataUpdate.legal_address || null,
 					num_address: dataUpdate.num_address || null,
 				}
-				const [PersonLegal, createdLegal] = await db.Person_legal.findOrCreate({ where: { cuit: dataUser.cuit } })
-				if (createdLegal) {
-					await db.Person_legal.update(dataUser, { transaction: t })
+				const existPersonLegal = await db.Person_legal.findOne({ where: { cuit: dataUser.cuit } })
+				if (!existPersonLegal) {
+					person = await db.Person_legal.create(dataUser, { transaction: t })
+				} else {
+					person = await existPersonLegal.update(dataUser, { transaction: t })
 				}
-				person = PersonLegal
-				userDetail = await db.User_Detail.findOrCreate({ where: { id_user: user.id, id_person_legal: person.id } })
+				const existUserDetail = await db.User_Detail.findOne({ where: { id_user: user.id, id_person_legal: person.id } })
+				if (!existUserDetail) {
+					userDetail = await db.User_Detail.create({ id_user: user.id, id_person_legal: person.id }, { transaction: t })
+				}
 			}
-			const [ProcoopMember, createProcoopMember] = await db.Procoop_Member.findOrCreate({ where: { number_customer: dataUpdate.number_customer } })
-			// let ProcoopMember
-			if (createProcoopMember) {
+			const existProcoopMember = await db.Procoop_Member.findOne({ where: { number_customer: dataUpdate.number_customer } })
+			let ProcoopMember
+			if (!existProcoopMember) {
 				const dataProcoop = await Persona_x_COD_SOC(dataUpdate.number_customer)
 				const dataProcoopMember = {
 					number_customer: dataUpdate.number_customer,
@@ -116,7 +124,9 @@ const updateLvl2 = async (user, dataUpdate) => {
 					num_dni: dataProcoop[0].NUM_DNI,
 					born_date: new Date(`${dataProcoop[0].FEC_NAC} `),
 				}
-				await ProcoopMember.update(dataProcoopMember, { transaction: t })
+				ProcoopMember = await db.Procoop_Member.create(dataProcoopMember, { transaction: t })
+			} else {
+				ProcoopMember = existProcoopMember
 			}
 			const dataUserProcoop = {
 				id_user: user.id,
@@ -125,9 +135,12 @@ const updateLvl2 = async (user, dataUpdate) => {
 				primary_account: true,
 				status: true,
 			}
-			const [UserProcoopMember, createdUserProcoop] = await db.User_procoopMember.findOrCreate({ where: { id_user: user.id, id_procoop_member: ProcoopMember.id } })
-			if (createdUserProcoop) {
-				await UserProcoopMember.update(dataUserProcoop, { transaction: t })
+			const existUserProcoop = await db.User_procoopMember.findOne({ where: { id_user: user.id, id_procoop_member: ProcoopMember.id } })
+			let userProcoopMember
+			if (!existUserProcoop) {
+				userProcoopMember = await db.User_procoopMember.create(dataUserProcoop, { transaction: t })
+			} else {
+				userProcoopMember = await existUserProcoop.update(dataUserProcoop, { transaction: t })
 			}
 			const city = await db.City.findOne({ where: { COD_LOC: dataUpdate.CityId } }, { transaction: t })
 			const state = await db.State.findOne({ where: { COD_PRO: dataUpdate.StateId } }, { transaction: t })
@@ -144,19 +157,22 @@ const updateLvl2 = async (user, dataUpdate) => {
 				CityId: city.id,
 				StateId: state.id,
 			}
-			const [newAddress, createdAddress] = await db.Address.findOrCreate(
-				{ where: { number_address: address.number_address, CityId: address.CityId, StateId: address.StateId, StreetId: address.StreetId } },
-				{ transaction: t }
-			)
-			if (createdAddress) {
-				await newAddress.update(address, { transaction: t })
+			const existAddress = await db.Address.findOne({ where: { number_address: address.number_address, CityId: address.CityId, StateId: address.StateId, StreetId: address.StreetId } }, { transaction: t })
+			let addressCreate
+			if (!existAddress) {
+				addressCreate = await db.Address.create(address, { transaction: t })
+			} else {
+				addressCreate = await existAddress.update(address, { transaction: t })
 			}
-			const dataUserAddress = { status: true, UserId: user.id, AddressId: newAddress.id, Procoop_MembersId: ProcoopMember.id }
-			const [PersonAddress, createdPersonAddress] = await db.Person_Address.findOrCreate({ where: { UserId: dataUserAddress.UserId, AddressId: dataUserAddress.AddressId } })
-			if (createdPersonAddress) {
-				await PersonAddress.update(dataUserAddress, { transaction: t })
+			const dataUserAddress = { status: true, UserId: user.id, AddressId: addressCreate.id, Procoop_MembersId: ProcoopMember.id }
+			const existUserAddress = await db.Person_Address.findOne({ where: { UserId: dataUserAddress.UserId, AddressId: dataUserAddress.AddressId } })
+			let userAddress
+			if (!existUserAddress) {
+				userAddress = await db.Person_Address.create(dataUserAddress, { transaction: t })
+			} else {
+				await existUserAddress.update(dataUserAddress, { transaction: t })
 			}
-			return { PersonAddress, newAddress, UserProcoopMember, ProcoopMember, userDetail, person }
+			return { userAddress, addressCreate, userProcoopMember, ProcoopMember, userDetail, person }
 		} catch (error) {
 			throw error
 		}
