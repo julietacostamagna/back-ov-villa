@@ -60,7 +60,7 @@ const login = async (email, password, remember) => {
 		const dataProcoop = await getLevel(user.id)
 		let accountPrimary
 		if (dataProcoop) {
-			accountPrimary = dataProcoop.map((item) => {
+			accountPrimary = dataProcoop.filter((item) => {
 				let data = item.get()
 				if (data.primary_account === true) {
 					return item

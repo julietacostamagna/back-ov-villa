@@ -139,13 +139,11 @@ async function updateUser(req, res) {
 }
 async function searchUserxDni(req, res) {
 	try {
-		const { id } = req.user
+		// const { id } = req.user
 		const { dni } = req.query
 		if (!dni) throw new Error('Se debe pasar el dni del usuario.')
 		const user = await getUserxDni(dni)
-		const Address = await searchAddressxUser(id)
-		const data = { user, Address }
-		res.status(200).json(data)
+		res.status(200).json(user)
 	} catch (error) {
 		res.status(400).json(error.message)
 	}

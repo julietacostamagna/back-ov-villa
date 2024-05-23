@@ -9,9 +9,10 @@ module.exports = (sequelize, DataTypes) => {
 		 */
 		static associate(models) {
 			// define association here
-			Address.belongsTo(models.City, { foreignKey: 'CityId', targetKey: 'id' })
-			Address.belongsTo(models.State, { foreignKey: 'StateId', targetKey: 'id' })
-			Address.belongsTo(models.Street, { foreignKey: 'StreetId' })
+			this.belongsTo(models.City, { foreignKey: 'CityId', targetKey: 'id' })
+			this.belongsTo(models.State, { foreignKey: 'StateId', targetKey: 'id' })
+			this.belongsTo(models.Street, { foreignKey: 'StreetId' })
+			this.hasMany(models.Person_Address, { foreignKey: 'AddressId', as: 'Person_Addresses' })
 		}
 	}
 	Address.init(

@@ -164,13 +164,20 @@ const updateLvl2 = async (user, dataUpdate) => {
 			} else {
 				addressCreate = await existAddress.update(address, { transaction: t })
 			}
-			const dataUserAddress = { status: true, UserId: user.id, AddressId: addressCreate.id, Procoop_MembersId: ProcoopMember.id }
-			const existUserAddress = await db.Person_Address.findOne({ where: { UserId: dataUserAddress.UserId, AddressId: dataUserAddress.AddressId } })
+			let idPersonPhysical = null
+			let idPersonLegal = null
+			if (user.typePerson === 1) {
+				idPersonPhysical = person.id
+			} else {
+				idPersonLegal = person.id
+			}
+			const dataUserAddress = { status: true, PersonPhysicalId: idPersonPhysical, PersonLegalsId: idPersonLegal, AddressId: addressCreate.id, Procoop_MembersId: ProcoopMember.id }
+			const existUserAddress = await db.Person_Address.findOne({ where: { PersonPhysicalId: idPersonPhysical, PersonLegalsId: idPersonLegal, AddressId: dataUserAddress.AddressId } })
 			let userAddress
 			if (!existUserAddress) {
 				userAddress = await db.Person_Address.create(dataUserAddress, { transaction: t })
 			} else {
-				await existUserAddress.update(dataUserAddress, { transaction: t })
+				userAddress = await existUserAddress.update(dataUserAddress, { transaction: t })
 			}
 			return { userAddress, addressCreate, userProcoopMember, ProcoopMember, userDetail, person }
 		} catch (error) {
@@ -211,11 +218,69 @@ const getUserxDni = async (dni) => {
 					model: db.TypeSex,
 					as: 'TypeSex', // Asegúrate de que este alias coincida con el definido en tu modelo
 				},
+				{
+					model: db.Person_Address,
+					as: 'Person_Address', // Asegúrate de que este alias coincida con el definido en tu modelo
+					include: [
+						{
+							model: db.Address,
+							as: 'Address',
+							include: [
+								{
+									model: db.City,
+									as: 'City',
+								},
+								{
+									model: db.Street,
+									as: 'Street',
+								},
+								{
+									model: db.State,
+									as: 'State',
+								},
+							],
+						},
+					],
+				},
 			],
 		})
-		return user ? user.get() : null
+		if (!user) return null
+
+		return user.get()
 	} catch (error) {
-		return { error: error.message }
+		throw error
 	}
 }
-module.exports = { getUserxEmail, setTokenTemporal, RegisterAcept, verifyEmailToken, getUser, getLevel, updateLvl2, saveUser, getUserxDni }
+
+const deleteUserPersonMember = async (id) => {
+	return db.sequelize.transaction(async (t) => {
+		try {
+			const UserProcoopMember = await db.User_procoopMember.findOne({ where: { id } })
+			if (!UserProcoopMember) throw new Error('La relación no existe')
+			await UserProcoopMember.destroy({ transaction: t })
+			return { message: 'Se elimino correctamente' }
+		} catch (error) {
+			throw error
+		}
+	})
+}
+const updatePrimaryAccountUserProcoop = async (id_relation, id) => {
+	return db.sequelize.transaction(async (t) => {
+		try {
+			const listUserProcoopMember = await db.User_procoopMember.findAll({ where: { id_user: id } })
+			if (!listUserProcoopMember) throw new Error('No se encontraron relaciones')
+			await db.User_procoopMember.update({ primary_account: 0 }, { where: { id_user: id }, transaction: t })
+			const specificRelation = listUserProcoopMember.find((relation) => relation.dataValues.id == id_relation)
+			if (!specificRelation) {
+				throw new Error('No se encontró la relación especificada')
+			}
+			specificRelation.primary_account = 1
+			await specificRelation.save({ transaction: t })
+			return { message: 'Se cambió la cuenta principal correctamente' }
+		} catch (error) {
+			throw error
+		}
+	})
+}
+
+module.exports = { getUserxEmail, setTokenTemporal, RegisterAcept, verifyEmailToken, getUser, getLevel, updateLvl2, saveUser, getUserxDni, deleteUserPersonMember, updatePrimaryAccountUserProcoop }

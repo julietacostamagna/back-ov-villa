@@ -116,7 +116,8 @@ const searchAddress = async (data) => {
  */
 const searchAddressxUser = async (id_user) => {
 	try {
-		const Person_Address = await db.Person_Address.findOne({ where: { UserId: id_user } })
+		console.log(id_user)
+		const Person_Address = await db.Person_Address.findOne({ where: { [Op.or]: [{ PersonPhysicalId: id_user }, { PersonLegalsId: id_user }] } })
 		if (!Person_Address) {
 			return Person_Address
 		}

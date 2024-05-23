@@ -1,6 +1,7 @@
 const City = require('../models/city.js')
 const State = require('../models/state.js')
 const { ListCityProcoop, ListStateProcoop, empresaPorCuit, personaPorDni, Persona_x_COD_SOC, getOrCreateUser_ProcoopMember, getOrCreateProcoopMember } = require('../services/ProcoopService.js')
+const { updatePrimaryAccountUserProcoop, deleteUserPersonMember } = require('../services/UserService.js')
 const { addStreet } = require('../services/locationServices.js')
 
 async function searchByDNI(req, res) {
@@ -69,12 +70,37 @@ async function addUserPersonMember(req, res) {
 		const { id } = req.user
 		const ProcoopMember = await getOrCreateProcoopMember(customer)
 		const relationUserProcoopMember = await getOrCreateUser_ProcoopMember(ProcoopMember.id, id)
-		const dataResult = { name: ProcoopMember.last_name, num: ProcoopMember.number_customer, primary: relationUserProcoopMember.primary_account, select: relationUserProcoopMember.primary_account }
+		const dataResult = {
+			id_relation: relationUserProcoopMember.id,
+			name: ProcoopMember.last_name,
+			num: ProcoopMember.number_customer,
+			primary: relationUserProcoopMember.primary_account,
+			level: relationUserProcoopMember.level,
+		}
 		return res.status(200).json(dataResult)
 	} catch (error) {
 		return res.status(404).json({ message: error.message })
 	}
 	// Persona_x_COD_SOC
+}
+async function removeUserPersonMember(req, res) {
+	try {
+		const { id_relation } = req.query
+		const relationUserProcoopMember = await deleteUserPersonMember(id_relation)
+		return res.status(200).json(relationUserProcoopMember)
+	} catch (error) {
+		return res.status(404).json({ message: error.message })
+	}
+}
+async function changePrimaryAccountUserProcoop(req, res) {
+	try {
+		const { id_relation } = req.query
+		const { id } = req.user
+		const relationUserProcoopMember = await updatePrimaryAccountUserProcoop(id_relation, id)
+		return res.status(200).json(relationUserProcoopMember)
+	} catch (error) {
+		return res.status(404).json(error.message)
+	}
 }
 
 module.exports = {
@@ -84,4 +110,6 @@ module.exports = {
 	migrationState,
 	getNameCustomer,
 	addUserPersonMember,
+	removeUserPersonMember,
+	changePrimaryAccountUserProcoop,
 }

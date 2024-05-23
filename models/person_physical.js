@@ -4,6 +4,7 @@ module.exports = (sequelize, DataTypes) => {
 	class Person_physical extends Model {
 		static associate(models) {
 			this.belongsTo(models.TypeSex, { foreignKey: 'SexId' })
+			this.hasOne(models.Person_Address, { foreignKey: 'PersonPhysicalId', as: 'Person_Address' })
 		}
 	}
 	Person_physical.init(
