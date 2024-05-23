@@ -1,9 +1,9 @@
 const express = require('express')
 const router = express.Router()
-const { migrationCity, migrationState, getNameCustomer, searchByCuit, searchByDNI, addUserPersonMember } = require('../controllers/Procoop.controller')
-const { migrationUser, dataUser, upgradeUser, updateUser, searchUserxDni, getAllAccount } = require('../controllers/User.controller')
+const { getNameCustomer, searchByCuit, searchByDNI, addUserPersonMember, removeUserPersonMember, changePrimaryAccountUserProcoop } = require('../controllers/Procoop.controller')
+const { dataUser, upgradeUser, updateUser, searchUserxDni, getAllAccount } = require('../controllers/User.controller')
 const { verifyToken } = require('../middleware/Auth.middleware')
-const { newQuery, logout } = require('../controllers/Auth.controller')
+const { logout } = require('../controllers/Auth.controller')
 const { getListState, getListCity, getListStreet, newStreet, getAddress } = require('../controllers/Location.controller')
 
 router.get('/test', (req, res) => {
@@ -28,6 +28,9 @@ router.patch('/updateCustomer', verifyToken, updateUser)
 // traigo el listado de todas las cuentas de procoop relacionadas
 router.get('/allOther', verifyToken, getAllAccount)
 router.post('/createOther', verifyToken, addUserPersonMember)
+router.delete('/deleteOther', verifyToken, removeUserPersonMember)
+
+router.patch('/chagePrimayMember', verifyToken, changePrimaryAccountUserProcoop)
 
 // Funciones de localidad
 router.get('/listState', verifyToken, getListState)

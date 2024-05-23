@@ -251,4 +251,36 @@ const getUserxDni = async (dni) => {
 		throw error
 	}
 }
-module.exports = { getUserxEmail, setTokenTemporal, RegisterAcept, verifyEmailToken, getUser, getLevel, updateLvl2, saveUser, getUserxDni }
+
+const deleteUserPersonMember = async (id) => {
+	return db.sequelize.transaction(async (t) => {
+		try {
+			const UserProcoopMember = await db.User_procoopMember.findOne({ where: { id } })
+			if (!UserProcoopMember) throw new Error('La relación no existe')
+			await UserProcoopMember.destroy({ transaction: t })
+			return { message: 'Se elimino correctamente' }
+		} catch (error) {
+			throw error
+		}
+	})
+}
+const updatePrimaryAccountUserProcoop = async (id_relation, id) => {
+	return db.sequelize.transaction(async (t) => {
+		try {
+			const listUserProcoopMember = await db.User_procoopMember.findAll({ where: { id_user: id } })
+			if (!listUserProcoopMember) throw new Error('No se encontraron relaciones')
+			await db.User_procoopMember.update({ primary_account: 0 }, { where: { id_user: id }, transaction: t })
+			const specificRelation = listUserProcoopMember.find((relation) => relation.dataValues.id == id_relation)
+			if (!specificRelation) {
+				throw new Error('No se encontró la relación especificada')
+			}
+			specificRelation.primary_account = 1
+			await specificRelation.save({ transaction: t })
+			return { message: 'Se cambió la cuenta principal correctamente' }
+		} catch (error) {
+			throw error
+		}
+	})
+}
+
+module.exports = { getUserxEmail, setTokenTemporal, RegisterAcept, verifyEmailToken, getUser, getLevel, updateLvl2, saveUser, getUserxDni, deleteUserPersonMember, updatePrimaryAccountUserProcoop }

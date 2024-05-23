@@ -250,7 +250,7 @@ const getProcoopMemberxDni = async (dni) => {
 const getOrCreateProcoopMember = async (num_Customer) => {
 	return db.sequelize.transaction(async (t) => {
 		try {
-			const [user_procoop, created] = await db.Procoop_Member.findOrCreate({ where: { number_customer: num_Customer } }, { transaction: t })
+			const [user_procoop, created] = await db.Procoop_Member.findOrCreate({ where: { number_customer: num_Customer }, default: { number_customer: num_Customer }, transaction: t })
 			if (created) {
 				const dataProcoop = await Persona_x_COD_SOC(num_Customer)
 				const dataProcoopMember = {
@@ -281,7 +281,11 @@ const getOrCreateProcoopMember = async (num_Customer) => {
 const getOrCreateUser_ProcoopMember = async (id_ProcoopMember, id_user) => {
 	return db.sequelize.transaction(async (t) => {
 		try {
-			const [user_procoopmember, created] = await db.User_procoopMember.findOrCreate({ where: { id_procoop_member: id_ProcoopMember, id_user: id_user } })
+			const [user_procoopmember, created] = await db.User_procoopMember.findOrCreate({
+				where: { id_procoop_member: id_ProcoopMember, id_user: id_user },
+				default: { id_procoop_member: id_ProcoopMember, id_user: id_user },
+				transaction: t,
+			})
 			if (created) {
 				const AccountPrimary = await db.User_procoopMember.findOne({ where: { id_user: id_user } })
 				await user_procoopmember.update({ level: 2, primary_account: AccountPrimary ? false : true, status: true }, { transaction: t })
