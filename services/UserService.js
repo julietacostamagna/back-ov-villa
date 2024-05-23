@@ -74,14 +74,14 @@ const updateLvl2 = async (user, dataUpdate) => {
 					cell_phone: `${dataUpdate.phoneCaract} ${dataUpdate.numberPhone}`,
 					SexId: dataUpdate.sex,
 				}
-				const existPerson = await db.Person_physical.findOne({ where: { num_dni: dataUser.num_dni } })
-				if (!existPerson) {
+				const existPersonPhysical = await db.Person_physical.findOne({ where: { num_dni: dataUser.num_dni } }, { transaction: t })
+				if (!existPersonPhysical) {
 					person = await db.Person_physical.create(dataUser, { transaction: t })
 				} else {
-					person = await existPerson.update(dataUser, { transaction: t })
+					person = await existPersonPhysical.update(dataUser, { transaction: t })
 				}
-				const existUserDetail = await db.User_Detail.findOne({ where: { id_user: user.id, id_person_physical: person.id } })
-				if (!existUserDetail) {
+				userDetail = await db.User_Detail.findOne({ where: { id_user: user.id, id_person_physical: person.id } })
+				if (!userDetail) {
 					userDetail = await db.User_Detail.create({ id_user: user.id, id_person_physical: person.id }, { transaction: t })
 				}
 			} else {
@@ -93,11 +93,11 @@ const updateLvl2 = async (user, dataUpdate) => {
 					legal_address: dataUpdate.legal_address || null,
 					num_address: dataUpdate.num_address || null,
 				}
-				const existPerson = await db.Person_legal.findOne({ where: { cuit: dataUser.cuit } })
-				if (!existPerson) {
+				const existPersonLegal = await db.Person_legal.findOne({ where: { cuit: dataUser.cuit } })
+				if (!existPersonLegal) {
 					person = await db.Person_legal.create(dataUser, { transaction: t })
 				} else {
-					person = await existPerson.update(dataUser, { transaction: t })
+					person = await existPersonLegal.update(dataUser, { transaction: t })
 				}
 				const existUserDetail = await db.User_Detail.findOne({ where: { id_user: user.id, id_person_legal: person.id } })
 				if (!existUserDetail) {
@@ -136,10 +136,11 @@ const updateLvl2 = async (user, dataUpdate) => {
 				status: true,
 			}
 			const existUserProcoop = await db.User_procoopMember.findOne({ where: { id_user: user.id, id_procoop_member: ProcoopMember.id } })
+			let userProcoopMember
 			if (!existUserProcoop) {
-				await db.User_procoopMember.create(dataUserProcoop, { transaction: t })
+				userProcoopMember = await db.User_procoopMember.create(dataUserProcoop, { transaction: t })
 			} else {
-				await existUserProcoop.update(dataUserProcoop, { transaction: t })
+				userProcoopMember = await existUserProcoop.update(dataUserProcoop, { transaction: t })
 			}
 			const city = await db.City.findOne({ where: { COD_LOC: dataUpdate.CityId } }, { transaction: t })
 			const state = await db.State.findOne({ where: { COD_PRO: dataUpdate.StateId } }, { transaction: t })

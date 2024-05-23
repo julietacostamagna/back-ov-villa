@@ -19,7 +19,6 @@ async function searchByCuit(req, res) {
 		const result = await empresaPorCuit(cuit)
 		return res.status(200).json(result)
 	} catch (error) {
-		console.log(error)
 		return res.json({ error, msj: 'error' })
 	}
 }
@@ -36,7 +35,6 @@ async function migrationCity(req, res) {
 		const resultadd = await City.bulkCreate(citiesOfi)
 		return res.status(200).json(resultadd)
 	} catch (error) {
-		console.log(error)
 		return res.json({ error, msj: 'error' })
 	}
 }
@@ -52,7 +50,6 @@ async function migrationState(req, res) {
 		const resultadd = await State.bulkCreate(listStateOfi)
 		return res.status(200).json(resultadd)
 	} catch (error) {
-		console.log(error)
 		return res.json({ error, msj: 'error' })
 	}
 }
@@ -72,7 +69,6 @@ async function addUserPersonMember(req, res) {
 		const { id } = req.user
 		const ProcoopMember = await getOrCreateProcoopMember(customer)
 		const relationUserProcoopMember = await getOrCreateUser_ProcoopMember(ProcoopMember.id, id)
-		console.log(ProcoopMember, relationUserProcoopMember)
 		const dataResult = { name: ProcoopMember.last_name, num: ProcoopMember.number_customer, primary: relationUserProcoopMember.primary_account, select: relationUserProcoopMember.primary_account }
 		return res.status(200).json(dataResult)
 	} catch (error) {

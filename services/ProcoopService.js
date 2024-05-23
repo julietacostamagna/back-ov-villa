@@ -250,7 +250,7 @@ const getProcoopMemberxDni = async (dni) => {
 const getOrCreateProcoopMember = async (num_Customer) => {
 	return db.sequelize.transaction(async (t) => {
 		try {
-			const [user_procoop, created] = await db.Procoop_Member.findOrCreate({ where: { number_customer: num_Customer } })
+			const [user_procoop, created] = await db.Procoop_Member.findOrCreate({ where: { number_customer: num_Customer } }, { transaction: t })
 			if (created) {
 				const dataProcoop = await Persona_x_COD_SOC(num_Customer)
 				const dataProcoopMember = {

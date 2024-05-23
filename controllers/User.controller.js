@@ -100,7 +100,7 @@ async function upgradeUser(req, res) {
 		if (!user) throw new Error('El usuario no existe o ya ha sido validado.')
 		const response = await updateLvl2(user, req.body)
 		if (!response) throw new Error('El usuario no se pudo actualizar.')
-		res.status(200).json(true)
+		res.status(200).json(response)
 	} catch (error) {
 		console.log({ message: error.message })
 		res.status(400).json({ message: error.message })
@@ -122,7 +122,30 @@ async function updateUser(req, res) {
 		res.status(400).json({ message: error.message })
 	}
 }
+async function searchUserxDni(req, res) {
+	try {
+		const { id } = req.user
+		const { dni } = req.query
+		if (!dni) throw new Error('Se debe pasar el dni del usuario.')
+		const user = await getUserxDni(dni)
+		const Address = await searchAddressxUser(id)
+		const data = { user, Address }
+		res.status(200).json(data)
+	} catch (error) {
+		res.status(400).json(error.message)
+	}
+}
 
+async function getAllAccount(req, res) {
+	try {
+		const { id } = req.user
+		const allAccountRelation = await allAccount(id)
+		return res.status(200).json(allAccountRelation)
+	} catch (error) {
+		res.status(400).json({ message: error.message })
+	}
+	// Persona_x_COD_SOC
+}
 module.exports = {
 	migrationUser,
 	tokenVerify,
