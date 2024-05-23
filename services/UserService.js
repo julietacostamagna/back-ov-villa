@@ -44,7 +44,7 @@ const getUser = async (id) => {
 			// Clonamos dataValues para no modificar el objeto original
 			const result = { ...data.dataValues }
 			// Eliminamos los campos que no queremos en el resultado
-			delete result.password
+			//delete result.password
 			delete result.token_temp
 			delete result.createdAt
 			delete result.updatedAt
@@ -213,7 +213,7 @@ const getUserxDni = async (dni) => {
 				},
 			],
 		})
-		return user.get()
+		return user ? user.get() : null
 	} catch (error) {
 		return { error: error.message }
 	}

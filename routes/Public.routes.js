@@ -22,7 +22,6 @@ router.get('/email', sendEmail)
 //RUTAS DE SERVICIOS
 router.get('/getService', customerServices)
 router.get('/getConsumo', customerConsumption)
-router.get('/getDetailService', customerServicesDetail)
 
 //RUTAS DE PAGOS
 router.get('/facturas', getInvoice)

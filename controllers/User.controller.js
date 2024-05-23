@@ -2,6 +2,7 @@ const { Persona_x_COD_SOC, getProcoopMemberxDni, allAccount, getDataProcoopxId }
 const ScriptService = require('../services/ScriptService.js')
 const { verifyEmailToken, getUser, getLevel, updateLvl2, saveUser, getUserxDni } = require('../services/UserService.js')
 const { searchAddressxUser } = require('../services/locationServices.js')
+const bcrypt = require('bcrypt')
 
 const user = (req, res) => {}
 
@@ -112,14 +113,28 @@ async function updateUser(req, res) {
 		const { ...fields } = req.body
 		if (!id) throw new Error('Se debe pasar el id del usuario.')
 		const user = await getUser(id)
+		//POR SI MODIFICAN LA CONTRASEÑA
+		if (fields.password) {
+			let hash = user.password
+			console.log(hash)
+			hash = hash.replace(/^\$2y(.+)$/i, '$2a$1')
+			const isMatch = await bcrypt.compare(fields.password, hash)
+			if (!isMatch) {
+				throw new Error('La contraseña es incorrecta')
+			}
+			const pass = await bcrypt.hash(fields.newPassword, 10)
+			fields.password = pass
+			delete fields.new_password
+			console.log('Paso')
+			console.log(fields)
+		}
 		if (!user) throw new Error('El usuario no existe o ya ha sido validado.')
 		Object.assign(user, fields)
 		const updatedUser = await saveUser(user)
 
 		res.status(200).json(updatedUser)
 	} catch (error) {
-		console.log({ message: error.message })
-		res.status(400).json({ message: error.message })
+		res.status(400).json(error.message)
 	}
 }
 async function searchUserxDni(req, res) {
