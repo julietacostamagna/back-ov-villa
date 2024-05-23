@@ -164,13 +164,20 @@ const updateLvl2 = async (user, dataUpdate) => {
 			} else {
 				addressCreate = await existAddress.update(address, { transaction: t })
 			}
-			const dataUserAddress = { status: true, UserId: user.id, AddressId: addressCreate.id, Procoop_MembersId: ProcoopMember.id }
-			const existUserAddress = await db.Person_Address.findOne({ where: { UserId: dataUserAddress.UserId, AddressId: dataUserAddress.AddressId } })
+			let idPersonPhysical = null
+			let idPersonLegal = null
+			if (user.typePerson === 1) {
+				idPersonPhysical = person.id
+			} else {
+				idPersonLegal = person.id
+			}
+			const dataUserAddress = { status: true, PersonPhysicalId: idPersonPhysical, PersonLegalsId: idPersonLegal, AddressId: addressCreate.id, Procoop_MembersId: ProcoopMember.id }
+			const existUserAddress = await db.Person_Address.findOne({ where: { PersonPhysicalId: idPersonPhysical, PersonLegalsId: idPersonLegal, AddressId: dataUserAddress.AddressId } })
 			let userAddress
 			if (!existUserAddress) {
 				userAddress = await db.Person_Address.create(dataUserAddress, { transaction: t })
 			} else {
-				await existUserAddress.update(dataUserAddress, { transaction: t })
+				userAddress = await existUserAddress.update(dataUserAddress, { transaction: t })
 			}
 			return { userAddress, addressCreate, userProcoopMember, ProcoopMember, userDetail, person }
 		} catch (error) {
@@ -211,11 +218,37 @@ const getUserxDni = async (dni) => {
 					model: db.TypeSex,
 					as: 'TypeSex', // Asegúrate de que este alias coincida con el definido en tu modelo
 				},
+				{
+					model: db.Person_Address,
+					as: 'Person_Address', // Asegúrate de que este alias coincida con el definido en tu modelo
+					include: [
+						{
+							model: db.Address,
+							as: 'Address',
+							include: [
+								{
+									model: db.City,
+									as: 'City',
+								},
+								{
+									model: db.Street,
+									as: 'Street',
+								},
+								{
+									model: db.State,
+									as: 'State',
+								},
+							],
+						},
+					],
+				},
 			],
 		})
+		if (!user) return null
+
 		return user.get()
 	} catch (error) {
-		return { error: error.message }
+		throw error
 	}
 }
 module.exports = { getUserxEmail, setTokenTemporal, RegisterAcept, verifyEmailToken, getUser, getLevel, updateLvl2, saveUser, getUserxDni }
