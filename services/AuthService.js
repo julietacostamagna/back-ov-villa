@@ -42,30 +42,39 @@ const signToken = (user, remember) => {
 
 const login = async (email, password, remember) => {
 	// const user = await db_coopm_v1.UserDesarrollo.findOne({ where: { email: email } })
-	const user = await db.User.findOne({ where: { email: email } })
-	if (!user) {
-		throw new Error('El usuario o la contraseña son incorrectas')
+	try {
+		const user = await db.User.findOne({ where: { email: email } })
+		if (!user) {
+			throw new Error('El usuario o la contraseña son incorrectas')
+		}
+		if (!user.dataValues.email_verified) {
+			throw new Error('El usuario no esta verificado')
+		}
+		let hash = user.password
+		hash = hash.replace(/^\$2y(.+)$/i, '$2a$1')
+		const isMatch = await bcrypt.compare(password, hash)
+		if (!isMatch) {
+			throw new Error('El usuario o la contraseña son incorrectas')
+		}
+		const dataProcoop = await getLevel(user.id)
+		let accountPrimary
+		if (dataProcoop) {
+			accountPrimary = dataProcoop.map((item) => {
+				let data = item.get()
+				if (data.primary_account === true) {
+					return item
+				}
+			})
+		}
+		user.level = accountPrimary[0]?.level || 1
+		if (accountPrimary[0]) {
+			const number_customer = await getDataProcoopxId(accountPrimary[0].id_procoop_member)
+			user.number_customer = number_customer.number_customer
+		}
+		return signToken(user, remember)
+	} catch (error) {
+		throw error
 	}
-	let hash = user.password
-	hash = hash.replace(/^\$2y(.+)$/i, '$2a$1')
-	const isMatch = await bcrypt.compare(password, hash)
-	if (!isMatch) {
-		throw new Error('El usuario o la contraseña son incorrectas')
-	}
-	const dataProcoop = await getLevel(user.id)
-	let accountPrimary
-	if (dataProcoop) {
-		accountPrimary = dataProcoop.map((item) => {
-			let data = item.get()
-			if (data.primary_account === true) {
-				return item
-			}
-		})
-	}
-	user.level = accountPrimary[0].level
-	const number_customer = await getDataProcoopxId(accountPrimary[0].id_procoop_member)
-	user.number_customer = number_customer.number_customer
-	return signToken(user, remember)
 }
 
 const testConection = async () => {
