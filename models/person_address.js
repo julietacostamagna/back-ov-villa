@@ -1,29 +1,33 @@
 'use strict'
 const { Model } = require('sequelize')
 module.exports = (sequelize, DataTypes) => {
-    class Person_Address extends Model {
-        /**
-         * Helper method for defining associations.
-         * This method is not a part of Sequelize lifecycle.
-         * The `models/index` file will call this method automatically.
-         */
-        static associate(models) {
-            // define association here
-        }
-    }
-    Person_Address.init(
-        {
-            status: DataTypes.BOOLEAN,
-            Procoop_MembersId: DataTypes.INTEGER,
-            UserId: DataTypes.INTEGER,
-            AddressId: DataTypes.INTEGER
-        },
-        {
-            sequelize,
-            modelName: 'Person_Address'
-        }
-    )
-    return Person_Address
+	class Person_Address extends Model {
+		/**
+		 * Helper method for defining associations.
+		 * This method is not a part of Sequelize lifecycle.
+		 * The `models/index` file will call this method automatically.
+		 */
+		static associate(models) {
+			// define association here
+			this.belongsTo(models.Person_legal, { foreignKey: 'PersonLegalsId' })
+			this.belongsTo(models.Person_physical, { foreignKey: 'PersonPhysicalId', as: 'Person_physical' })
+			this.belongsTo(models.Address, { foreignKey: 'AddressId', as: 'Address' })
+		}
+	}
+	Person_Address.init(
+		{
+			status: DataTypes.BOOLEAN,
+			Procoop_MembersId: DataTypes.INTEGER,
+			PersonLegalsId: DataTypes.INTEGER,
+			PersonPhysicalId: DataTypes.INTEGER,
+			AddressId: DataTypes.INTEGER,
+		},
+		{
+			sequelize,
+			modelName: 'Person_Address',
+		}
+	)
+	return Person_Address
 }
 
 // 'use strict'

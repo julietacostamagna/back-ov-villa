@@ -9,10 +9,6 @@ module.exports = (sequelize, DataTypes) => {
 		 */
 		static associate(models) {
 			// define association here
-			User.hasMany(models.Service_Request, {
-				foreignKey: 'user_id',
-				as: 'Service_Requests',
-			})
 		}
 	}
 	User.init(
@@ -37,6 +33,7 @@ module.exports = (sequelize, DataTypes) => {
 			},
 			dark: DataTypes.BOOLEAN,
 			token_temp: DataTypes.STRING,
+			img_profile: DataTypes.STRING,
 			typePerson: DataTypes.INTEGER,
 		},
 		{
