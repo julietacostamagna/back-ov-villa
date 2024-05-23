@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
 			// define association here
 			this.belongsTo(models.Service_Request, {
 				foreignKey: 'service_request_id',
-				as: 'Service_Requests',
+				as: 'items',
 			})
 		}
 	}
@@ -23,6 +23,7 @@ module.exports = (sequelize, DataTypes) => {
 			service_type: { type: DataTypes.TINYINT, allowNull: false },
 			status: { type: DataTypes.TINYINT, allowNull: false },
 			cod_sum: DataTypes.INTEGER,
+			service_name: { type: DataTypes.STRING, allowNull: false },
 		},
 		{
 			sequelize,

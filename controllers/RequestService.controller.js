@@ -1,4 +1,4 @@
-const { createRequestService } = require('../services/ServiceRequestService')
+const { createRequestService, getRequestServiceByUser } = require('../services/ServiceRequestService')
 
 const newRequestService = async (req, res) => {
 	try {
@@ -7,8 +7,18 @@ const newRequestService = async (req, res) => {
 		const result = await createRequestService(id, services)
 		res.status(200).json(result)
 	} catch (error) {
-		res.status(500).json({ error: error.message })
+		res.status(500).json({ message: error.message })
 	}
 }
 
-module.exports = { newRequestService }
+const getRequestsByUser = async (req, res) => {
+	try {
+		const { id } = req.user
+		const requests = await getRequestServiceByUser(id)
+		res.status(200).json(requests)
+	} catch (error) {
+		res.status(500).json({ message: error.message })
+	}
+}
+
+module.exports = { newRequestService, getRequestsByUser }

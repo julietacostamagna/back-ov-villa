@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
 		static associate(models) {
 			this.belongsTo(models.Procoop_Member, { foreignKey: 'procoop_member_id', as: 'Procoop_Members' })
 			this.belongsTo(models.User, { foreignKey: 'user_id', as: 'User' })
-			this.hasMany(models.Service_Items, { foreignKey: 'service_request_id', as: 'Service_Items' })
+			this.hasMany(models.Service_Items, { foreignKey: 'service_request_id', as: 'items' })
 		}
 	}
 	Service_Request.init(
@@ -18,6 +18,7 @@ module.exports = (sequelize, DataTypes) => {
 			procoop_member_id: DataTypes.INTEGER,
 			user_id: { type: DataTypes.INTEGER, allowNull: false },
 			status: { type: DataTypes.TINYINT, allowNull: false },
+			return_later: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: false },
 		},
 		{
 			sequelize,

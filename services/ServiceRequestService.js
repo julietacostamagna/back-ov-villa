@@ -15,7 +15,8 @@ const createRequestService = async (userID, services) => {
 				service_request_id: requestService.id,
 				service_form_id: 1,
 				service_type: service.tipo,
-				status: 2,
+				status: 1,
+				service_name: service.nombre,
 			}))
 
 		await db.Service_Items.bulkCreate(servicesToSave, { transaction: t })
@@ -29,4 +30,18 @@ const createRequestService = async (userID, services) => {
 	}
 }
 
-module.exports = { createRequestService }
+const getRequestServiceByUser = async (userID) => {
+	const requests = await db.Service_Request.findAll({
+		where: { user_id: userID },
+		include: [
+			{
+				model: db.Service_Items,
+				as: 'items',
+			},
+		],
+	})
+
+	return requests
+}
+
+module.exports = { createRequestService, getRequestServiceByUser }
