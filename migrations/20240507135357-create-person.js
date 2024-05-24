@@ -2,39 +2,42 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
 	async up(queryInterface, Sequelize) {
-		await queryInterface.createTable('Procoop_Members', {
+		await queryInterface.createTable('People', {
 			id: {
 				allowNull: false,
 				autoIncrement: true,
 				primaryKey: true,
 				type: Sequelize.INTEGER,
 			},
+			procoop_last_name: {
+				type: Sequelize.STRING,
+			},
+			email: {
+				type: Sequelize.STRING,
+			},
+
 			number_customer: {
 				type: Sequelize.INTEGER,
 			},
-			mail_procoop: {
+			type_person: {
+				type: Sequelize.INTEGER,
+				allowNull: false,
+			},
+			situation_tax: {
+				type: Sequelize.INTEGER,
+				comment: 'id de situacion impositiva',
+			},
+			fixed_phone: {
 				type: Sequelize.STRING,
 			},
 			cell_phone: {
 				type: Sequelize.STRING,
 			},
-			fixed_phone: {
-				type: Sequelize.STRING,
-			},
-			id_type_perso_procop: {
+			type_document: {
 				type: Sequelize.INTEGER,
 			},
-			id_situation_procop: {
-				type: Sequelize.INTEGER,
-			},
-			blood_type: {
+			number_document: {
 				type: Sequelize.STRING,
-			},
-			factor: {
-				type: Sequelize.STRING,
-			},
-			donor: {
-				type: Sequelize.INTEGER,
 			},
 			createdAt: {
 				allowNull: false,
@@ -47,6 +50,6 @@ module.exports = {
 		})
 	},
 	async down(queryInterface, Sequelize) {
-		await queryInterface.dropTable('Procoop_Members')
+		await queryInterface.dropTable('People')
 	},
 }

@@ -9,18 +9,15 @@ module.exports = (sequelize, DataTypes) => {
 		 */
 		static associate(models) {
 			// define association here
-			this.belongsTo(models.Person_legal, { foreignKey: 'PersonLegalsId' })
-			this.belongsTo(models.Person_physical, { foreignKey: 'PersonPhysicalId', as: 'Person_physical' })
-			this.belongsTo(models.Address, { foreignKey: 'AddressId', as: 'Address' })
+			this.belongsTo(models.Person_legal, { foreignKey: 'id_person' })
+			this.belongsTo(models.Address, { foreignKey: 'id_address', as: 'Address' })
 		}
 	}
 	Person_Address.init(
 		{
 			status: DataTypes.BOOLEAN,
-			Procoop_MembersId: DataTypes.INTEGER,
-			PersonLegalsId: DataTypes.INTEGER,
-			PersonPhysicalId: DataTypes.INTEGER,
-			AddressId: DataTypes.INTEGER,
+			id_person: DataTypes.INTEGER,
+			id_address: DataTypes.INTEGER,
 		},
 		{
 			sequelize,

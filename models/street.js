@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
 			Street.belongsToMany(models.City, {
 				through: 'Street_City',
 				as: 'Cities',
-				foreignKey: 'StreetId',
+				foreignKey: 'id_street',
 			})
 			// define association here
 		}
