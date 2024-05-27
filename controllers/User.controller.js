@@ -159,6 +159,7 @@ async function getAllAccount(req, res) {
 	}
 	// Persona_x_COD_SOC
 }
+
 module.exports = {
 	migrationUser,
 	tokenVerify,

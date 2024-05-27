@@ -7,6 +7,7 @@ const { sendEmail } = require('../services/EmailServices')
 const { customerServices, customerConsumption, customerServicesDetail } = require('../controllers/Services.controller')
 const { getInvoice, existInvoice } = require('../controllers/Payment.controller')
 const { searchByDNI, searchByCuit } = require('../controllers/Procoop.controller')
+const { Commentaries, addCommentary } = require('../controllers/Managment.controller')
 
 // RUTAS PARA AUTH
 
@@ -31,5 +32,9 @@ router.get('/existinvoice', existInvoice)
 router.get('/testConect', testConect)
 router.post('/searchDni', searchByDNI)
 router.post('/searchCuit', searchByCuit)
+
+//RUTAS INTERNAS
+router.get('/Commentaries', Commentaries)
+router.post('/addCommentary', addCommentary)
 
 module.exports = router
