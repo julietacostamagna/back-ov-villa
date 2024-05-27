@@ -3,8 +3,8 @@ const { Model } = require('sequelize')
 module.exports = (sequelize, DataTypes) => {
 	class Person_physical extends Model {
 		static associate(models) {
-			this.belongsTo(models.Person, { foreignKey: 'id_person', targetKey: 'id' })
-			this.belongsTo(models.TypeSex, { foreignKey: 'id_type_sex' })
+			this.belongsTo(models.Person, { foreignKey: 'id_person', targetKey: 'id', as: 'dataPerson' })
+			this.belongsTo(models.TypeSex, { foreignKey: 'id_type_sex', as: 'typeSex' })
 		}
 	}
 	Person_physical.init(

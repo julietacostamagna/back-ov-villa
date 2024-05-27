@@ -50,15 +50,15 @@ const addStreet = async (data) => {
 				{ transaction: t }
 			)
 			if (existingStreet) {
-				const existingRelation = await db.Street_City.findOne({ where: { CityId: parseInt(idCity), StreetId: parseInt(existingStreet.id) } }, { transaction: t })
+				const existingRelation = await db.Street_City.findOne({ where: { id_city: parseInt(idCity), id_street: parseInt(existingStreet.id) } }, { transaction: t })
 				if (existingRelation) {
 					throw new Error('Esta Calle ya existe en nuestra base de datos')
 				} else {
-					return await db.Street_City.create({ status: true, StreetId: parseInt(existingStreet.id), CityId: parseInt(idCity) }, { transaction: t })
+					return await db.Street_City.create({ status: true, id_street: parseInt(existingStreet.id), id_city: parseInt(idCity) }, { transaction: t })
 				}
 			} else {
 				const newStreet = await db.Street.create({ name: name, id_api: parseInt(id_api), id_procoop: null }, { transaction: t })
-				return await db.Street_City.create({ status: true, StreetId: parseInt(newStreet.id), CityId: parseInt(idCity) }, { transaction: t })
+				return await db.Street_City.create({ status: true, id_street: parseInt(newStreet.id), id_city: parseInt(idCity) }, { transaction: t })
 			}
 		} catch (error) {
 			return { error: error.message }
@@ -71,13 +71,12 @@ const listStreetsByCity = async (cityId) => {
 		const streets = await db.Street.findAll({
 			include: [
 				{
-					model: db.City,
-					as: 'Cities',
+					association: 'Cities',
 					where: { id: cityId },
-					through: {
-						model: db.Street_City,
-						as: 'StreetCities',
-					},
+					// through: {
+					// 	model: db.Street_City,
+					// 	as: 'StreetCities',
+					// },
 					attributes: ['id', 'DES_LOC'],
 				},
 			],

@@ -1,4 +1,5 @@
 const City = require('../models/city.js')
+const { db } = require('../models/index.js')
 const State = require('../models/state.js')
 const { ListCityProcoop, ListStateProcoop, empresaPorCuit, personaPorDni, Persona_x_COD_SOC, getOrCreateUser_ProcoopMember, getOrCreateProcoopMember } = require('../services/ProcoopService.js')
 const { updatePrimaryAccountUserProcoop, deleteUserPersonMember } = require('../services/UserService.js')
@@ -30,10 +31,10 @@ async function migrationCity(req, res) {
 		let citiesOfi = []
 		if (listCities) {
 			citiesOfi = await listCities.map((item) => {
-				return { COD_LOC: item.COD_LOC, DES_LOC: item.DES_LOC, COD_POS: item.COD_POS, COD_PCI: item.COD_PCI }
+				return { cod_loc: item.COD_LOC, des_loc: item.DES_LOC, cod_pos: item.COD_POS, cod_pci: item.COD_PCI }
 			})
 		}
-		const resultadd = await City.bulkCreate(citiesOfi)
+		const resultadd = await db.City.bulkCreate(citiesOfi)
 		return res.status(200).json(resultadd)
 	} catch (error) {
 		return res.json({ error, msj: 'error' })
@@ -43,15 +44,17 @@ async function migrationState(req, res) {
 	try {
 		const ListStates = await ListStateProcoop()
 		let listStateOfi = []
+
 		if (ListStates) {
 			listStateOfi = await ListStates.map((item) => {
-				return { COD_PRO: item.COD_PRO, DES_PRO: item.DES_PRO, COD_AFIP: item.COD_AFIP }
+				return { cod_pro: item.COD_PRO, des_pro: item.DES_PRO, cod_afip: item.COD_AFIP }
 			})
 		}
-		const resultadd = await State.bulkCreate(listStateOfi)
-		return res.status(200).json(resultadd)
+		const resultado = await db.State.bulkCreate(listStateOfi)
+		return res.status(200).json(resultado)
 	} catch (error) {
-		return res.json({ error, msj: 'error' })
+		console.log(error)
+		return res.json({ error, msj: error })
 	}
 }
 async function getNameCustomer(req, res) {

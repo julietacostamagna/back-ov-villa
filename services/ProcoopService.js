@@ -96,7 +96,7 @@ const ListCityProcoop = async () => {
 		}
 		return result
 	} catch (error) {
-		console.error('ERROR DE PROCOOP:', error)
+		throw error
 	}
 }
 
@@ -235,7 +235,7 @@ const getProcoopMemberxDni = async (dni) => {
 		const user_procoop = await db.Procoop_Member.findOne({ where: { num_dni: dni } })
 		return user_procoop.get()
 	} catch (error) {
-		return { error: error.message }
+		throw error
 	}
 }
 /**
@@ -298,7 +298,7 @@ const getOrCreateUser_ProcoopMember = async (id_ProcoopMember, id_user) => {
 }
 const getDataProcoopxId = async (id) => {
 	try {
-		const user_procoop = await db.Procoop_Member.findByPk(id)
+		const user_procoop = await db.Person.findByPk(id)
 		return user_procoop.get()
 	} catch (error) {
 		throw error
@@ -306,12 +306,11 @@ const getDataProcoopxId = async (id) => {
 }
 const allAccount = async (id) => {
 	try {
-		const users_procoop = await db.User_procoopMember.findAll({
+		const users_procoop = await db.User_People.findAll({
 			where: { id_user: id },
 			include: [
 				{
-					model: db.Procoop_Member,
-					as: 'Procoop_Member', // Asegúrate de que este alias coincida con el definido en tu modelo
+					association: 'data_Person',
 				},
 			],
 		})
