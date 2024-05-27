@@ -1,6 +1,6 @@
 const { Persona_x_COD_SOC, getProcoopMemberxDni, allAccount, getDataProcoopxId } = require('../services/ProcoopService.js')
 const ScriptService = require('../services/ScriptService.js')
-const { verifyEmailToken, getUser, getLevel, updateLvl2, saveUser, getUserxDni } = require('../services/UserService.js')
+const { verifyEmailToken, getUser, getLevel, updateLvl2, saveUser, getUserxDni, getUserxNumCustomer } = require('../services/UserService.js')
 const { searchAddressxUser } = require('../services/locationServices.js')
 const bcrypt = require('bcrypt')
 
@@ -116,7 +116,6 @@ async function updateUser(req, res) {
 		//POR SI MODIFICAN LA CONTRASEÑA
 		if (fields.password) {
 			let hash = user.password
-			console.log(hash)
 			hash = hash.replace(/^\$2y(.+)$/i, '$2a$1')
 			const isMatch = await bcrypt.compare(fields.password, hash)
 			if (!isMatch) {
@@ -125,13 +124,10 @@ async function updateUser(req, res) {
 			const pass = await bcrypt.hash(fields.newPassword, 10)
 			fields.password = pass
 			delete fields.new_password
-			console.log('Paso')
-			console.log(fields)
 		}
 		if (!user) throw new Error('El usuario no existe o ya ha sido validado.')
 		Object.assign(user, fields)
 		const updatedUser = await saveUser(user)
-
 		res.status(200).json(updatedUser)
 	} catch (error) {
 		res.status(400).json(error.message)
@@ -143,6 +139,16 @@ async function searchUserxDni(req, res) {
 		const { dni } = req.query
 		if (!dni) throw new Error('Se debe pasar el dni del usuario.')
 		const user = await getUserxDni(dni)
+		res.status(200).json(user)
+	} catch (error) {
+		res.status(400).json(error.message)
+	}
+}
+async function searchUserxNumCustomer(req, res) {
+	try {
+		const { num } = req.query
+		if (!num) throw new Error('Se debe pasar el numero de socio.')
+		const user = await getUserxNumCustomer(num)
 		res.status(200).json(user)
 	} catch (error) {
 		res.status(400).json(error.message)
@@ -167,4 +173,5 @@ module.exports = {
 	updateUser,
 	searchUserxDni,
 	getAllAccount,
+	searchUserxNumCustomer,
 }

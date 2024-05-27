@@ -50,9 +50,9 @@ const register = async (req, res) => {
 		if (password !== password_confirmation) throw new Error('Las contraseñas no coinciden')
 		if (!reg.test(password)) throw new Error('La contraseña no tiene formato correcto')
 		const tokenTemp = crypto.randomBytes(64).toString('hex')
-		const data = { email, typePerson, password: pass, name_register: name, token_temp: tokenTemp }
+		const data = { email, type_person: typePerson, password: pass, name_register: name, token_temp: tokenTemp }
 		if (parseInt(typePerson) === 1) {
-			data.lastName_register = last_name
+			data.last_name_register = last_name
 		}
 		const user = await AuthService.registerUser(data, fullUrl)
 		res.status(200).json(user)
@@ -70,7 +70,7 @@ const verifyRegister = async (req, res) => {
 		await RegisterAcept(isValidToken)
 		res.status(200).json({ message: 'Se Verifico correctamente el usuario' })
 	} catch (error) {
-		res.status(400).json({ message: error.message })
+		res.status(400).json(error.message)
 	}
 }
 
@@ -88,7 +88,7 @@ const password_recover = async (req, res) => {
 		await setTokenTemporal(user.id, tokenTemp)
 		res.status(200).json({ message: `Se ha enviado un mensaje a tu cuenta de correo electrónico`, url: fullUrl })
 	} catch (error) {
-		res.status(400).json({ message: error.message })
+		res.status(400).json(error.message)
 	}
 }
 

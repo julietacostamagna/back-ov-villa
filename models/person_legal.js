@@ -28,23 +28,3 @@ module.exports = (sequelize, DataTypes) => {
 	)
 	return Person_legal
 }
-
-// 'use strict'
-// const { DataTypes } = require('sequelize')
-// const { sequelizeCoopm_v2 } = require('../database/MySQL.database')
-
-// const Person_legal = sequelizeCoopm_v2.define(
-//     'Person_legals',
-//     {
-//         social_raeson: DataTypes.STRING,
-//         fantasy_name: DataTypes.STRING,
-//         cuit: DataTypes.INTEGER,
-//         date_registration: DataTypes.DATE,
-//         legal_address: DataTypes.STRING,
-//         num_address: DataTypes.STRING,
-//         authorization_img: DataTypes.STRING
-//     },
-//     {}
-// )
-
-// module.exports = Person_legal
