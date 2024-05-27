@@ -9,7 +9,7 @@ module.exports = {
 				primaryKey: true,
 				type: Sequelize.INTEGER,
 			},
-			service_request_id: {
+			id_service_request: {
 				type: Sequelize.INTEGER,
 				allowNull: false,
 				references: {
@@ -17,7 +17,7 @@ module.exports = {
 					key: 'id',
 				},
 			},
-			service_form_id: {
+			id_service_form: {
 				type: Sequelize.INTEGER,
 				allowNull: false,
 			},
