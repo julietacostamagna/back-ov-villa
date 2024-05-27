@@ -31,10 +31,10 @@ const signToken = (user, remember) => {
 		iat: new Date().getTime(),
 		exp: new Date(remember ? dateYear : dateHour).getTime(),
 		name: user.name_register,
-		lastName: user.lastName_register,
+		lastName: user.last_name_register,
 		number_customer: user.number_customer,
 		level: user.level,
-		TypeUser: user.typePerson,
+		TypeUser: user.type_person,
 		dark: user.dark,
 		img_profile: user.img_profile,
 	}
@@ -42,7 +42,6 @@ const signToken = (user, remember) => {
 }
 
 const login = async (email, password, remember) => {
-	// const user = await db_coopm_v1.UserDesarrollo.findOne({ where: { email: email } })
 	try {
 		const user = await db.User.findOne({ where: { email: email } })
 		if (!user) {
@@ -57,10 +56,10 @@ const login = async (email, password, remember) => {
 		if (!isMatch) {
 			throw new Error('El usuario o la contraseña son incorrectas')
 		}
-		const dataProcoop = await getLevel(user.id)
+		const dataPeople = await getLevel(user.id)
 		let accountPrimary
-		if (dataProcoop) {
-			accountPrimary = dataProcoop.filter((item) => {
+		if (dataPeople) {
+			accountPrimary = dataPeople.filter((item) => {
 				let data = item.get()
 				if (data.primary_account === true) {
 					return item
@@ -69,7 +68,7 @@ const login = async (email, password, remember) => {
 		}
 		user.level = accountPrimary[0]?.level || 1
 		if (accountPrimary[0]) {
-			const number_customer = await getDataProcoopxId(accountPrimary[0].id_procoop_member)
+			const number_customer = await getDataProcoopxId(accountPrimary[0].id_person)
 			user.number_customer = number_customer.number_customer
 		}
 		return signToken(user, remember)

@@ -3,8 +3,8 @@ const { Model } = require('sequelize')
 module.exports = (sequelize, DataTypes) => {
 	class Person_physical extends Model {
 		static associate(models) {
-			this.belongsTo(models.TypeSex, { foreignKey: 'SexId' })
-			this.hasOne(models.Person_Address, { foreignKey: 'PersonPhysicalId', as: 'Person_Address' })
+			this.belongsTo(models.Person, { foreignKey: 'id_person', targetKey: 'id', as: 'dataPerson' })
+			this.belongsTo(models.TypeSex, { foreignKey: 'id_type_sex', as: 'typeSex' })
 		}
 	}
 	Person_physical.init(
@@ -14,11 +14,12 @@ module.exports = (sequelize, DataTypes) => {
 			type_dni: DataTypes.INTEGER,
 			num_dni: DataTypes.INTEGER,
 			born_date: DataTypes.DATE,
+			blood_type: DataTypes.STRING,
+			factor: DataTypes.STRING,
+			donor: DataTypes.INTEGER,
 			validation_renaper: DataTypes.INTEGER,
-			fixed_phone: DataTypes.STRING,
-			cell_phone: DataTypes.STRING,
-			EmployeeId: DataTypes.INTEGER,
-			SexId: DataTypes.INTEGER,
+			id_type_sex: DataTypes.INTEGER,
+			id_person: DataTypes.INTEGER,
 		},
 		{
 			sequelize,

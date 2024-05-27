@@ -9,12 +9,16 @@ module.exports = (sequelize, DataTypes) => {
 		 */
 		static associate(models) {
 			// define association here
+			User.hasMany(models.User_People, { foreignKey: 'id_user' })
+			User.hasMany(models.Service_Request, { foreignKey: 'id_user' })
+			this.belongsTo(models.Person, { foreignKey: 'id_person_profile', targetKey: 'id' })
+			this.hasMany(models.Commentary, { as: 'Commentaries', foreignKey: 'id_user' })
 		}
 	}
 	User.init(
 		{
 			name_register: DataTypes.STRING,
-			lastName_register: DataTypes.STRING,
+			last_name_register: DataTypes.STRING,
 			email: {
 				type: DataTypes.STRING,
 				allowNull: false,
@@ -31,10 +35,14 @@ module.exports = (sequelize, DataTypes) => {
 					},
 				},
 			},
-			dark: DataTypes.BOOLEAN,
 			token_temp: DataTypes.STRING,
+			lvl2_date: DataTypes.DATE,
+			lvl3_date: DataTypes.DATE,
+			id_person_profile: DataTypes.INTEGER,
+			dark: DataTypes.BOOLEAN,
 			img_profile: DataTypes.STRING,
-			typePerson: DataTypes.INTEGER,
+			type_person: DataTypes.INTEGER,
+			status: DataTypes.INTEGER,
 		},
 		{
 			sequelize,
@@ -43,23 +51,3 @@ module.exports = (sequelize, DataTypes) => {
 	)
 	return User
 }
-
-// 'use strict'
-// const { DataTypes } = require('sequelize')
-// const { sequelizeCoopm_v2 } = require('../database/MySQL.database')
-
-// const User = sequelizeCoopm_v2.define(
-//     'Users',
-//     {
-//         name_register: DataTypes.STRING,
-//         lastName_register: DataTypes.STRING,
-//         email: DataTypes.STRING,
-//         email_verified: DataTypes.DATE,
-//         password: DataTypes.STRING,
-//         remember_token: DataTypes.STRING,
-//         token_temp: DataTypes.STRING
-//     },
-//     {}
-// )
-
-// module.exports = User

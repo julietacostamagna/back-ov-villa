@@ -2,21 +2,32 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
 	async up(queryInterface, Sequelize) {
-		await queryInterface.createTable('States', {
+		await queryInterface.createTable('PopUps', {
 			id: {
 				allowNull: false,
 				autoIncrement: true,
 				primaryKey: true,
 				type: Sequelize.INTEGER,
 			},
-			cod_pro: {
-				type: Sequelize.BIGINT,
-				unique: true,
-			},
-			des_pro: {
+			description: {
+				allowNull: false,
 				type: Sequelize.STRING,
 			},
-			cod_afip: {
+			level: {
+				type: Sequelize.TINYINT,
+			},
+			status: {
+				allowNull: false,
+				type: Sequelize.TINYINT,
+			},
+			date_start: {
+				allowNull: false,
+				type: Sequelize.DATE,
+			},
+			date_end: {
+				type: Sequelize.DATE,
+			},
+			img: {
 				type: Sequelize.STRING,
 			},
 			createdAt: {
@@ -30,6 +41,6 @@ module.exports = {
 		})
 	},
 	async down(queryInterface, Sequelize) {
-		await queryInterface.dropTable('States')
+		await queryInterface.dropTable('PopUps')
 	},
 }
