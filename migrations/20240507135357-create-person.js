@@ -2,36 +2,42 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
 	async up(queryInterface, Sequelize) {
-		await queryInterface.createTable('Person_legals', {
+		await queryInterface.createTable('People', {
 			id: {
 				allowNull: false,
 				autoIncrement: true,
 				primaryKey: true,
 				type: Sequelize.INTEGER,
 			},
-			social_raeson: {
+			procoop_last_name: {
 				type: Sequelize.STRING,
 			},
-			fantasy_name: {
+			email: {
 				type: Sequelize.STRING,
 			},
-			cuit: {
+
+			number_customer: {
 				type: Sequelize.INTEGER,
 			},
-			date_registration: {
-				type: Sequelize.DATE,
+			type_person: {
+				type: Sequelize.INTEGER,
+				allowNull: false,
 			},
-			authorization_img: {
+			situation_tax: {
+				type: Sequelize.INTEGER,
+				comment: 'id de situacion impositiva',
+			},
+			fixed_phone: {
 				type: Sequelize.STRING,
 			},
-			id_person: {
+			cell_phone: {
+				type: Sequelize.STRING,
+			},
+			type_document: {
 				type: Sequelize.INTEGER,
-				references: {
-					model: 'People',
-					key: 'id',
-				},
-				onUpdate: 'CASCADE',
-				onDelete: 'CASCADE',
+			},
+			number_document: {
+				type: Sequelize.STRING,
 			},
 			createdAt: {
 				allowNull: false,
@@ -44,6 +50,6 @@ module.exports = {
 		})
 	},
 	async down(queryInterface, Sequelize) {
-		await queryInterface.dropTable('Person_legals')
+		await queryInterface.dropTable('People')
 	},
 }

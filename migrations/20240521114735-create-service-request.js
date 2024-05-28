@@ -9,14 +9,11 @@ module.exports = {
 				primaryKey: true,
 				type: Sequelize.INTEGER,
 			},
-			procoop_member_id: {
+			id_person: {
 				type: Sequelize.INTEGER,
-				references: {
-					model: 'Procoop_Members',
-					key: 'id',
-				},
+				references: { model: 'People', key: 'id' },
 			},
-			user_id: {
+			id_user: {
 				type: Sequelize.INTEGER,
 				references: {
 					model: 'Users',

@@ -1,4 +1,6 @@
+const { QueryTypes } = require('sequelize')
 const { SequelizeMorteros } = require('../database/MSSQL.database')
+const { db } = require('../models')
 const conexionProcoop = async () => {
 	try {
 		await SequelizeMorteros.authenticate()
@@ -60,26 +62,25 @@ const invoicesXsocio = async (id_procoop) => {
 
 const Persona_x_COD_SOC = async (numberCustomer) => {
 	try {
+		if (!numberCustomer) throw new Error('falta pasar el numero de socio')
 		const query = `SELECT * FROM socios  WHERE cod_soc = :numberCustomer`
 		const result = await SequelizeMorteros.query(query, {
 			replacements: { numberCustomer: numberCustomer },
-			type: SequelizeMorteros.QueryTypes.SELECT,
+			type: QueryTypes.SELECT,
 		})
 		if (result.length === 0) {
-			// Retorno un objeto con un mensaje de error
-			return { error: 'No se encontró la persona' }
+			throw new Error('No se encontro socio')
 		}
 		const query2 = `SELECT * FROM personas WHERE COD_PER = ${result[0].cod_per}`
-		const result2 = await sequelize.query(query2, {
-			type: SequelizeMorteros.QueryTypes.SELECT,
+		const result2 = await SequelizeMorteros.query(query2, {
+			type: QueryTypes.SELECT,
 		})
 		if (result2.length === 0) {
-			// Retorno un objeto con un mensaje de error
-			return { error: 'No se encontró la persona' }
+			throw new Error('No se encontro Persona con ese numero de socio')
 		}
 		return result2
 	} catch (error) {
-		console.error('ERROR DE PROCOOP:', error)
+		throw error
 	}
 }
 
@@ -95,7 +96,7 @@ const ListCityProcoop = async () => {
 		}
 		return result
 	} catch (error) {
-		console.error('ERROR DE PROCOOP:', error)
+		throw error
 	}
 }
 
@@ -181,12 +182,9 @@ const debtsCustomer = async (number, all = false) => {
 			replacements: { number: number },
 			type: SequelizeMorteros.QueryTypes.SELECT,
 		})
-		if (result.length === 0) {
-			return { error: 'No se encontró la persona' }
-		}
 		return result
 	} catch (error) {
-		console.error('ERROR DE PROCOOP:', error)
+		throw error
 	}
 }
 
@@ -231,6 +229,98 @@ const adheridosSS = async (data) => {
 	}
 }
 
+//Funciones en tablas en db nueva
+const getProcoopMemberxDni = async (dni) => {
+	try {
+		const user_procoop = await db.Procoop_Member.findOne({ where: { num_dni: dni } })
+		return user_procoop.get()
+	} catch (error) {
+		throw error
+	}
+}
+/**
+ * Busca o crea un miembro de Procoop basado en el número de cliente.
+ * Si el miembro no existe, lo crea y sincroniza los datos con la base de datos.
+ *
+ * @param {string} num_Customer - El número de identificación del cliente.
+ * @returns {Promise<Object>} Un objeto que representa al miembro de Procoop.
+ *                            Si se crea un nuevo miembro, se actualiza con información adicional.
+ *                            En caso de error, devuelve un objeto con la propiedad 'error'.
+ */
+const getOrCreateProcoopMember = async (num_Customer) => {
+	return db.sequelize.transaction(async (t) => {
+		try {
+			const [user_procoop, created] = await db.Procoop_Member.findOrCreate({ where: { number_customer: num_Customer }, default: { number_customer: num_Customer }, transaction: t })
+			if (created) {
+				const dataProcoop = await Persona_x_COD_SOC(num_Customer)
+				const dataProcoopMember = {
+					number_customer: num_Customer,
+					mail_procoop: dataProcoop[0].EMAIL,
+					cell_phone: dataProcoop[0].TELEFONO,
+					fixed_phone: dataProcoop[0].TELEFONO,
+					id_type_procoop: dataProcoop[0].TIP_PERSO,
+					id_situation_procoop: dataProcoop[0].COD_SIT,
+					blood_type: dataProcoop[0].GRU_SGR,
+					factor: dataProcoop[0].FAC_SGR,
+					donor: dataProcoop[0].DAD_SGR,
+					name: dataProcoop[0].NOMBRES,
+					last_name: dataProcoop[0].APELLIDOS,
+					type_dni: dataProcoop[0].TIP_DNI,
+					num_dni: dataProcoop[0].NUM_DNI,
+					born_date: new Date(`${dataProcoop[0].FEC_NAC} `),
+				}
+				await user_procoop.update(dataProcoopMember, { transaction: t })
+			}
+			return user_procoop
+		} catch (error) {
+			throw error
+		}
+	})
+}
+
+const getOrCreateUser_ProcoopMember = async (id_ProcoopMember, id_user) => {
+	return db.sequelize.transaction(async (t) => {
+		try {
+			const [user_procoopmember, created] = await db.User_procoopMember.findOrCreate({
+				where: { id_procoop_member: id_ProcoopMember, id_user: id_user },
+				default: { id_procoop_member: id_ProcoopMember, id_user: id_user },
+				transaction: t,
+			})
+			if (created) {
+				const AccountPrimary = await db.User_procoopMember.findOne({ where: { id_user: id_user } })
+				await user_procoopmember.update({ level: 2, primary_account: AccountPrimary ? false : true, status: true }, { transaction: t })
+			}
+			return user_procoopmember
+		} catch (error) {
+			throw error
+		}
+	})
+}
+const getDataProcoopxId = async (id) => {
+	try {
+		const user_procoop = await db.Person.findByPk(id)
+		return user_procoop.get()
+	} catch (error) {
+		throw error
+	}
+}
+const allAccount = async (id) => {
+	try {
+		const users_procoop = await db.User_People.findAll({
+			where: { id_user: id },
+			include: [
+				{
+					association: 'data_Person',
+				},
+			],
+		})
+		const result = users_procoop.map((user) => user.get({ plain: true }))
+		return result
+	} catch (error) {
+		throw error
+	}
+}
+
 module.exports = {
 	personaPorDni,
 	empresaPorCuit,
@@ -244,4 +334,9 @@ module.exports = {
 	debtsCustomer,
 	phoneCustomer,
 	adheridosSS,
+	getProcoopMemberxDni,
+	getDataProcoopxId,
+	allAccount,
+	getOrCreateProcoopMember,
+	getOrCreateUser_ProcoopMember,
 }

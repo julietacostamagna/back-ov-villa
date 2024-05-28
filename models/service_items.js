@@ -10,19 +10,20 @@ module.exports = (sequelize, DataTypes) => {
 		static associate(models) {
 			// define association here
 			this.belongsTo(models.Service_Request, {
-				foreignKey: 'service_request_id',
-				as: 'Service_Requests',
+				foreignKey: 'id_service_request',
+				as: 'items',
 			})
 		}
 	}
 
 	Service_Items.init(
 		{
-			service_request_id: { type: DataTypes.INTEGER, allowNull: false },
-			service_form_id: { type: DataTypes.INTEGER, allowNull: false },
+			id_service_request: { type: DataTypes.INTEGER, allowNull: false },
+			id_service_form: { type: DataTypes.INTEGER, allowNull: false },
 			service_type: { type: DataTypes.TINYINT, allowNull: false },
 			status: { type: DataTypes.TINYINT, allowNull: false },
 			cod_sum: DataTypes.INTEGER,
+			service_name: { type: DataTypes.STRING, allowNull: false },
 		},
 		{
 			sequelize,

@@ -1,54 +1,30 @@
 'use strict'
 const { Model } = require('sequelize')
 module.exports = (sequelize, DataTypes) => {
-    class Person_physical extends Model {
-        /**
-         * Helper method for defining associations.
-         * This method is not a part of Sequelize lifecycle.
-         * The `models/index` file will call this method automatically.
-         */
-        static associate(models) {
-            // define association here
-        }
-    }
-    Person_physical.init(
-        {
-            name: DataTypes.STRING,
-            last_name: DataTypes.STRING,
-            type_dni: DataTypes.INTEGER,
-            num_dni: DataTypes.INTEGER,
-            born_date: DataTypes.DATE,
-            validation_renaper: DataTypes.INTEGER,
-            fixed_phone: DataTypes.STRING,
-            cell_phone: DataTypes.STRING,
-            EmployeeId: DataTypes.INTEGER,
-        },
-        {
-            sequelize,
-            modelName: 'Person_physical',
-        }
-    )
-    return Person_physical
+	class Person_physical extends Model {
+		static associate(models) {
+			this.belongsTo(models.Person, { foreignKey: 'id_person', targetKey: 'id', as: 'dataPerson' })
+			this.belongsTo(models.TypeSex, { foreignKey: 'id_type_sex', as: 'typeSex' })
+		}
+	}
+	Person_physical.init(
+		{
+			name: DataTypes.STRING,
+			last_name: DataTypes.STRING,
+			type_dni: DataTypes.INTEGER,
+			num_dni: DataTypes.INTEGER,
+			born_date: DataTypes.DATE,
+			blood_type: DataTypes.STRING,
+			factor: DataTypes.STRING,
+			donor: DataTypes.INTEGER,
+			validation_renaper: DataTypes.INTEGER,
+			id_type_sex: DataTypes.INTEGER,
+			id_person: DataTypes.INTEGER,
+		},
+		{
+			sequelize,
+			modelName: 'Person_physical',
+		}
+	)
+	return Person_physical
 }
-
-// 'use strict'
-// const { DataTypes } = require('sequelize')
-// const { sequelizeCoopm_v2 } = require('../database/MySQL.database')
-
-// const Person_physical = sequelizeCoopm_v2.define(
-//     'Person_physicals',
-//     {
-// name: DataTypes.STRING,
-// last_name: DataTypes.STRING,
-// type_dni: DataTypes.INTEGER,
-// num_dni: DataTypes.INTEGER,
-// born_date: DataTypes.DATE,
-// validation_renaper: DataTypes.INTEGER,
-// fixed_phone: DataTypes.STRING,
-// cell_phone: DataTypes.STRING,
-// EmployeeId: DataTypes.INTEGER
-//     },
-//     {}
-// )
-
-// module.exports = Person_physical
