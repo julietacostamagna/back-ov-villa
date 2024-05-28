@@ -9,11 +9,12 @@ module.exports = (sequelize, DataTypes) => {
 		 */
 		static associate(models) {
 			// define association here
-			this.hasOne(models.Person_physical, { foreignKey: 'id_person', as: 'Person_physical' })
-			this.hasOne(models.Person_legal, { foreignKey: 'id_person', as: 'Person_legal' })
-			this.hasMany(models.Person_Address, { foreignKey: 'id_person', as: 'Person_Address' })
-			this.hasMany(models.User_People, { foreignKey: 'id_person', as: 'User_People' })
-			this.hasMany(models.Service_Request, { foreignKey: 'id_person', as: 'Service_Request' })
+			Person.hasOne(models.Person_physical, { foreignKey: 'id_person', targetKey: 'id', as: 'Person_physical' })
+			Person.hasOne(models.Person_legal, { foreignKey: 'id_person', targetKey: 'id', as: 'Person_legal' })
+			Person.hasOne(models.User, { foreignKey: 'id_person_profile', targetKey: 'id', as: 'person_profile' })
+			Person.hasMany(models.Person_Address, { foreignKey: 'id_person', targetKey: 'id', as: 'Person_Address' })
+			Person.hasMany(models.User_People, { foreignKey: 'id_person', targetKey: 'id', as: 'User_People' })
+			Person.hasMany(models.Service_Request, { foreignKey: 'id_person', targetKey: 'id', as: 'Service_Request' })
 		}
 	}
 	Person.init(
@@ -30,7 +31,8 @@ module.exports = (sequelize, DataTypes) => {
 		},
 		{
 			sequelize,
-			modelName: 'People',
+			modelName: 'Person',
+			tableName: 'People',
 		}
 	)
 	return Person

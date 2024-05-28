@@ -7,7 +7,7 @@ const getUserxEmail = async (email) => {
 		if (!user) throw new Error('El email no existe')
 		return user
 	} catch (error) {
-		return { error: error.message }
+		throw error
 	}
 }
 const setTokenTemporal = async (id, tokenTemp) => {
@@ -17,7 +17,7 @@ const setTokenTemporal = async (id, tokenTemp) => {
 		user.update({ token_temp: tokenTemp })
 		return user
 	} catch (error) {
-		return { error: error.message }
+		throw error
 	}
 }
 const verifyEmailToken = async (tokenTemp, id) => {
@@ -26,7 +26,7 @@ const verifyEmailToken = async (tokenTemp, id) => {
 		if (!user) throw new Error('El token expiro o no existe')
 		return user
 	} catch (error) {
-		return { error: error.message }
+		throw error
 	}
 }
 const RegisterAcept = async (user) => {
@@ -34,7 +34,7 @@ const RegisterAcept = async (user) => {
 		await user.update({ email_verified: new Date(Date.now()), token_temp: null })
 		return true
 	} catch (error) {
-		return { error: error.message }
+		throw error
 	}
 }
 const getUser = async (id) => {
@@ -53,15 +53,55 @@ const getUser = async (id) => {
 		}
 		return null // o manejar como prefieras si el usuario no se encuentra
 	} catch (error) {
-		return { error: error.message }
+		throw error
 	}
 }
 const updateLvl2 = async (user, dataUpdate) => {
 	return db.sequelize.transaction(async (t) => {
 		try {
+			const dataProcoop = await Persona_x_COD_SOC(dataUpdate.number_customer)
+			console.log(user, dataUpdate, dataProcoop)
+			return false
 			let dataUser
 			let userDetail
 			let person
+			const [dataPerson, createdPerson] = await db.Person.findOrCreate({ where: { number_document: dataUser.num_dni }, default: { number_document: dataUser.num_dni }, transaction: t })
+			if (createdPerson) {
+				const dataProcoop = await Persona_x_COD_SOC(dataUpdate.number_customer)
+				if (dataProcoop.length) {
+					const dataProcoopMember = {
+						procoop_last_name: dataProcoop[0].APELLIDOS,
+						email: dataProcoop[0].EMAIL,
+						number_customer: dataUpdate.number_customer,
+						type_person: dataProcoop[0].TIP_PERSO,
+						situation_tax: dataProcoop[0].COD_SIT,
+						cell_phone: `${dataUpdate.phoneCaract} ${dataUpdate.numberPhone}`,
+						fixed_phone: dataProcoop[0].TELEFONO,
+						type_document: dataProcoop[0].TIP_DNI,
+						number_document: dataProcoop[0].NUM_DNI,
+					}
+
+					if (dataProcoop[0].NUM_DNI !== Person.number_document) {
+						const PersonUser = await dataPerson.update(dataUpdate, { transaction: t })
+						const PersonProcoop = await db.Person.create(dataProcoopMember, { transaction: t })
+						if (dataProcoop[0].TIP_PERSO === 1) {
+							const dataPersonPhysicalProcoop = {
+								name: dataProcoop[0].NOMBRES,
+								last_name: dataProcoop[0].APELLIDOS,
+								type_dni: dataProcoop[0].TIP_DNI,
+								num_dni: dataProcoop[0].NUM_DNI,
+								born_date: new Date(`${dataProcoop[0].FEC_NAC} `),
+								blood_type: dataProcoop[0].GRU_SGR,
+								factor: dataProcoop[0].FAC_SGR,
+								donor: dataProcoop[0].DAD_SGR,
+								id_type_sex: 1,
+								id_person: PersonProcoop.id,
+							}
+							await db.Person_physical.create(dataPersonPhysicalProcoop, { transaction: t })
+						}
+					}
+				}
+			}
 			if (user.typePerson === 1) {
 				dataUser = {
 					name: user.name_register,
@@ -187,10 +227,10 @@ const updateLvl2 = async (user, dataUpdate) => {
 }
 const getLevel = async (id) => {
 	try {
-		const data = await db.User_procoopMember.findAll({ where: { id_user: id } })
+		const data = await db.User_People.findAll({ where: { id_user: id } })
 		return data
 	} catch (error) {
-		return { error: error.message }
+		throw error
 	}
 }
 const saveUser = async (userData) => {
@@ -206,7 +246,7 @@ const saveUser = async (userData) => {
 		}
 		return user
 	} catch (error) {
-		return { error: error.message }
+		throw error
 	}
 }
 const getUserxDni = async (dni) => {
@@ -215,28 +255,27 @@ const getUserxDni = async (dni) => {
 			where: { num_dni: dni },
 			include: [
 				{
-					model: db.TypeSex,
-					as: 'TypeSex', // Asegúrate de que este alias coincida con el definido en tu modelo
+					association: 'typeSex',
 				},
 				{
-					model: db.Person_Address,
-					as: 'Person_Address', // Asegúrate de que este alias coincida con el definido en tu modelo
+					association: 'dataPerson',
 					include: [
 						{
-							model: db.Address,
-							as: 'Address',
+							association: 'Person_Address',
 							include: [
 								{
-									model: db.City,
-									as: 'City',
-								},
-								{
-									model: db.Street,
-									as: 'Street',
-								},
-								{
-									model: db.State,
-									as: 'State',
+									association: 'Address',
+									include: [
+										{
+											association: 'city',
+										},
+										{
+											association: 'street',
+										},
+										{
+											association: 'state',
+										},
+									],
 								},
 							],
 						},
@@ -247,6 +286,39 @@ const getUserxDni = async (dni) => {
 		if (!user) return null
 
 		return user.get()
+	} catch (error) {
+		throw error
+	}
+}
+const getUserxNumCustomer = async (num) => {
+	try {
+		user = await db.Person.findOne({
+			where: { number_customer: num },
+			include: [
+				{
+					association: 'Person_physical',
+				},
+				{ association: 'Person_legal' },
+			],
+		})
+		let responseData
+		if (!user) {
+			user = await Persona_x_COD_SOC(num)
+			if (user[0].TIP_PERSO === 1) {
+				responseData = { name: '', last_name: user[0].APELLIDOS }
+			} else {
+				responseData = { social_raeson: user[0].APELLIDOS, fantasy_name: user[0].NOMBRES }
+			}
+		} else {
+			if (user.Person_legal) {
+				responseData = { social_raeson: user.Person_legal.social_raeson, fantasy_name: user.Person_legal.fantasy_name }
+			}
+			if (user.Person_physical) {
+				responseData = { name: user.Person_physical.name, last_name: user.Person_physical.last_name }
+			}
+		}
+		if (!user) throw new Error('El numero de socio no existe')
+		return responseData
 	} catch (error) {
 		throw error
 	}
@@ -283,4 +355,4 @@ const updatePrimaryAccountUserProcoop = async (id_relation, id) => {
 	})
 }
 
-module.exports = { getUserxEmail, setTokenTemporal, RegisterAcept, verifyEmailToken, getUser, getLevel, updateLvl2, saveUser, getUserxDni, deleteUserPersonMember, updatePrimaryAccountUserProcoop }
+module.exports = { getUserxNumCustomer, getUserxEmail, setTokenTemporal, RegisterAcept, verifyEmailToken, getUser, getLevel, updateLvl2, saveUser, getUserxDni, deleteUserPersonMember, updatePrimaryAccountUserProcoop }

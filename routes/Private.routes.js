@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const { getNameCustomer, searchByCuit, searchByDNI, addUserPersonMember, removeUserPersonMember, changePrimaryAccountUserProcoop } = require('../controllers/Procoop.controller')
-const { dataUser, upgradeUser, updateUser, searchUserxDni, getAllAccount } = require('../controllers/User.controller')
+const { dataUser, upgradeUser, updateUser, searchUserxDni, getAllAccount, searchUserxNumCustomer } = require('../controllers/User.controller')
 const { verifyToken } = require('../middleware/Auth.middleware')
 const { logout } = require('../controllers/Auth.controller')
 const { getListState, getListCity, getListStreet, newStreet, getAddress } = require('../controllers/Location.controller')
@@ -46,5 +46,6 @@ router.post('/getDetailService', customerServicesDetail)
 
 // Funcion para recuperar toda la informacion del usuario por dni
 router.get('/searchUserxDni', verifyToken, searchUserxDni)
+router.get('/searchUserxNumCustomer', verifyToken, searchUserxNumCustomer)
 
 module.exports = router
