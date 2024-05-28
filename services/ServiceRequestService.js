@@ -4,7 +4,7 @@ const createRequestService = async (userID, services) => {
 	const t = await db.sequelize.transaction()
 	try {
 		const serviceRequest = {
-			user_id: userID,
+			id_user: userID,
 			status: 1,
 		}
 		const requestService = await db.Service_Request.create(serviceRequest, { transaction: t })
@@ -12,8 +12,8 @@ const createRequestService = async (userID, services) => {
 		const servicesToSave = services
 			.filter((service) => service.tipo !== 0)
 			.map((service) => ({
-				service_request_id: requestService.id,
-				service_form_id: 1,
+				id_service_request: requestService.id,
+				id_service_form: 1,
 				service_type: service.tipo,
 				status: 1,
 				service_name: service.nombre,
@@ -32,11 +32,10 @@ const createRequestService = async (userID, services) => {
 
 const getRequestServiceByUser = async (userID) => {
 	const requests = await db.Service_Request.findAll({
-		where: { user_id: userID },
+		where: { id_user: userID },
 		include: [
 			{
-				model: db.Service_Items,
-				as: 'items',
+				association: 'Service_Items',
 			},
 		],
 	})
