@@ -9,7 +9,7 @@ async function sendEmail(data, url) {
 			{
 				campana_id: 14,
 				email: true,
-				contacto: { email: 'jose.romani@hotmail.com', nombre: 'jose', apellido: 'romani' },
+				contacto: { email: data.email, nombre: data.name, apellido: data.last_name },
 				html: html,
 			},
 			{
