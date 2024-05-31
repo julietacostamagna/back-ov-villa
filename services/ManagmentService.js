@@ -6,7 +6,7 @@ async function getCommentaries(id = false) {
 			{
 				model: db.User,
 				as: 'User',
-				attributes: ['name_register', 'lastName_register', 'email'],
+				attributes: ['name_register', 'last_name_register', 'email'],
 			},
 		],
 	}
@@ -22,7 +22,21 @@ async function saveCommentary(commentary) {
 	return await db.Commentary.create(commentary)
 }
 
+async function getPopups(id = false) {
+	const query = {}
+	if (id) {
+		query.where = { id }
+	}
+	return await db.PopUp.findAll(query)
+}
+
+async function savePopup(popup) {
+	return await db.PopUp.create(popup)
+}
+
 module.exports = {
 	getCommentaries,
 	saveCommentary,
+	getPopups,
+	savePopup,
 }
