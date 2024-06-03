@@ -67,7 +67,6 @@ const createPersonProcoop = async (dataUpdate, user, dataProcoop, t) => {
 			type_person: dataProcoop.TIP_PERSO,
 			situation_tax: dataProcoop.COD_SIT,
 			cell_phone: `${dataUpdate.phoneCaract} ${dataUpdate.numberPhone}`,
-			fixed_phone: dataProcoop.TELEFONO,
 			type_document: dataProcoop.TIP_DNI,
 			number_document: dataProcoop.NUM_DNI,
 		}
@@ -167,7 +166,7 @@ const updatePersonUserCreated = async (dataUpdate, user, dataPerson, dataProcoop
 		const userData = await db.User.findOne({ where: { id: user.id }, transaction: t })
 		// SI NO EXISTE SE DEVUELVE UN ERROR
 		if (!userData) throw new Error('No se encontro usuario con ese id')
-		await userData.update({ id_person_profile: PersonUser.id }, { transaction: t })
+		await userData.update({ id_person_profile: PersonUser.id, lvl2_date: new Date() }, { transaction: t })
 		return PersonUser
 	} catch (error) {
 		throw error
@@ -212,10 +211,11 @@ const updateLvl2 = async (user, dataUpdate) => {
 			}
 			if (!dataProcoop) throw new Error('El numero de socio no es correcto')
 			const nombre = dataProcoop?.APELLIDOS ? dataProcoop.APELLIDOS : dataProcoop.procoop_last_name ? dataProcoop.procoop_last_name : ''
+			const num_dni = dataProcoop?.NUM_DNI || dataProcoop.procoop_last_name
 			const dataPersonUser = {
 				procoop_last_name: nombre,
 				email: user.email,
-				number_customer: dataUpdate.number_customer,
+				number_customer: num_dni == dataUpdate.document_number ? dataUpdate.number_customer : null,
 				type_person: user.type_person,
 				cell_phone: `${dataUpdate.phoneCaract} ${dataUpdate.numberPhone}`,
 				type_document: parseInt(dataUpdate.document_type),
@@ -370,12 +370,12 @@ const getUserxNumCustomer = async (num) => {
 	}
 }
 
-const deleteUserPersonMember = async (id) => {
+const deleteUserPerson = async (id) => {
 	return db.sequelize.transaction(async (t) => {
 		try {
-			const UserProcoopMember = await db.User_procoopMember.findOne({ where: { id } })
-			if (!UserProcoopMember) throw new Error('La relación no existe')
-			await UserProcoopMember.destroy({ transaction: t })
+			const UserPerson = await db.User_People.findOne({ where: { id } })
+			if (!UserPerson) throw new Error('La relación no existe')
+			await UserPerson.destroy({ transaction: t })
 			return { message: 'Se elimino correctamente' }
 		} catch (error) {
 			throw error
@@ -385,10 +385,10 @@ const deleteUserPersonMember = async (id) => {
 const updatePrimaryAccountUserProcoop = async (id_relation, id) => {
 	return db.sequelize.transaction(async (t) => {
 		try {
-			const listUserProcoopMember = await db.User_procoopMember.findAll({ where: { id_user: id } })
-			if (!listUserProcoopMember) throw new Error('No se encontraron relaciones')
-			await db.User_procoopMember.update({ primary_account: 0 }, { where: { id_user: id }, transaction: t })
-			const specificRelation = listUserProcoopMember.find((relation) => relation.dataValues.id == id_relation)
+			const listUserPerson = await db.User_People.findAll({ where: { id_user: id } })
+			if (!listUserPerson) throw new Error('No se encontraron relaciones')
+			await db.User_People.update({ primary_account: 0 }, { where: { id_user: id }, transaction: t })
+			const specificRelation = listUserPerson.find((relation) => relation.dataValues.id == id_relation)
 			if (!specificRelation) {
 				throw new Error('No se encontró la relación especificada')
 			}
@@ -412,7 +412,7 @@ module.exports = {
 	updateLvl2,
 	saveUser,
 	getUserxDni,
-	deleteUserPersonMember,
+	deleteUserPerson,
 	updatePrimaryAccountUserProcoop,
 	createPersonProcoop,
 }
