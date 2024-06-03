@@ -21,7 +21,8 @@ async function addCommentary(req, res) {
 
 async function Popups(req, res) {
 	try {
-		const popups = await getPopups()
+		const id = req.query.id || false
+		const popups = await getPopups(id)
 		res.status(200).json(popups)
 	} catch (error) {
 		res.status(400).json(error.message)

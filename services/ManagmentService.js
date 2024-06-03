@@ -31,7 +31,13 @@ async function getPopups(id = false) {
 }
 
 async function savePopup(popup) {
-	return await db.PopUp.create(popup)
+	if (popup.id) {
+		return await db.PopUp.update(popup, {
+			where: { id: popup.id },
+		})
+	} else {
+		return await db.PopUp.create(popup)
+	}
 }
 
 module.exports = {
