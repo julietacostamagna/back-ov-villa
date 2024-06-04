@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const { migrationUser, tokenVerify } = require('../controllers/User.controller')
+const { migrationUser, tokenVerify, usersRegistered } = require('../controllers/User.controller')
 // const { migrator1Up } = require('../controllers/migrations.controller')
 const { login, testConect, register, newQuery, verifyRegister, password_recover } = require('../controllers/Auth.controller')
 const { customerServices, customerConsumption, customerServicesDetail } = require('../controllers/Services.controller')
@@ -38,5 +38,6 @@ router.get('/Commentaries', Commentaries)
 router.post('/addCommentary', addCommentary)
 router.get('/getPopups', Popups)
 router.post('/addPopup', addPopup)
+router.get('/getUsersRegistered', usersRegistered)
 
 module.exports = router

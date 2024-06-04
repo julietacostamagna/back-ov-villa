@@ -57,6 +57,26 @@ const getUser = async (id) => {
 	}
 }
 
+const getUsersRegistered = async (id) => {
+	try {
+		const query = {
+			include: [
+				{
+					model: db.User_People,
+					as: 'User_People',
+					attributes: ['level'],
+				},
+			],
+		}
+		if (id) {
+			query.where = { id }
+		}
+		return await db.User.findAll(query)
+	} catch (error) {
+		throw error
+	}
+}
+
 const createPersonProcoop = async (dataUpdate, user, dataProcoop, t) => {
 	try {
 		// SE GENERA UN OBJETO DONDE TENGA TODO LOS VALORES DE PROCOOP, PARA QUE EN CASO DE QUE NO EXISTA CREARLO
@@ -415,4 +435,5 @@ module.exports = {
 	deleteUserPerson,
 	updatePrimaryAccountUserProcoop,
 	createPersonProcoop,
+	getUsersRegistered,
 }
