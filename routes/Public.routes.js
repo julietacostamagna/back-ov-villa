@@ -2,11 +2,11 @@ const express = require('express')
 const router = express.Router()
 const { migrationUser, tokenVerify } = require('../controllers/User.controller')
 // const { migrator1Up } = require('../controllers/migrations.controller')
-const { login, testConect, register, newQuery, verifyRegister, password_recover } = require('../controllers/Auth.controller')
-const { customerServices, customerConsumption, customerServicesDetail } = require('../controllers/Services.controller')
+const { login, testConect, register, verifyRegister, password_recover } = require('../controllers/Auth.controller')
+const { customerServices, customerConsumption } = require('../controllers/Services.controller')
 const { getInvoice, existInvoice } = require('../controllers/Payment.controller')
-const { searchByDNI, searchByCuit, migrationCity, migrationState } = require('../controllers/Procoop.controller')
-const { Commentaries, addCommentary, Popups, addPopup } = require('../controllers/Managment.controller')
+const { searchByDNI, searchByCuit} = require('../controllers/Procoop.controller')
+const { Commentaries, addCommentary, Popups, addPopup, addInformation, Informations } = require('../controllers/Managment.controller')
 
 // RUTAS PARA AUTH
 
@@ -35,8 +35,9 @@ router.post('/searchCuit', searchByCuit)
 
 //RUTAS INTERNAS
 router.get('/Commentaries', Commentaries)
-router.post('/addCommentary', addCommentary)
 router.post('/addModals', addPopup)
 router.get('/modals', Popups)
+router.post('/addInformation', addInformation)
+router.get('/informations', Informations)
 
 module.exports = router

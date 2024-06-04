@@ -6,6 +6,7 @@ const { verifyToken } = require('../middleware/Auth.middleware')
 const { logout } = require('../controllers/Auth.controller')
 const { getListState, getListCity, getListStreet, newStreet, getAddress } = require('../controllers/Location.controller')
 const { customerServicesDetail } = require('../controllers/Services.controller')
+const { addCommentary } = require('../controllers/Managment.controller')
 
 router.get('/test', (req, res) => {
 	res.json({ message: 'Test route' })
@@ -47,5 +48,6 @@ router.post('/getDetailService', customerServicesDetail)
 // Funcion para recuperar toda la informacion del usuario por dni
 router.get('/searchUserxDni', verifyToken, searchUserxDni)
 router.get('/searchUserxNumCustomer', verifyToken, searchUserxNumCustomer)
+router.post('/addCommentary', verifyToken, addCommentary)
 
 module.exports = router
