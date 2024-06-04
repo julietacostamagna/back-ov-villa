@@ -1,7 +1,8 @@
+const { savePerson, savePersonLegal, savePersonPhysical } = require('../services/PersonService.js')
 const { Persona_x_COD_SOC, getProcoopMemberxDni, allAccount, getDataProcoopxId } = require('../services/ProcoopService.js')
 const ScriptService = require('../services/ScriptService.js')
-const { verifyEmailToken, getUser, getLevel, updateLvl2, saveUser, getUserxDni, getUserxNumCustomer } = require('../services/UserService.js')
-const { searchAddressxUser } = require('../services/locationServices.js')
+const { verifyEmailToken, getUser, getLevel, updateLvl2, saveUser, getUserxDni, getUserxNumCustomer, getProfileUser, getUserxId } = require('../services/UserService.js')
+const { searchAddressxUser, saveAdrress, savePersonAdrress } = require('../services/locationServices.js')
 const bcrypt = require('bcrypt')
 
 const user = (req, res) => {}
@@ -95,6 +96,18 @@ async function dataUser(req, res) {
 		res.status(400).json({ message: error.message })
 	}
 }
+async function dataUserProfile(req, res) {
+	try {
+		const { id } = req.user
+		if (!id) throw new Error('Se debe tener un id Autentificado')
+		const user = await getProfileUser(id)
+		if (!user) throw new Error('El usuario no existe o ya ha sido validado.')
+		res.status(200).json(user)
+	} catch (error) {
+		console.log({ message: error.message })
+		res.status(400).json({ message: error.message })
+	}
+}
 async function upgradeUser(req, res) {
 	try {
 		const user = await getUser(req.user.id)
@@ -131,6 +144,83 @@ async function updateUser(req, res) {
 		res.status(200).json(updatedUser)
 	} catch (error) {
 		res.status(400).json(error.message)
+	}
+}
+async function updateProfile(req, res) {
+	try {
+		const { id } = req.user
+		const { ...fields } = req.body
+		if (!id) throw new Error('Se debe pasar el id del usuario.')
+		const user = await getProfileUser(id)
+		if (!user) throw new Error('El usuario no existe o ya ha sido validado.')
+		let hash = user.password
+		hash = hash.replace(/^\$2y(.+)$/i, '$2a$1')
+		const isMatch = await bcrypt.compare(fields.pass, hash)
+		if (!isMatch) {
+			throw new Error('La contraseña es incorrecta')
+		}
+		if (user.email != fields.email) {
+			await saveUser({ id: user.id, email: fields.email })
+		}
+		const dataUpPerson = {
+			id: fields.id_person,
+			email: fields.email,
+			fixed_phone: fields.caractFixedPhone + ' ' + fields.numbFixedPhone,
+			cell_phone: fields.caractCellPhone + ' ' + fields.numbCellPhone,
+		}
+		const Persona = await savePerson(dataUpPerson)
+		if (Persona.type_person === 1) {
+			const dataUpdPhysical = {
+				id_person: Persona.id,
+				name: fields.name,
+				last_name: fields.lastName,
+				born_date: `${fields.year}-${fields.month}-${fields.day}`,
+				id_type_sex: fields.id_type_sex,
+			}
+			await savePersonPhysical(dataUpdPhysical)
+		} else {
+			const dataUpdLegal = {
+				id_person: Persona.id,
+				social_raeson: fields.name,
+				fantasy_name: fields.lastName,
+				date_registration: `${fields.year}-${fields.month}-${fields.day}`,
+			}
+			await savePersonLegal(dataUpdLegal)
+		}
+		const dataUpdAddress = {
+			number_address: fields.number_address,
+			floor: fields.floor,
+			dtop: fields.dtop,
+			id_street: fields.street,
+			id_city: fields.city,
+			id_state: fields.state,
+		}
+		const Address = await saveAdrress(dataUpdAddress)
+		await savePersonAdrress({ id_person: Persona.id, id_address: Address.id })
+		res.status(200).json(Persona)
+	} catch (error) {
+		if (error.errors) {
+			res.status(500).json(error.errors)
+		} else {
+			res.status(400).json(error.message)
+		}
+	}
+}
+async function updatePhotoProfile(req, res) {
+	try {
+		const { id } = req.user
+		const { img_profile } = req.body
+		if (!id) throw new Error('Se debe pasar el id del usuario.')
+		const user = await getUserxId(id)
+		if (!user) throw new Error('El usuario no existe o ya ha sido validado.')
+		await user.update({ img_profile: img_profile })
+		res.status(200).json(user)
+	} catch (error) {
+		if (error.errors) {
+			res.status(500).json(error.errors)
+		} else {
+			res.status(400).json(error.message)
+		}
 	}
 }
 async function searchUserxDni(req, res) {
@@ -175,4 +265,7 @@ module.exports = {
 	searchUserxDni,
 	getAllAccount,
 	searchUserxNumCustomer,
+	dataUserProfile,
+	updateProfile,
+	updatePhotoProfile,
 }
