@@ -1,6 +1,6 @@
 const { Persona_x_COD_SOC, getProcoopMemberxDni, allAccount, getDataProcoopxId } = require('../services/ProcoopService.js')
 const ScriptService = require('../services/ScriptService.js')
-const { verifyEmailToken, getUser, getLevel, updateLvl2, saveUser, getUserxDni, getUserxNumCustomer } = require('../services/UserService.js')
+const { verifyEmailToken, getUser, getLevel, updateLvl2, saveUser, getUserxDni, getUserxNumCustomer, getUsersRegistered } = require('../services/UserService.js')
 const { searchAddressxUser } = require('../services/locationServices.js')
 const bcrypt = require('bcrypt')
 
@@ -166,6 +166,16 @@ async function getAllAccount(req, res) {
 	// Persona_x_COD_SOC
 }
 
+async function usersRegistered(req, res) {
+	try {
+		const id = req.query.id || false
+		const users = await getUsersRegistered(id)
+		res.status(200).json(users)
+	} catch (error) {
+		res.status(400).json({ message: error.message })
+	}
+}
+
 module.exports = {
 	migrationUser,
 	tokenVerify,
@@ -175,4 +185,5 @@ module.exports = {
 	searchUserxDni,
 	getAllAccount,
 	searchUserxNumCustomer,
+	usersRegistered,
 }

@@ -22,16 +22,25 @@ async function saveCommentary(commentary) {
 	return await db.Commentary.create(commentary)
 }
 
-async function getPopup(body = false) {
+async function getPopup(body = false, id = false) {
 	const query = {}
 	if (body) {
 		query.where = { level: body.level,   date_out: { '>=': body.date_start}, status: 0}
+	}
+	if (id) {
+		query.where = { id }
 	}
 	return await db.PopUp.findAll(query)
 }
 
 async function savePopup(popup) {
-	return await db.PopUp.create(popup)
+	if (popup.id) {
+		return await db.PopUp.update(popup, {
+			where: { id: popup.id },
+		})
+	} else {
+		return await db.PopUp.create(popup)
+	}
 }
 
 async function getInformation() {
@@ -45,8 +54,4 @@ async function saveInformation(information) {
 module.exports = {
 	getCommentaries,
 	saveCommentary,
-	savePopup,
-	getPopup,
-	getInformation,
-	saveInformation
 }

@@ -37,6 +37,7 @@ async function addPopup(req, res) {
 
 async function Popups(req, res) {
 	try {
+		const id = req.query.id || false
 		const popups = await getPopup()
 		res.status(200).json(popups)
 	} catch (error) {

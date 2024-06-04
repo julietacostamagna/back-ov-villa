@@ -7,6 +7,8 @@ const { logout } = require('../controllers/Auth.controller')
 const { getListState, getListCity, getListStreet, newStreet, getAddress } = require('../controllers/Location.controller')
 const { customerServicesDetail } = require('../controllers/Services.controller')
 const { addCommentary } = require('../controllers/Managment.controller')
+const { newRequestService, getRequestsByUser } = require('../controllers/RequestService.controller')
+const { peopleByDocumentNumber } = require('../controllers/Person.controller')
 
 router.get('/test', (req, res) => {
 	res.json({ message: 'Test route' })
@@ -48,6 +50,14 @@ router.post('/getDetailService', customerServicesDetail)
 // Funcion para recuperar toda la informacion del usuario por dni
 router.get('/searchUserxDni', verifyToken, searchUserxDni)
 router.get('/searchUserxNumCustomer', verifyToken, searchUserxNumCustomer)
+
+// FUNCIONES PARA SOLICITUD DE SERVICIOS
+router.post('/createRequestService', verifyToken, newRequestService)
+router.post('/getRequestsByUser', verifyToken, getRequestsByUser)
+
+// Funciones de Peoples
+router.post('/searchPeopleByDocumentNumber', verifyToken, peopleByDocumentNumber)
+
 router.post('/addCommentary', verifyToken, addCommentary)
 
 module.exports = router
