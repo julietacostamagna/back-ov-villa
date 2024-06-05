@@ -19,7 +19,7 @@ async function migrationUser(req, res) {
 			const usersProcoop = await Persona_x_COD_SOC(users[user].number_customer || 0)
 			userMigrate.push({
 				name_register: users[user].first_name,
-				lastName_register: users[user].last_name,
+				last_name_register: users[user].last_name,
 				email: users[user].email,
 				email_verified: users[user].date_input ? new Date(users[user].date_input) : '',
 				password: users[user].password,
@@ -59,7 +59,11 @@ async function migrationUser(req, res) {
 		const data = { users: userMigrate, person_physical: person_physical, procoopmembers: procoopmembers, User_procoopmembers: User_procoopmembers }
 		return res.status(200).json(data)
 	} catch (error) {
-		res.json(error)
+		if (error.errors) {
+			res.status(500).json(error.errors)
+		} else {
+			res.status(400).json(error.message)
+		}
 	}
 }
 
@@ -71,7 +75,11 @@ async function tokenVerify(req, res) {
 		if (!user) throw new Error('El usuario no existe o ya ha sido validado.')
 		res.status(200).json(true)
 	} catch (error) {
-		res.status(400).json({ message: error.message })
+		if (error.errors) {
+			res.status(500).json(error.errors)
+		} else {
+			res.status(400).json(error.message)
+		}
 	}
 }
 async function dataUser(req, res) {
@@ -92,8 +100,11 @@ async function dataUser(req, res) {
 		user.level = level
 		res.status(200).json(user)
 	} catch (error) {
-		console.log({ message: error.message })
-		res.status(400).json({ message: error.message })
+		if (error.errors) {
+			res.status(500).json(error.errors)
+		} else {
+			res.status(400).json(error.message)
+		}
 	}
 }
 async function dataUserProfile(req, res) {
@@ -104,8 +115,11 @@ async function dataUserProfile(req, res) {
 		if (!user) throw new Error('El usuario no existe o ya ha sido validado.')
 		res.status(200).json(user)
 	} catch (error) {
-		console.log({ message: error.message })
-		res.status(400).json({ message: error.message })
+		if (error.errors) {
+			res.status(500).json(error.errors)
+		} else {
+			res.status(400).json(error.message)
+		}
 	}
 }
 async function upgradeUser(req, res) {
@@ -116,8 +130,11 @@ async function upgradeUser(req, res) {
 		if (!response) throw new Error('El usuario no se pudo actualizar.')
 		res.status(200).json(response)
 	} catch (error) {
-		console.log({ message: error.message })
-		res.status(400).json({ message: error.message })
+		if (error.errors) {
+			res.status(500).json(error.errors)
+		} else {
+			res.status(400).json(error.message)
+		}
 	}
 }
 async function updateUser(req, res) {
@@ -143,7 +160,11 @@ async function updateUser(req, res) {
 		const updatedUser = await saveUser(user)
 		res.status(200).json(updatedUser)
 	} catch (error) {
-		res.status(400).json(error.message)
+		if (error.errors) {
+			res.status(500).json(error.errors)
+		} else {
+			res.status(400).json(error.message)
+		}
 	}
 }
 async function updateProfile(req, res) {
@@ -173,7 +194,7 @@ async function updateProfile(req, res) {
 			const dataUpdPhysical = {
 				id_person: Persona.id,
 				name: fields.name,
-				last_name: fields.lastName,
+				last_name: fields.last_name,
 				born_date: `${fields.year}-${fields.month}-${fields.day}`,
 				id_type_sex: fields.id_type_sex,
 			}
@@ -182,7 +203,7 @@ async function updateProfile(req, res) {
 			const dataUpdLegal = {
 				id_person: Persona.id,
 				social_raeson: fields.name,
-				fantasy_name: fields.lastName,
+				fantasy_name: fields.last_name,
 				date_registration: `${fields.year}-${fields.month}-${fields.day}`,
 			}
 			await savePersonLegal(dataUpdLegal)
@@ -231,7 +252,11 @@ async function searchUserxDni(req, res) {
 		const user = await getUserxDni(dni)
 		res.status(200).json(user)
 	} catch (error) {
-		res.status(400).json(error.message)
+		if (error.errors) {
+			res.status(500).json(error.errors)
+		} else {
+			res.status(400).json(error.message)
+		}
 	}
 }
 async function searchUserxNumCustomer(req, res) {
@@ -241,7 +266,11 @@ async function searchUserxNumCustomer(req, res) {
 		const user = await getUserxNumCustomer(num)
 		res.status(200).json(user)
 	} catch (error) {
-		res.status(400).json(error.message)
+		if (error.errors) {
+			res.status(500).json(error.errors)
+		} else {
+			res.status(400).json(error.message)
+		}
 	}
 }
 
@@ -251,7 +280,11 @@ async function getAllAccount(req, res) {
 		const allAccountRelation = await allAccount(id)
 		return res.status(200).json(allAccountRelation)
 	} catch (error) {
-		res.status(400).json({ message: error.message })
+		if (error.errors) {
+			res.status(500).json(error.errors)
+		} else {
+			res.status(400).json(error.message)
+		}
 	}
 	// Persona_x_COD_SOC
 }
@@ -262,7 +295,11 @@ async function usersRegistered(req, res) {
 		const users = await getUsersRegistered(id)
 		res.status(200).json(users)
 	} catch (error) {
-		res.status(400).json({ message: error.message })
+		if (error.errors) {
+			res.status(500).json(error.errors)
+		} else {
+			res.status(400).json(error.message)
+		}
 	}
 }
 
