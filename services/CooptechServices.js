@@ -25,7 +25,7 @@ const addUserCooptech = async (data) => {
 				name_register: data.name,
 				last_name_register: data.last_name,
 				email: data.email,
-				user_type: 1,
+				// user_type: 1,
 				token_app: data.token,
 				type_person: 1,
 				email_verified: formatDate(new Date().toLocaleDateString()),
@@ -33,7 +33,7 @@ const addUserCooptech = async (data) => {
 			const [User, createdUser] = await db.User.findOrCreate({ where: { email: dataUser.email }, defaults: { ...dataUser }, transaction: t })
 			if (!createdUser) {
 				const dataUpdate = {
-					user_type: 1,
+					// user_type: 1,
 					token_app: data.token,
 				}
 				await User.update(dataUpdate, { transaction: t })
