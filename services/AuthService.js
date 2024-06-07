@@ -75,7 +75,7 @@ const generateTokenCooptech = async (email, tokenCooptech) => {
 
 const login = async (email, password, remember) => {
 	try {
-		const user = await db.User.findOne({ where: { email: email } })
+		const user = await db.User.findOne({ where: { email: email, user_type: 0 } })
 		if (!user) {
 			throw new Error('El usuario o la contraseña son incorrectas')
 		}
