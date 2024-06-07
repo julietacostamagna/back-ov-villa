@@ -43,7 +43,6 @@ module.exports = (sequelize, DataTypes) => {
 			img_profile: DataTypes.STRING,
 			type_person: DataTypes.INTEGER,
 			status: DataTypes.INTEGER,
-			user_type: DataTypes.INTEGER,
 			token_app: DataTypes.STRING,
 		},
 		{
