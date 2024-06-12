@@ -45,6 +45,5 @@ router.get('/getPopups', Popups)
 router.post('/addPopup', addPopup)
 router.post('/addInformation', addInformation)
 router.get('/informations', Informations)
-router.get('/getUsersRegistered', usersRegistered)
 
 module.exports = router
