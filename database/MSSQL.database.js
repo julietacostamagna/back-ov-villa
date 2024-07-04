@@ -11,17 +11,7 @@ SequelizeMorteros = new Sequelize(configDb.procoop.database, configDb.procoop.us
 		},
 	},
 })
-const SequelizeOncativo = new Sequelize(configDb.procoopOncativo.database, configDb.procoopOncativo.username, configDb.procoopOncativo.password, {
-	host: configDb.procoopOncativo.host,
-	port: configDb.procoopOncativo.port,
-	dialect: configDb.procoopOncativo.dialect,
-	dialectOptions: {
-		options: {
-			encrypt: false,
-		},
-	},
-})
+
 module.exports = {
-	SequelizeMorteros,
-	SequelizeOncativo,
+	SequelizeMorteros
 }
