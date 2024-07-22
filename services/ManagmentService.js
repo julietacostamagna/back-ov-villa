@@ -28,7 +28,7 @@ async function getPopup(body = false, id = false) {
 		query.where = { id }
 	}else{
 		if (body) {
-			query.where = { level: body.level,   date_out: { '>=': body.date_start}, status: 0}
+			query.where = { level: body.level, date_end: { [db.Sequelize.Op.gte]: body.date_start }, status: 0}
 		}
 	}
 	return await db.PopUp.findAll(query)
@@ -74,6 +74,74 @@ async function saveImageInformation(ImageInformation) {
 	return await db.Image_Information.create(ImageInformation)
 }
 
+async function getClaim(id = false) {
+	const query = {}
+	if (id) {
+		query.where = { id }
+	}
+	return await db.Claim.findAll(query)
+}
+
+async function saveClaim(claim) {
+	if (claim.id) {
+		return await db.Claim.update(claim, {
+			where: { id: claim.id },
+		})
+	} else {
+		return await db.Claim.create(claim)
+	}
+}
+
+async function getUsers(body = false) {
+    const query = {
+        include: [
+            {
+                model: db.User_People,
+                as: 'User_People',
+                attributes: ['level'],
+            },
+        ],
+        where: {},
+    };
+    if (body) {
+        if (body.nivel !== '' && body.nivel !== '1') {
+            query.include[0].where = { level: body.nivel };
+        }
+        if (body.inicio !== '') {
+            query.where.createdAt = {
+                [db.Sequelize.Op.gte]: new Date(body.inicio),
+            };
+        }
+        if (body.fin !== '') {
+            query.where.createdAt = {
+                ...query.where.createdAt,
+                [db.Sequelize.Op.lte]: new Date(body.fin),
+            };
+        }
+    }
+
+    return await db.User.findAll(query);
+}
+
+async function saveMaterialsClaim(materialsClaim) {
+    return await db.sequelize.transaction(async (t) => {
+		await db.Tools_Claims.destroy({
+			where: { id_claim: materialsClaim[0].id_claim },
+			transaction: t
+		});
+
+		await db.Tools_Claims.bulkCreate(materialsClaim, { transaction: t });
+	});
+}
+
+async function getMaterialsClaim(idClaim = false) {
+	const query = {}
+	if (idClaim) {
+		query.where = { id_claim: idClaim }
+	}
+	return await db.Tools_Claims.findAll(query)
+}
+
 module.exports = {
 	getCommentaries,
 	saveCommentary,
@@ -82,5 +150,10 @@ module.exports = {
 	getInformation, 
 	saveInformation,
 	getImageInformation,
-	saveImageInformation
+	saveImageInformation, 
+	saveClaim,
+	getClaim,
+	getUsers,
+	saveMaterialsClaim,
+	getMaterialsClaim
 }

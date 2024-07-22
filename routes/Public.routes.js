@@ -5,8 +5,8 @@ const { migrationUser, tokenVerify, usersRegistered } = require('../controllers/
 const { login, testConect, register, verifyRegister, password_recover } = require('../controllers/Auth.controller')
 const { customerServices, customerConsumption } = require('../controllers/Services.controller')
 const { getInvoice, existInvoice } = require('../controllers/Payment.controller')
-const { searchByDNI, searchByCuit, migrationCity, migrationState } = require('../controllers/Procoop.controller')
-const { Commentaries, addCommentary, Popups, addPopup, addInformation, Informations, addImageInformation, ImageInformations } = require('../controllers/Managment.controller')
+const { searchByDNI, searchByCuit } = require('../controllers/Procoop.controller')
+const { Commentaries, Popups, addPopup, addInformation, Informations, addImageInformation, ImageInformations, Claims, addClaim, Users, addMaterialsClaim, MaterialsClaim } = require('../controllers/Managment.controller')
 const { relationUserCooptech, loginCooptech, tokenCooptech } = require('../controllers/Cooptech.controller')
 
 // RUTAS PARA AUTH
@@ -48,5 +48,10 @@ router.get('/informations', Informations)
 router.post('/addImageInformation', addImageInformation)
 router.get('/imageInformations', ImageInformations)
 router.get('/getUsersRegistered', usersRegistered)
+router.post('/addClaim', addClaim)
+router.get('/Claims', Claims)
+router.post('/Users', Users)
+router.post('/addMaterialsClaim', addMaterialsClaim)
+router.get('/getMaterialsClaim', MaterialsClaim)
 
 module.exports = router

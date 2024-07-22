@@ -1,5 +1,6 @@
 const { db } = require('../models')
 const { Op } = require('sequelize')
+
 const listState = async () => {
 	try {
 		const data = await db.State.findAll()
@@ -99,23 +100,9 @@ const addStreetProcoop = async (data) => {
 	})
 }
 
-const listStreetsByCity = async (cityId) => {
+const listStreetsByCity = async () => {
 	try {
-		const streets = await db.Street.findAll({
-			include: [
-				{
-					association: 'Cities',
-					where: { id: cityId },
-					// through: {
-					// 	model: db.Street_City,
-					// 	as: 'StreetCities',
-					// },
-					attributes: ['id', 'DES_LOC'],
-				},
-			],
-			raw: true,
-			nest: true,
-		})
+		const streets = await db.Street.findAll()
 		return streets
 	} catch (error) {
 		return { error: error.message }

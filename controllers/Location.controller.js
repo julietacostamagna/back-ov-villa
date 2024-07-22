@@ -19,8 +19,8 @@ async function getListCity(req, res) {
 }
 async function getListStreet(req, res) {
 	try {
-		const { id } = req.query
-		const result = await listStreetsByCity(id)
+		// const { id } = req.query
+		const result = await listStreetsByCity()
 		return res.status(200).json(result)
 	} catch (error) {
 		res.status(400).json({ message: error.message })

@@ -13,9 +13,7 @@ module.exports = (sequelize, DataTypes) => {
 			Person.hasOne(models.Person_legal, { foreignKey: 'id_person', targetKey: 'id', as: 'Person_legal' })
 			Person.hasOne(models.User, { foreignKey: 'id_person_profile', targetKey: 'id', as: 'person_profile' })
 			Person.hasMany(models.Person_Address, { foreignKey: 'id_person', targetKey: 'id', as: 'Person_Address' })
-			Person.hasMany(models.User_People, { foreignKey: 'id_person', targetKey: 'id', as: 'User_People' })
-			Person.hasMany(models.Service_Request, { foreignKey: 'id_person', targetKey: 'id', as: 'Service_Request' })
-		}
+			Person.hasMany(models.User_People, { foreignKey: 'id_person', targetKey: 'id', as: 'User_People' })		}
 	}
 	Person.init(
 		{

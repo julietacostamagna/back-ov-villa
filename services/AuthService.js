@@ -1,8 +1,8 @@
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
-const { sequelizeCoopm_v1 } = require('../database/MySQL.database')
+const { SequelizeVilla } = require('../database/MySQL.database')
 const { sequelize, SequelizeOncativo } = require('../database/MSSQL.database')
-const { db, db_coopm_v1, changeSchema } = require('../models')
+const { db, changeSchema } = require('../models')
 const { Sequelize } = require('sequelize')
 const { sendEmail } = require('./EmailServices')
 const { getLevel } = require('./UserService')
@@ -138,7 +138,7 @@ const authCooptech = async (email, token, schemaName) => {
 
 const testConection = async () => {
 	try {
-		await sequelizeCoopm_v1.authenticate()
+		await SequelizeVilla.authenticate()
 	} catch (error) {
 		console.error('ERROR DE DATABASE:', error)
 	}
@@ -162,13 +162,13 @@ const registerUser = async (data, url) => {
 	}
 }
 
-const logout = async (req, res) => {
-	try {
-		const id = req.cookies.token.sub
-		const user = await db_coopm_v1.UserDesarrollo.findOne({ where: { id: id } })
-	} catch (error) {
-		res.status(400).json({ error: error.message })
-	}
-}
+// const logout = async (req, res) => {
+// 	try {
+// 		const id = req.cookies.token.sub
+// 		const user = await db_coopm_v1.UserDesarrollo.findOne({ where: { id: id } })
+// 	} catch (error) {
+// 		res.status(400).json({ error: error.message })
+// 	}
+// }
 
-module.exports = { testConection, login, newQuery, registerUser, logout, authCooptech, generateTokenCooptech }
+module.exports = { testConection, login, newQuery, registerUser, authCooptech, generateTokenCooptech }

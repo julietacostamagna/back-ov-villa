@@ -1,4 +1,4 @@
-const { getCommentaries, saveCommentary, savePopup, getPopup, saveInformation, getInformation, getImageInformation, saveImageInformation} = require('../services/ManagmentService')
+const { getCommentaries, saveCommentary, savePopup, getPopup, saveInformation, getInformation, getImageInformation, saveImageInformation, getClaim, saveClaim, getUsers, saveMaterialsClaim, getMaterialsClaim} = require('../services/ManagmentService')
 
 async function Commentaries(req, res) {
 	try {
@@ -85,6 +85,56 @@ async function ImageInformations(req, res) {
 	}
 }
 
+async function addClaim(req, res) {
+	try {
+		const claim = req.body
+		const newClaim = await saveClaim(claim)
+		res.status(200).json(newClaim)
+	} catch (error) {
+		res.status(400).json(error.message)
+	}
+}
+
+async function Claims(req, res) {
+	try {
+		const id = req.query.id || false
+		const claims = await getClaim(id)
+		res.status(200).json(claims)
+	} catch (error) {
+		res.status(400).json(error.message)
+	}
+}
+
+async function Users(req, res) {
+	try {
+		const datos = req.body
+		const users = await getUsers(datos)
+		res.status(200).json(users)
+	} catch (error) {
+		res.status(400).json(error.message)
+	}
+}
+
+async function MaterialsClaim(req, res) {
+	try {
+		const idClaim = req.query.id_claim || false
+		const MaterialsClaim = await getMaterialsClaim(idClaim)
+		res.status(200).json(MaterialsClaim)
+	} catch (error) {
+		res.status(400).json(error.message)
+	}
+}
+
+async function addMaterialsClaim(req, res) {
+	try {
+		const MaterialsClaim = req.body
+		const newMaterialsClaim = await saveMaterialsClaim(MaterialsClaim)
+		res.status(200).json(newMaterialsClaim)
+	} catch (error) {
+		res.status(400).json(error.message)
+	}
+}
+
 
 module.exports = {
 	Commentaries,
@@ -94,5 +144,10 @@ module.exports = {
 	Informations, 
 	addInformation, 
 	ImageInformations,
-	addImageInformation
+	addImageInformation, 
+	Claims, 
+	addClaim, 
+	addMaterialsClaim,
+	MaterialsClaim,
+	Users
 }

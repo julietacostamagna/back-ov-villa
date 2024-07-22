@@ -64,6 +64,6 @@ router.post('/getRequestsByUser', verifyToken, getRequestsByUser)
 router.post('/searchPeopleByDocumentNumber', verifyToken, peopleByDocumentNumber)
 
 router.post('/addCommentary', verifyToken, addCommentary)
-router.get('/getUsersRegistered', verifyToken, usersRegistered)
+router.post('/getUsersRegistered', verifyToken, usersRegistered)
 
 module.exports = router

@@ -17,8 +17,27 @@ async function testConnection() {
 	}
 }
 
+const sequelizeVilla = new Sequelize(config.bd_villa.database, config.bd_villa.username, config.bd_villa.password, {
+	host: config.bd_villa.host,
+	port: config.bd_villa.port,
+	dialect: config.bd_villa.dialect,
+})
+
+
+async function testConnectionVilla() {
+	try {
+		await sequelizeVilla.authenticate()
+		await sequelizeVilla.authenticate()
+		console.log('Connection has been established successfully.')
+	} catch (error) {
+		console.error('Unable to connect to the database:', error)
+	}
+}
+
 module.exports = {
-	sequelizeCoopm_villa,
 	QueryTypes,
+	sequelizeCoopm_villa,
 	testConnection,
+	sequelizeVilla,
+	testConnectionVilla
 }

@@ -128,6 +128,9 @@ async function upgradeUser(req, res) {
 		if (!user) throw new Error('El usuario no existe o ya ha sido validado.')
 		const response = await updateLvl2(user, req.body)
 		if (!response) throw new Error('El usuario no se pudo actualizar.')
+		if (response){
+			
+		}
 		res.status(200).json(response)
 	} catch (error) {
 		if (error.errors) {
@@ -137,6 +140,7 @@ async function upgradeUser(req, res) {
 		}
 	}
 }
+
 async function updateUser(req, res) {
 	try {
 		const { id } = req.user

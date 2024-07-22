@@ -44,6 +44,7 @@ const register = async (req, res) => {
 	try {
 		const fullUrl = req.headers.origin
 		const { name, last_name, email, email_confirmation, password, password_confirmation, typePerson } = req.body
+		console.log(name);
 		const pass = await bcrypt.hash(password, 10)
 		const reg = /^(?=.*[A-Z])(?=.*[!@#$%^&*.]).{6,}$/
 		if (email !== email_confirmation) throw new Error('Los emails no coinciden')
