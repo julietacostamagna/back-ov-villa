@@ -5,9 +5,9 @@ const { dataUser, upgradeUser, updateUser, searchUserxDni, getAllAccount, search
 const { verifyToken } = require('../middleware/Auth.middleware')
 const { logout } = require('../controllers/Auth.controller')
 const { getListState, getListCity, getListStreet, newStreet, getAddress, newStreetAPi, newStreetProcoop } = require('../controllers/Location.controller')
-const { customerServicesDetail } = require('../controllers/Services.controller')
-const { addCommentary } = require('../controllers/Managment.controller')
-const { newRequestService, getRequestsByUser } = require('../controllers/RequestService.controller')
+// const { customerServicesDetail } = require('../controllers/Services.controller')
+const { addCommentary, activePopups } = require('../controllers/Managment.controller')
+// const { newRequestService, getRequestsByUser } = require('../controllers/RequestService.controller')
 const { peopleByDocumentNumber } = require('../controllers/Person.controller')
 
 router.get('/test', (req, res) => {
@@ -22,6 +22,7 @@ router.post('/searchCuit', verifyToken, searchByCuit)
 // router.get('/users', migrationUser)
 router.get('/dataUser', verifyToken, dataUser)
 router.get('/dataUserProfile', verifyToken, dataUserProfile)
+router.get('/activePopups', verifyToken, activePopups)
 // router.get('/localidad', migrationCity)
 // router.get('/provincia', migrationState)
 
@@ -50,15 +51,15 @@ router.post('/addStreetProcoop', verifyToken, newStreetProcoop)
 router.post('/getAddress', verifyToken, getAddress)
 
 //Funciones de servicios
-router.post('/getDetailService', customerServicesDetail)
+// router.post('/getDetailService', customerServicesDetail)
 
 // Funcion para recuperar toda la informacion del usuario por dni
 router.get('/searchUserxDni', verifyToken, searchUserxDni)
 router.get('/searchUserxNumCustomer', verifyToken, searchUserxNumCustomer)
 
 // FUNCIONES PARA SOLICITUD DE SERVICIOS
-router.post('/createRequestService', verifyToken, newRequestService)
-router.post('/getRequestsByUser', verifyToken, getRequestsByUser)
+// router.post('/createRequestService', verifyToken, newRequestService)
+// router.post('/getRequestsByUser', verifyToken, getRequestsByUser)
 
 // Funciones de Peoples
 router.post('/searchPeopleByDocumentNumber', verifyToken, peopleByDocumentNumber)

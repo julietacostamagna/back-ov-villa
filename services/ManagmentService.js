@@ -142,6 +142,21 @@ async function getMaterialsClaim(idClaim = false) {
 	return await db.Tools_Claims.findAll(query)
 }
 
+async function getTools(id = false) {
+	const query = {}
+	if (id) {
+		query.where = { id: id }
+	}
+	return await db.Tools.findAll(query)
+}
+
+
+async function getActivePopups() {
+	return await db.PopUp.findAll({
+		where: { status: 1 },
+	})
+}
+
 module.exports = {
 	getCommentaries,
 	saveCommentary,
@@ -155,5 +170,7 @@ module.exports = {
 	getClaim,
 	getUsers,
 	saveMaterialsClaim,
-	getMaterialsClaim
+	getMaterialsClaim,
+	getTools,
+	getActivePopups
 }

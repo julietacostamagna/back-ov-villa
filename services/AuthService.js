@@ -26,7 +26,7 @@ const signToken = (user, remember) => {
 	// Seteo de fecha con 8horas mas para expiracion
 	const dateHour = new Date().setHours(new Date().getHours() + 8)
 	const configSing = {
-		iss: `app-coopm_v2`,
+		iss: `app-coopm_villa`,
 		sub: user.id,
 		iat: new Date().getTime(),
 		exp: new Date(remember ? dateYear : dateHour).getTime(),
@@ -37,6 +37,7 @@ const signToken = (user, remember) => {
 		TypeUser: user.type_person,
 		dark: user.dark,
 		img_profile: user.img_profile,
+		type_person: user.type_person,
 	}
 	return jwt.sign(configSing, secret)
 }

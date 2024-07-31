@@ -1,4 +1,4 @@
-const { getCommentaries, saveCommentary, savePopup, getPopup, saveInformation, getInformation, getImageInformation, saveImageInformation, getClaim, saveClaim, getUsers, saveMaterialsClaim, getMaterialsClaim} = require('../services/ManagmentService')
+const { getCommentaries, saveCommentary, savePopup, getPopup, saveInformation, getInformation, getImageInformation, saveImageInformation, getClaim, saveClaim, getUsers, saveMaterialsClaim, getMaterialsClaim, getTools, getActivePopups} = require('../services/ManagmentService')
 
 async function Commentaries(req, res) {
 	try {
@@ -135,6 +135,26 @@ async function addMaterialsClaim(req, res) {
 	}
 }
 
+async function toolsClaim(req, res) {
+	try {
+		const id = req.query.id || false
+		const tools = await getTools(id)
+		res.status(200).json(tools)
+	} catch (error) {
+		res.status(400).json(error.message)
+	}
+}
+
+async function activePopups(req, res) {
+	try {
+		const id = req.query.id || false
+		const popups = await getActivePopups()
+		res.status(200).json(popups)
+	} catch (error) {
+		res.status(400).json(error.message)
+	}
+}
+
 
 module.exports = {
 	Commentaries,
@@ -149,5 +169,7 @@ module.exports = {
 	addClaim, 
 	addMaterialsClaim,
 	MaterialsClaim,
-	Users
+	Users,
+	toolsClaim,
+	activePopups
 }

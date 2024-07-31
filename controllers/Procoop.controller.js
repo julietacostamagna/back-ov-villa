@@ -2,8 +2,10 @@ const City = require('../models/city.js')
 const { db } = require('../models/index.js')
 const State = require('../models/state.js')
 const { ListCityProcoop, ListStateProcoop, empresaPorCuit, personaPorDni, Persona_x_COD_SOC, getOrCreateUser_ProcoopMember, getOrCreateProcoopMember, ListStreetProcoop } = require('../services/ProcoopService.js')
+const { Cliente_x_code, Service_x_code } = require('../services/VillaService.js');
 const { updatePrimaryAccountUserProcoop, deleteUserPerson } = require('../services/UserService.js')
 const { addStreet } = require('../services/locationServices.js')
+const { getOrCreateMember } = require('../services/VillaService.js')
 
 async function searchByDNI(req, res) {
 	const { dni } = req.body
@@ -68,16 +70,28 @@ async function migrationState(req, res) {
 async function getNameCustomer(req, res) {
 	try {
 		const { customer } = req.body
-		const result = await Persona_x_COD_SOC(customer)
+		const result = await Cliente_x_code(customer)
 		return res.status(200).json(result)
 	} catch (error) {
 		return res.status(400).json({ message: error.message })
 	}
 	// Persona_x_COD_SOC
 }
+
+async function getService(req, res) {
+	try {
+		const { customer } = req.body
+		const result = await Service_x_code(customer)
+		return res.status(200).json(result)
+	} catch (error) {
+		return res.status(400).json({ message: error.message })
+	}
+	// Persona_x_COD_SOC
+}
+
 async function addUserPersonMember(req, res) {
 	try {
-		const Person = await getOrCreateProcoopMember(req.body, req.user)
+		const Person = await getOrCreateMember(req.body, req.user)
 		return res.status(200).json(Person)
 	} catch (error) {
 		return res.status(404).json({ message: error.message })
@@ -113,4 +127,5 @@ module.exports = {
 	addUserPersonMember,
 	removeUserPersonMember,
 	changePrimaryAccountUserProcoop,
+	getService
 }

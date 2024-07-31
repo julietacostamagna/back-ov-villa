@@ -6,7 +6,7 @@ const { login, testConect, register, verifyRegister, password_recover } = requir
 const { customerServices, customerConsumption } = require('../controllers/Services.controller')
 const { getInvoice, existInvoice } = require('../controllers/Payment.controller')
 const { searchByDNI, searchByCuit } = require('../controllers/Procoop.controller')
-const { Commentaries, Popups, addPopup, addInformation, Informations, addImageInformation, ImageInformations, Claims, addClaim, Users, addMaterialsClaim, MaterialsClaim } = require('../controllers/Managment.controller')
+const { Commentaries, Popups, addPopup, addInformation, Informations, addImageInformation, ImageInformations, Claims, addClaim, Users, addMaterialsClaim, MaterialsClaim, toolsClaim } = require('../controllers/Managment.controller')
 const { relationUserCooptech, loginCooptech, tokenCooptech } = require('../controllers/Cooptech.controller')
 
 // RUTAS PARA AUTH
@@ -30,7 +30,7 @@ router.get('/getService', customerServices)
 router.get('/getConsumo', customerConsumption)
 
 //RUTAS DE PAGOS
-router.get('/facturas', getInvoice)
+router.post('/facturas', getInvoice)
 router.get('/existinvoice', existInvoice)
 // router.get('/pruebaMigration', migrator1Up)
 // router.get('/MigrationLocation', migrationCity)
@@ -53,5 +53,8 @@ router.get('/Claims', Claims)
 router.post('/Users', Users)
 router.post('/addMaterialsClaim', addMaterialsClaim)
 router.get('/getMaterialsClaim', MaterialsClaim)
+// router.get('/typesClaim', MaterialsClaim)
+router.get('/toolsClaim', toolsClaim)
+
 
 module.exports = router

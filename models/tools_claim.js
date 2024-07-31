@@ -12,6 +12,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
 			// define association here
 			this.belongsTo(models.Claim, { foreignKey: 'id_claim', targetKey: 'id', as: 'claim' })
+      this.belongsTo(models.Tools, { foreignKey: 'id_tool', targetKey: 'id', as: 'tool' })
 		}
   }
   Tools_Claims.init({

@@ -69,38 +69,54 @@ const codes = require('../utils/Procoop/serviceCode.json')
 
 async function getInvoice(req, res) {
 	try {
-		const { id_villa } = req.query;
-		const all = req.query.all ? true : false;
-		const debts = await debtsCustomerVilla(id_villa, all);
+		const { socios, all } =  req.body;
+		const result = [];
 
-		if (!debts) {
-			return res.status(404).json({ message: 'Error al buscar los datos' });
-		}
-
-		let invoices = { list: [] }; 
-
-		for (let i in debts) {
-
-			let status = 1;
-			if (parseInt(debts[i].importe) > 0) {
-				status = 0;
+		for (const item of socios) {
+			const debts = await debtsCustomerVilla(item.num, all);
+			if (!debts) {
+				continue;
 			}
 
-			let fact = {
-				id: debts[i].ID_FAC,
-				type: debts[i].tipoComprobante,
-				nrovoucher: debts[i].numero,
-				vto: debts[i].fechaVencimiento,
-				amount: debts[i].importe,
-				url: ``,
-				status: status,
-				number: debts[i].cliente,
-			};
+			let invoices = { codigo: item.num, list: [] };
 
-			invoices.list.push(fact);
+			for (const debt of debts) {
+				let precio = parseFloat(debt.importe) < 0 ? Math.abs(debt.importe) : debt.importe;
+				let status = parseFloat(debt.importe) > 0 ? 0 : 1;
+
+				let comprobante = '';
+				switch (debt.puntoVenta) {
+					case 5: comprobante = 'TV';
+						break;
+					case 9: comprobante = 'INT';
+						break;
+					case 7: comprobante = 'RA';
+						break;
+					default:
+						break;
+				}
+
+				let fact = {
+					type: comprobante,
+					nrovoucher: debt.numero,
+					vto: debt.fechaVencimiento,
+					amount: parseFloat(precio).toFixed(2),
+					url: ``,
+					status: status,
+					number: debt.cliente,
+					nombre: debt.nombre,
+					domicilio: debt.domicilio
+				};
+
+				invoices.list.push(fact);
+			}
+
+			if (invoices.list.length > 0) {
+				result.push(invoices);
+			}
 		}
-
-		return res.status(200).json(invoices);
+	
+		return res.status(200).json(result);
 	} catch (error) {
 		return res.status(400).json({ message: error.message });
 	}
