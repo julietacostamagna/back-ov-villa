@@ -6,7 +6,7 @@ const { login, testConect, register, verifyRegister, password_recover } = requir
 const { customerServices, customerConsumption } = require('../controllers/Services.controller')
 const { getInvoice, existInvoice } = require('../controllers/Payment.controller')
 const { searchByDNI, searchByCuit } = require('../controllers/Procoop.controller')
-const { Commentaries, Popups, addPopup, addInformation, Informations, addImageInformation, ImageInformations, Claims, addClaim, Users, addMaterialsClaim, MaterialsClaim, toolsClaim } = require('../controllers/Managment.controller')
+const { Commentaries, Popups, addPopup, addInformation, Informations, addImageInformation, ImageInformations, Claims, addClaim, Users, addMaterialsClaim, MaterialsClaim, toolsClaim, addTechnicianClaim, TechnicianClaim } = require('../controllers/Managment.controller')
 const { relationUserCooptech, loginCooptech, tokenCooptech } = require('../controllers/Cooptech.controller')
 
 // RUTAS PARA AUTH
