@@ -55,6 +55,8 @@ router.post('/addMaterialsClaim', addMaterialsClaim)
 router.get('/getMaterialsClaim', MaterialsClaim)
 // router.get('/typesClaim', MaterialsClaim)
 router.get('/toolsClaim', toolsClaim)
+router.post('/addTechnicianClaim', addTechnicianClaim)
+router.get('/getTechnicianClaim', TechnicianClaim)
 
 
 module.exports = router
