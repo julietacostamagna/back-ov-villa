@@ -157,6 +157,25 @@ async function getActivePopups() {
 	})
 }
 
+async function saveTechniciansClaim(techniciansClaim) {
+    return await db.sequelize.transaction(async (t) => {
+		await db.Technicians_Claims.destroy({
+			where: { id_claim: techniciansClaim[0].id_claim },
+			transaction: t
+		});
+
+		await db.Technicians_Claims.bulkCreate(techniciansClaim, { transaction: t });
+	});
+}
+
+async function getTechniciansClaim(idClaim = false) {
+	const query = {}
+	if (idClaim) {
+		query.where = { id_claim: idClaim }
+	}
+	return await db.Technicians_Claims.findAll(query)
+}
+
 module.exports = {
 	getCommentaries,
 	saveCommentary,
@@ -172,5 +191,7 @@ module.exports = {
 	saveMaterialsClaim,
 	getMaterialsClaim,
 	getTools,
-	getActivePopups
+	getActivePopups,
+	saveTechniciansClaim,
+	getTechniciansClaim
 }
