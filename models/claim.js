@@ -9,9 +9,8 @@ module.exports = (sequelize, DataTypes) => {
     type: DataTypes.INTEGER,
     service: DataTypes.INTEGER,
     status: DataTypes.BOOLEAN,
-    nro_customer: DataTypes.INTEGER,
-    customer: DataTypes.STRING,
-    technician: DataTypes.INTEGER,
+    user_id: DataTypes.INTEGER,
+    user_name: DataTypes.STRING,
     observations: DataTypes.STRING,
   }, {
     sequelize,
