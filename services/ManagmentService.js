@@ -74,12 +74,37 @@ async function saveImageInformation(ImageInformation) {
 	return await db.Image_Information.create(ImageInformation)
 }
 
-async function getClaim(id = false) {
-	const query = {}
-	if (id) {
-		query.where = { id }
-	}
-	return await db.Claim.findAll(query)
+async function getClaim(body) {
+    const query = {
+        order: [['status', 'ASC'], ['id', 'DESC']],
+        where: {},
+    };
+
+    if (body) {
+        if (body.id) {
+            query.where.id = body.id;
+            return await db.Claim.findAll(query);
+        }
+
+        if (body.status && body.status !== '') {
+            query.where.status = body.status;
+        }
+
+        if (body.inicio && body.inicio !== '') {
+            query.where.createdAt = {
+                [db.Sequelize.Op.gte]: new Date(body.inicio),
+            };
+        }
+
+        if (body.fin && body.fin !== '') {
+            query.where.createdAt = {
+                ...query.where.createdAt,
+                [db.Sequelize.Op.lte]: new Date(body.fin),
+            };
+        }
+    }
+
+    return await db.Claim.findAll(query);
 }
 
 async function saveClaim(claim) {
@@ -107,6 +132,11 @@ async function getUsers(body = false) {
         if (body.nivel !== '' && body.nivel !== '1') {
             query.include[0].where = { level: body.nivel };
         }
+
+		if (body.nivel !== '' &&  body.nivel == '1'){
+			query.where = { lvl2_date: null };
+		}
+
         if (body.inicio !== '') {
             query.where.createdAt = {
                 [db.Sequelize.Op.gte]: new Date(body.inicio),
@@ -176,6 +206,19 @@ async function getTechniciansClaim(idClaim = false) {
 	return await db.Technicians_Claims.findAll(query)
 }
 
+
+async function savePaysMethodEnableds(paysMethodEnableds) {
+	return await db.PaysMethodEnableds.create(paysMethodEnableds)
+}
+
+async function getPaysMethodEnableds(idMethodEnableds = false) {
+	const query = {}
+	if (idMethodEnableds) {
+		query.where = { id: idMethodEnableds }
+	}
+	return await db.PaysMethodEnableds.findAll(query)
+}
+
 module.exports = {
 	getCommentaries,
 	saveCommentary,
@@ -193,5 +236,7 @@ module.exports = {
 	getTools,
 	getActivePopups,
 	saveTechniciansClaim,
-	getTechniciansClaim
+	getTechniciansClaim,
+	savePaysMethodEnableds,
+	getPaysMethodEnableds
 }

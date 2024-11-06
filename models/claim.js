@@ -12,6 +12,12 @@ module.exports = (sequelize, DataTypes) => {
     user_id: DataTypes.INTEGER,
     user_name: DataTypes.STRING,
     observations: DataTypes.STRING,
+    signName: DataTypes.STRING,
+    signLastName: DataTypes.STRING,
+    signDni: DataTypes.STRING,
+    signPhone: DataTypes.STRING,
+    signImage: DataTypes.STRING,
+    address: DataTypes.STRING,
   }, {
     sequelize,
     modelName: 'Claim',

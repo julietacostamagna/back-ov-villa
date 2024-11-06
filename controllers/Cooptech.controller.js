@@ -1,5 +1,5 @@
 const { authCooptech, generateTokenCooptech } = require('../services/AuthService')
-const { addUserCooptech } = require('../services/CooptechServices')
+const { addUserCooptech, ProductsCliente_x_id, MethodsPays } = require('../services/CooptechServices')
 
 async function relationUserCooptech(req, res) {
 	try {
@@ -41,8 +41,40 @@ const tokenCooptech = async (req, res) => {
 		}
 	}
 }
+
+const OVCliente = async (req, res) => {
+	try {
+	  const { id } = req.params;
+	  const cliente = await ProductsCliente_x_id(id);
+	  return res.status(200).json(cliente);
+	} catch (error) {
+	  if (error.errors) {
+		res.status(500).json(error.errors);
+	  } else {
+		res.status(400).json(error.message);
+	  }
+	}
+  };
+
+  const Methods = async (req, res) => {
+	try {
+	  const id = req.query.id || false
+	  const cliente = await MethodsPays(id);
+	  return res.status(200).json(cliente);
+	} catch (error) {
+	  if (error.errors) {
+		res.status(500).json(error.errors);
+	  } else {
+		res.status(400).json(error.message);
+	  }
+	}
+  }; 
+
+
 module.exports = {
 	relationUserCooptech,
 	loginCooptech,
 	tokenCooptech,
+	OVCliente,
+	Methods
 }

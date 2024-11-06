@@ -1,4 +1,6 @@
-const { getCommentaries, saveCommentary, savePopup, getPopup, saveInformation, getInformation, getImageInformation, saveImageInformation, getClaim, saveClaim, getUsers, saveMaterialsClaim, getMaterialsClaim, getTools, getActivePopups, saveTechniciansClaim, getTechniciansClaim} = require('../services/ManagmentService')
+const { getCommentaries, saveCommentary, savePopup, getPopup, saveInformation, getInformation, getImageInformation, saveImageInformation, 
+	getClaim, saveClaim, getUsers, saveMaterialsClaim, getMaterialsClaim, getTools, getActivePopups, saveTechniciansClaim, 
+	getTechniciansClaim, getPaysMethodEnableds, savePaysMethodEnableds} = require('../services/ManagmentService')
 
 async function Commentaries(req, res) {
 	try {
@@ -97,8 +99,8 @@ async function addClaim(req, res) {
 
 async function Claims(req, res) {
 	try {
-		const id = req.query.id || false
-		const claims = await getClaim(id)
+		const datos = req.body
+		const claims = await getClaim(datos)
 		res.status(200).json(claims)
 	} catch (error) {
 		res.status(400).json(error.message)
@@ -175,6 +177,25 @@ async function addTechnicianClaim(req, res) {
 	}
 }
 
+async function addMethodEnableds(req, res) {
+	try {
+		const methodEnableds = req.body
+		const newMethodEnableds = await savePaysMethodEnableds(methodEnableds)
+		res.status(200).json(newMethodEnableds)
+	} catch (error) {
+		res.status(400).json(error.message)
+	}
+}
+
+async function methodEnableds(req, res) {
+	try {
+		const id = req.query.id || false
+		const methodEnableds = await getPaysMethodEnableds(id)
+		res.status(200).json(methodEnableds)
+	} catch (error) {
+		res.status(400).json(error.message)
+	}
+}
 
 module.exports = {
 	Commentaries,
@@ -193,5 +214,7 @@ module.exports = {
 	toolsClaim,
 	activePopups,
 	TechnicianClaim,
-	addTechnicianClaim
+	addTechnicianClaim,
+	addMethodEnableds,
+	methodEnableds
 }

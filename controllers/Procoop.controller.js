@@ -1,10 +1,9 @@
 const City = require('../models/city.js')
 const { db } = require('../models/index.js')
 const State = require('../models/state.js')
-const { ListCityProcoop, ListStateProcoop, empresaPorCuit, personaPorDni, Persona_x_COD_SOC, getOrCreateUser_ProcoopMember, getOrCreateProcoopMember, ListStreetProcoop } = require('../services/ProcoopService.js')
+const { ListCityProcoop, ListStateProcoop, empresaPorCuit, personaPorDni, ListStreetProcoop } = require('../services/ProcoopService.js')
 const { Cliente_x_code, Service_x_code } = require('../services/VillaService.js');
 const { updatePrimaryAccountUserProcoop, deleteUserPerson } = require('../services/UserService.js')
-const { addStreet } = require('../services/locationServices.js')
 const { getOrCreateMember } = require('../services/VillaService.js')
 
 async function searchByDNI(req, res) {
@@ -67,6 +66,8 @@ async function migrationState(req, res) {
 		return res.json({ error, msj: error })
 	}
 }
+
+
 async function getNameCustomer(req, res) {
 	try {
 		const { customer } = req.body

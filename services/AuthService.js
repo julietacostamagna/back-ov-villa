@@ -1,7 +1,6 @@
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
 const { SequelizeVilla } = require('../database/MySQL.database')
-const { sequelize, SequelizeOncativo } = require('../database/MSSQL.database')
 const { db, changeSchema } = require('../models')
 const { Sequelize } = require('sequelize')
 const { sendEmail } = require('./EmailServices')
@@ -110,6 +109,8 @@ const login = async (email, password, remember) => {
 		throw error
 	}
 }
+
+
 const authCooptech = async (email, token, schemaName) => {
 	try {
 		await changeSchema(schemaName)
