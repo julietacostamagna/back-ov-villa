@@ -1,12 +1,11 @@
 {
 	"coopm_villa": {
-		"database": "coopm_villa",
-		"username": "DbDesarrollo",
-		"password": "m+?PvY:zUogF01Q^XH3i9",
-		"host": "localhost",
+		"database": "ov_villa_trinidad",
+		"username": "reconecta",
+		"password": "PgHQGFEgMEfsuEKfB6tV",
+		"host": "172.26.5.100",
 		"port": 3306,
-		"dialect": "mysql",
-		"timezone": "-03:00" 
+		"dialect": "mysql"
 	},
 	"bd_villa": {
 		"database": "coop",
@@ -18,11 +17,10 @@
 	},
 	"cooptech": {
 		"database": "cooptech",
-		"username": "DbDesarrollo",
-		"password": "m+?PvY:zUogF01Q^XH3i9",
-		"host": "localhost",
+		"username": "reconecta",
+		"password": "PgHQGFEgMEfsuEKfB6tV",
+		"host": "172.26.5.100",
 		"port": 3306,
-		"dialect": "mysql",
-		"timezone": "-03:00" 
+		"dialect": "mysql"
 	}
 }
