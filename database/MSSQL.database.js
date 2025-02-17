@@ -23,7 +23,19 @@ SequelizeVilla = new Sequelize(configDb.bd_villa.database, configDb.bd_villa.use
 	},
 })
 
+SequelizeCooptech = new Sequelize(configDb.cooptech.database, configDb.cooptech.username, configDb.cooptech.password, {
+	host: configDb.cooptech.host,
+	port: configDb.cooptech.port,
+	dialect: configDb.cooptech.dialect,
+	dialectOptions: {
+		options: {
+			encrypt: false,
+		},
+	},
+})
+
 module.exports = {
 	SequelizeMorteros,
-	SequelizeVilla
+	SequelizeVilla,
+	SequelizeCooptech
 }

@@ -9,6 +9,8 @@ const { getListState, getListCity, getListStreet, newStreet, getAddress, newStre
 const { addCommentary, activePopups } = require('../controllers/Managment.controller')
 // const { newRequestService, getRequestsByUser } = require('../controllers/RequestService.controller')
 const { peopleByDocumentNumber } = require('../controllers/Person.controller')
+const { payLink } = require('../controllers/Payment.controller')
+
 
 router.get('/test', (req, res) => {
 	res.json({ message: 'Test route' })
@@ -66,5 +68,6 @@ router.post('/searchPeopleByDocumentNumber', verifyToken, peopleByDocumentNumber
 
 router.post('/addCommentary', verifyToken, addCommentary)
 router.post('/getUsersRegistered', verifyToken, usersRegistered)
+router.post('/payLink', verifyToken, payLink)
 
 module.exports = router

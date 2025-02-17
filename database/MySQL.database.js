@@ -34,10 +34,30 @@ async function testConnectionVilla() {
 	}
 }
 
+const sequelizeCooptech = new Sequelize(config.cooptech.database, config.cooptech.username, config.cooptech.password, {
+	host: config.cooptech.host,
+	port: config.cooptech.port,
+	dialect: config.cooptech.dialect,
+})
+
+
+async function testConnectionCooptech() {
+	try {
+		await sequelizeCooptech.authenticate()
+		await sequelizeCooptech.authenticate()
+		console.log('Connection has been established successfully.')
+	} catch (error) {
+		console.error('Unable to connect to the database:', error)
+	}
+}
+
+
 module.exports = {
 	QueryTypes,
 	sequelizeCoopm_villa,
 	testConnection,
 	sequelizeVilla,
-	testConnectionVilla
+	testConnectionVilla,
+	sequelizeCooptech,
+	testConnectionCooptech
 }

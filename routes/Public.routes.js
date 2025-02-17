@@ -4,10 +4,12 @@ const { migrationUser, tokenVerify, usersRegistered } = require('../controllers/
 // const { migrator1Up } = require('../controllers/migrations.controller')
 const { login, testConect, register, verifyRegister, password_recover } = require('../controllers/Auth.controller')
 const { customerServices, customerConsumption } = require('../controllers/Services.controller')
-const { getInvoice, existInvoice } = require('../controllers/Payment.controller')
+const { getInvoice, existInvoice } = require('../controllers/Invoice.controller')
 const { searchByDNI, searchByCuit } = require('../controllers/Procoop.controller')
-const { Commentaries, Popups, addPopup, addInformation, Informations, addImageInformation, ImageInformations, Claims, addClaim, Users, addMaterialsClaim, MaterialsClaim, toolsClaim } = require('../controllers/Managment.controller')
-const { relationUserCooptech, loginCooptech, tokenCooptech } = require('../controllers/Cooptech.controller')
+const { Commentaries, Popups, addPopup, addInformation, Informations, addImageInformation, ImageInformations, Claims, addClaim, 
+    Users, addMaterialsClaim, MaterialsClaim, toolsClaim, addTechnicianClaim, TechnicianClaim, methodEnableds, addMethodEnableds
+} = require('../controllers/Managment.controller')
+const { relationUserCooptech, loginCooptech, tokenCooptech, OVCliente, Methods } = require('../controllers/Cooptech.controller')
 
 // RUTAS PARA AUTH
 
@@ -49,12 +51,18 @@ router.post('/addImageInformation', addImageInformation)
 router.get('/imageInformations', ImageInformations)
 router.get('/getUsersRegistered', usersRegistered)
 router.post('/addClaim', addClaim)
-router.get('/Claims', Claims)
+router.post('/Claims', Claims)
 router.post('/Users', Users)
 router.post('/addMaterialsClaim', addMaterialsClaim)
 router.get('/getMaterialsClaim', MaterialsClaim)
-// router.get('/typesClaim', MaterialsClaim)
 router.get('/toolsClaim', toolsClaim)
+router.post('/addTechnicianClaim', addTechnicianClaim)
+router.get('/getTechnicianClaim', TechnicianClaim)
+router.post('/addMethodEnableds', addMethodEnableds)
+router.get('/getmethodEnableds', methodEnableds)
 
+//datos cooptech 
+router.get('/OVCliente/:id', OVCliente);
+router.get('/getMethods', Methods);
 
 module.exports = router

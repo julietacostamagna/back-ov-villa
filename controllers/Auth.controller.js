@@ -79,7 +79,8 @@ const verifyRegister = async (req, res) => {
 
 const password_recover = async (req, res) => {
 	try {
-		const { email } = req.query
+		// const { email } = req.query
+		const { email } = req.body;
 		if (!email) throw new Error('No se enviaron los parametros necesarios')
 		const user = await getUserxEmail(email)
 		const tokenTemp = await crypto.randomBytes(64).toString('hex')
