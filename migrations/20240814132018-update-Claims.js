@@ -3,33 +3,33 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
-    await queryInterface.addColumn('Claims', 'signName', {
+    await queryInterface.addColumn('claims', 'signName', {
       type: Sequelize.STRING,
       allowNull: true,
     });
-    await queryInterface.addColumn('Claims', 'signLastName', {
+    await queryInterface.addColumn('claims', 'signLastName', {
       type: Sequelize.STRING,
       allowNull: true,
     });
-    await queryInterface.addColumn('Claims', 'signDni', {
+    await queryInterface.addColumn('claims', 'signDni', {
       type: Sequelize.STRING,
       allowNull: true,
     });
-    await queryInterface.addColumn('Claims', 'signPhone', {
+    await queryInterface.addColumn('claims', 'signPhone', {
       type: Sequelize.STRING,
       allowNull: true,
     });
-    await queryInterface.addColumn('Claims', 'signImage', {
+    await queryInterface.addColumn('claims', 'signImage', {
       type: Sequelize.STRING,
       allowNull: true,
     });
   },
 
   async down (queryInterface, Sequelize) {
-    await queryInterface.removeColumn('Claims', 'signName');
-    await queryInterface.removeColumn('Claims', 'signLastName');
-    await queryInterface.removeColumn('Claims', 'signDni');
-    await queryInterface.removeColumn('Claims', 'signPhone');
-    await queryInterface.removeColumn('Claims', 'signImage');
+    await queryInterface.removeColumn('claims', 'signName');
+    await queryInterface.removeColumn('claims', 'signLastName');
+    await queryInterface.removeColumn('claims', 'signDni');
+    await queryInterface.removeColumn('claims', 'signPhone');
+    await queryInterface.removeColumn('claims', 'signImage');
   }
 };

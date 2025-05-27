@@ -1,11 +1,14 @@
 const axios = require('axios')
-const { debtsCustomerVilla } = require('../services/VillaService.js')
+const { debtsCustomerVilla, getPaysCancel, debtsCustomerOV } = require('../services/VillaService.js')
+const SambaClient = require('samba-client');
 
 async function getInvoice(req, res) {
 	try {
 		const { socios, all } =  req.body;
 		const result = [];
 
+		// await Facturas()
+		
 		for (const item of socios) {
 			const debts = await debtsCustomerVilla(item.num, all);
 			if (!debts) {
@@ -16,7 +19,14 @@ async function getInvoice(req, res) {
 
 			for (const debt of debts) {
 				let precio = parseFloat(debt.importe) < 0 ? Math.abs(debt.importe) : debt.importe;
-				let status = parseFloat(debt.importe) > 0 ? 0 : 1;
+
+				const comp = `${debt.tipoComprobante}${formatearNumero(debt.puntoVenta, 4)}${formatearNumero(debt.numero, 8)}`;
+				var status
+				if (parseFloat(debt.importe) > 0) {
+					status = 0
+				}
+				var isPayed = await debtsCustomerOV(comp)
+				status = isPayed ? 2 : status
 
 				let comprobante = '';
 				switch (debt.puntoVenta) {
@@ -32,6 +42,8 @@ async function getInvoice(req, res) {
 
 				let fact = {
 					type: comprobante,
+					typeComp: debt.tipoComprobante,
+					puntoVenta: debt.puntoVenta,
 					nrovoucher: debt.numero,
 					vto: debt.fechaVencimiento,
 					amount: parseFloat(precio).toFixed(2),
@@ -39,7 +51,8 @@ async function getInvoice(req, res) {
 					status: status,
 					number: debt.cliente,
 					nombre: debt.nombre,
-					domicilio: debt.domicilio
+					domicilio: debt.domicilio,
+					checkbox: status == 2 ? false : true
 				};
 
 				invoices.list.push(fact);
@@ -56,8 +69,11 @@ async function getInvoice(req, res) {
 	}
 }
 
+function formatearNumero(numero, cantidad) {
+	return numero.toString().padStart(cantidad, '0');
+}
 
-async function existInvoice(req, res) {
+async function existInvoice(req, res) { 
 	try {
 		const { url } = req.query
 		const timeout = 5000
@@ -70,7 +86,29 @@ async function existInvoice(req, res) {
 	}
 }
 
+const Facturas = async () => {
+	try {
+		const client = new SambaClient({
+			address: '//10.8.0.13/pdf', 
+			username: 'morteros',
+			password: 'C00p3m0rt3r0s#',
+			port: 3306,
+		});
+
+		console.log(client);
+
+		const files = await client.list();  
+		console.log('Files and directories:', files);
+
+		return files;
+	} catch (error) {
+		console.error('Error listing files:', error);
+		throw error;
+	}
+};
+
 module.exports = {
 	getInvoice,
 	existInvoice,
+	Facturas
 }
