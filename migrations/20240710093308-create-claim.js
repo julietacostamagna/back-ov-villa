@@ -18,14 +18,17 @@ module.exports = {
       service: {
         type: Sequelize.INTEGER
       },
-      nro_customer: {
-        type: Sequelize.INTEGER
-      },
+      user_id: {
+				type: Sequelize.INTEGER,
+				references: {
+          model: 'Users',
+					key: 'id',
+				},
+				onUpdate: 'CASCADE',
+				onDelete: 'CASCADE',
+			},
       customer: {
         type: Sequelize.STRING
-      },
-      technician: {
-        type: Sequelize.INTEGER
       },
       observations: {
         type: Sequelize.STRING

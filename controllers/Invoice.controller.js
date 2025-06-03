@@ -7,8 +7,9 @@ async function getInvoice(req, res) {
 		const { socios, all } =  req.body;
 		const result = [];
 
-		// await Facturas()
-		
+		const facturas = await Facturas()
+		console.log(facturas);
+
 		for (const item of socios) {
 			const debts = await debtsCustomerVilla(item.num, all);
 			if (!debts) {
@@ -88,24 +89,32 @@ async function existInvoice(req, res) {
 
 const Facturas = async () => {
 	try {
-		const client = new SambaClient({
-			address: '//10.8.0.13/pdf', 
-			username: 'morteros',
-			password: 'C00p3m0rt3r0s#',
-			port: 3306,
+	  const client = new SambaClient({
+		address: '//10.8.0.13/pdf',
+		username: 'morteros',
+		password: 'C00p3m0rt3r0s#',
+	  });
+
+	  console.log(client);
+  
+	  const files = await new Promise((resolve, reject) => {
+		client.list('', (err, files) => {
+		  if (err) {
+			reject(err);
+		  } else {
+			resolve(files);
+		  }
 		});
-
-		console.log(client);
-
-		const files = await client.list();  
-		console.log('Files and directories:', files);
-
-		return files;
+	  });
+  
+	  console.log('Files:', files);
+	  return files;
+  
 	} catch (error) {
-		console.error('Error listing files:', error);
-		throw error;
+	  console.error('Error listing files:', error);
+	  throw error;
 	}
-};
+  };
 
 module.exports = {
 	getInvoice,
