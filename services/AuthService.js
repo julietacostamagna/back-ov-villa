@@ -106,7 +106,6 @@ const login = async (email, password, remember) => {
 			user.number_customer = number_customer.number_customer
 			if(number_customer.number_customer){
 				const name_customer = await getAditionalInfo(number_customer.number_customer)
-				console.log(name_customer);
 				user.name_customer = name_customer?.nombre
 			}
 		}
