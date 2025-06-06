@@ -7,8 +7,8 @@ async function getInvoice(req, res) {
 		const { socios, all } =  req.body;
 		const result = [];
 
-		const facturas = await Facturas()
-		console.log(facturas);
+		// const facturas = await Facturas()
+		// console.log(facturas);
 
 		for (const item of socios) {
 			const debts = await debtsCustomerVilla(item.num, all);
